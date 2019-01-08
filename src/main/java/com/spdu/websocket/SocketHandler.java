@@ -40,4 +40,15 @@ public class SocketHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) {
         sessions.add(session);
     }
+
+    public void sendMess(TextMessage message)
+    {
+        try {
+            for (WebSocketSession webSocketSession : sessions) {
+                webSocketSession.sendMessage(message);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

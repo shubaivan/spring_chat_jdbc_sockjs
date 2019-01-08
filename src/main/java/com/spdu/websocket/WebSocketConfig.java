@@ -10,8 +10,10 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
 @Configuration
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
+    public SocketHandler socketHandler;
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new SocketHandler(), "/all").setAllowedOrigins("*");
+        socketHandler = new SocketHandler();
+        registry.addHandler(mySocketHandler(), "/all").setAllowedOrigins("*");
     }
 
     @Bean
@@ -19,5 +21,10 @@ public class WebSocketConfig implements WebSocketConfigurer {
         ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
         container.setMaxBinaryMessageBufferSize(1024000);
         return container;
+    }
+
+    @Bean
+    public SocketHandler mySocketHandler(){
+        return socketHandler;
     }
 }
