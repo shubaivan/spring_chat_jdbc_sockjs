@@ -1,7 +1,9 @@
-package com.spdu.websocket;
+package com.spdu.web.websocket;
 
+import com.spdu.web.websocket.kop.AppConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
@@ -11,6 +13,7 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
     public SocketHandler socketHandler;
+
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         socketHandler = new SocketHandler();
         registry.addHandler(mySocketHandler(), "/all").setAllowedOrigins("*");
@@ -24,7 +27,8 @@ public class WebSocketConfig implements WebSocketConfigurer {
     }
 
     @Bean
-    public SocketHandler mySocketHandler(){
+    public SocketHandler mySocketHandler() {
+        AppConfig.configSocketHandler = socketHandler;
         return socketHandler;
     }
 }

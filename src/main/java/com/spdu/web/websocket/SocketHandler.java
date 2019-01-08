@@ -1,11 +1,13 @@
-package com.spdu.websocket;
+package com.spdu.web.websocket;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.AbstractWebSocketMessage;
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -16,24 +18,12 @@ public class SocketHandler extends TextWebSocketHandler {
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) {
-        try {
-            for (WebSocketSession webSocketSession : sessions) {
-                webSocketSession.sendMessage(message);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        sendMessageLogic(message);
     }
 
     @Override
     public void handleBinaryMessage(WebSocketSession session, BinaryMessage message) {
-        try {
-            for (WebSocketSession webSocketSession : sessions) {
-                webSocketSession.sendMessage(message);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        sendMessageLogic(message);
     }
 
     @Override
@@ -41,11 +31,21 @@ public class SocketHandler extends TextWebSocketHandler {
         sessions.add(session);
     }
 
-    public void sendMess(TextMessage message)
-    {
+    public void sendMess(TextMessage message) {
+        sendMessageLogic(message);
+    }
+
+    private void sendMessageLogic(AbstractWebSocketMessage abstractWebSocketMessage) {
         try {
             for (WebSocketSession webSocketSession : sessions) {
-                webSocketSession.sendMessage(message);
+                try {
+                    if (webSocketSession.isOpen()) {
+                        webSocketSession.sendMessage(abstractWebSocketMessage);
+                    }
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                    webSocketSession.close();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

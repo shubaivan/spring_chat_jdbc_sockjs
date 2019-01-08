@@ -1,4 +1,4 @@
-package com.spdu;
+package com.spdu.web;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
