@@ -1,5 +1,7 @@
 package com.spdu.model.entities;
 
+import com.spdu.model.constants.UserRole;
+
 import java.time.LocalDate;
 
 public class User {
@@ -10,6 +12,12 @@ public class User {
     private String userName;
     private String password;
     private LocalDate dateOfRegistration;
+    private long avatar;
+    private String urlLinkedin;
+    private String urlFacebook;
+    private String urlGit;
+    private LocalDate dateOfBirth;
+    private UserRole userRole;
 
     public User() {
 

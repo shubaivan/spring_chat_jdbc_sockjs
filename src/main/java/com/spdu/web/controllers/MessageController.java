@@ -1,4 +1,4 @@
-package com.spdu.web;
+package com.spdu.web.controllers;
 
 import com.spdu.web.websocket.SocketHandler;
 import com.spdu.web.websocket.kop.AppConfig;

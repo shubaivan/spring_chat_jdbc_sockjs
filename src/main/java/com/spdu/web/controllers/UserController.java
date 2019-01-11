@@ -1,4 +1,4 @@
-package com.spdu.web;
+package com.spdu.web.controllers;
 
 import org.springframework.stereotype.Controller;
 
