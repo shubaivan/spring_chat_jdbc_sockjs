@@ -19,6 +19,6 @@ public class ChatController {
 
     @PostMapping()
     public ResponseEntity<Chat> create(@RequestBody Chat chat) {
-       return new ResponseEntity<>(chatService.create(chat), HttpStatus.OK);
+        return new ResponseEntity<>(chatService.create(chat), HttpStatus.OK);
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.web.socket.TextMessage;
 
 @Controller
 public class MessageController {
+
     @RequestMapping(value = "/send")
     public void sendMessage() {
         System.out.println("PING");
