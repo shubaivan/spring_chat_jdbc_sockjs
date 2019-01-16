@@ -2,12 +2,12 @@ package com.spdu.web.controllers;
 
 import com.spdu.web.websocket.SocketHandler;
 import com.spdu.web.websocket.kop.AppConfig;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.TextMessage;
 
-@RestController
+@Controller
 public class MessageController {
     @RequestMapping(value = "/send")
     public void sendMessage() {
