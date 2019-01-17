@@ -13,12 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("chats")
 public class ChatController {
+    private final ChatService chatService;
 
     @Autowired
-    private ChatService chatService;
+    public ChatController(ChatService chatService){
+        this.chatService = chatService;
+    }
 
     @PostMapping()
     public ResponseEntity<Chat> create(@RequestBody Chat chat) {
-        return new ResponseEntity<>(chatService.create(chat), HttpStatus.OK);
+        return new ResponseEntity<>(chatService.create(chat), HttpStatus.CREATED);
     }
 }

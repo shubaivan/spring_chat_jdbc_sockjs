@@ -20,6 +20,9 @@ public class ChatsUsers {
     @Column(name = "dateOfJoined")
     private LocalDateTime dateOfJoined;
 
+    public ChatsUsers() {
+    }
+
     public long getId() {
         return id;
     }

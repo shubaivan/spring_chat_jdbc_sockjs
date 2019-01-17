@@ -22,6 +22,9 @@ public class FileEntity {
     @Column(name = "contentType")
     private String contentType;
 
+    public FileEntity() {
+    }
+
     public long getId() {
         return id;
     }

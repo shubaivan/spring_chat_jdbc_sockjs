@@ -29,7 +29,6 @@ public class Chat {
     private String description;
 
     public Chat() {
-        super();
     }
 
     public long getId() {

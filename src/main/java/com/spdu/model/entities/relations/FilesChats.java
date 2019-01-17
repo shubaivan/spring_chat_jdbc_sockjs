@@ -16,6 +16,10 @@ public class FilesChats {
     @Column(name = "chatId")
     private long chatId;
 
+    public FilesChats() {
+
+    }
+
     public long getId() {
         return id;
     }

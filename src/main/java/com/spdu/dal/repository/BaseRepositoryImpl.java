@@ -12,9 +12,12 @@ import java.util.Optional;
 @Repository
 @Transactional
 public class BaseRepositoryImpl<T, K extends Serializable> implements BaseRepository<T, K> {
+    private final SessionFactory sessionFactory;
 
     @Autowired
-    private SessionFactory sessionFactory;
+    public BaseRepositoryImpl(SessionFactory sessionFactory){
+        this.sessionFactory = sessionFactory;
+    }
 
     private Session getSession() {
         return sessionFactory.getCurrentSession();

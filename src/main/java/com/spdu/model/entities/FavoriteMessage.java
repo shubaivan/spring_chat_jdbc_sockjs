@@ -29,6 +29,9 @@ public class FavoriteMessage {
     @Column(name = "messageId")
     private long messageId;
 
+    public FavoriteMessage() {
+    }
+
     public long getId() {
         return id;
     }

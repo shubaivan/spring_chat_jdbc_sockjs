@@ -1,9 +1,11 @@
 package com.spdu.model.entities;
 
 import com.spdu.model.constants.UserRole;
+import com.spdu.model.entities.relations.ChatsUsers;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "users")

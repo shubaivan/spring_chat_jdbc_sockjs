@@ -8,8 +8,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository("chatRepository")
 public class ChatRepositoryImpl extends BaseRepositoryImpl<Chat, Long> implements ChatRepository {
+    private final SessionFactory sessionFactory;
+
     @Autowired
-    private SessionFactory sessionFactory;
+    public ChatRepositoryImpl(SessionFactory sessionFactory){
+        super(sessionFactory);
+        this.sessionFactory = sessionFactory;
+    }
 
     private Session getSession() {
         return sessionFactory.getCurrentSession();

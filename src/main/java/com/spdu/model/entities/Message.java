@@ -35,6 +35,9 @@ public class Message {
     @Column(name = "attachmentFileId")
     private long attachmentFileId;
 
+    public Message() {
+    }
+
     public String getUserName() {
         return userName;
     }
