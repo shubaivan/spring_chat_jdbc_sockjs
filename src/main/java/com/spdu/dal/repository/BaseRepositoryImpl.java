@@ -15,7 +15,7 @@ public class BaseRepositoryImpl<T, K extends Serializable> implements BaseReposi
     private final SessionFactory sessionFactory;
 
     @Autowired
-    public BaseRepositoryImpl(SessionFactory sessionFactory){
+    public BaseRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
@@ -25,7 +25,7 @@ public class BaseRepositoryImpl<T, K extends Serializable> implements BaseReposi
 
     @Override
     public K create(T entity) {
-        return (K)getSession().save(entity);
+        return (K) getSession().save(entity);
     }
 
     @Override

@@ -16,7 +16,7 @@ public class ChatController {
     private final ChatService chatService;
 
     @Autowired
-    public ChatController(ChatService chatService){
+    public ChatController(ChatService chatService) {
         this.chatService = chatService;
     }
 

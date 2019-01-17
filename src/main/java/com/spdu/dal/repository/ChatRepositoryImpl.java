@@ -11,7 +11,7 @@ public class ChatRepositoryImpl extends BaseRepositoryImpl<Chat, Long> implement
     private final SessionFactory sessionFactory;
 
     @Autowired
-    public ChatRepositoryImpl(SessionFactory sessionFactory){
+    public ChatRepositoryImpl(SessionFactory sessionFactory) {
         super(sessionFactory);
         this.sessionFactory = sessionFactory;
     }

@@ -13,7 +13,7 @@ public class ChatServiceImpl implements ChatService {
     private final ChatRepository chatRepository;
 
     @Autowired
-    public ChatServiceImpl(ChatRepository chatRepository){
+    public ChatServiceImpl(ChatRepository chatRepository) {
         this.chatRepository = chatRepository;
     }
 
