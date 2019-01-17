@@ -10,8 +10,9 @@ public class FileEntity {
     @GeneratedValue
     private long id;
 
-    @Column(name = "userId")
-    private long userId;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(name = "name")
     private String name;
@@ -27,14 +28,6 @@ public class FileEntity {
 
     public long getId() {
         return id;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
     }
 
     public String getName() {
@@ -59,5 +52,13 @@ public class FileEntity {
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

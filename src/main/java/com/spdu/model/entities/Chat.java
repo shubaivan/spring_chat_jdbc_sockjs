@@ -4,6 +4,7 @@ import com.spdu.model.constants.ChatType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "chats")
@@ -27,6 +28,13 @@ public class Chat {
 
     @Column(name = "description")
     private String description;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "owner_id", unique = true, nullable = false, updatable = false)
+    private User user;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "chat")
+    private List<Message> messages;
 
     public Chat() {
     }
@@ -77,5 +85,21 @@ public class Chat {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
     }
 }

@@ -17,7 +17,6 @@ public class FilesChats {
     private long chatId;
 
     public FilesChats() {
-
     }
 
     public long getId() {

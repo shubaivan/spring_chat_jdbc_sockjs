@@ -2,6 +2,7 @@ package com.spdu.model.entities;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "messages")
@@ -11,17 +12,16 @@ public class Message {
     @GeneratedValue
     private long id;
 
-    @Column(name = "chatId")
-    private long chatId;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "chat_id", nullable = false)
+    private Chat chat;
 
-    @Column(name = "userId")
-    private long userId;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(name = "text")
     private String text;
-
-    @Column(name = "userName")
-    private String userName;
 
     @Column(name = "dateOfCreated")
     private LocalDateTime dateOfCreated;
@@ -32,26 +32,14 @@ public class Message {
     @Column(name = "relativeChatId")
     private long relativeChatId;
 
-    @Column(name = "attachmentFileId")
-    private long attachmentFileId;
+    @OneToMany(mappedBy = "message")
+    private List<FavoriteMessage> favoriteMessages;
 
     public Message() {
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
     public String getText() {
         return text;
-    }
-
-    public long getAttachmentFileId() {
-        return attachmentFileId;
-    }
-
-    public void setAttachmentFileId(long attachmentFileId) {
-        this.attachmentFileId = attachmentFileId;
     }
 
     public long getRelativeChatId() {
@@ -78,31 +66,35 @@ public class Message {
         this.dateOfCreated = dateOfCreated;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
     public void setText(String text) {
         this.text = text;
     }
 
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
-    public long getChatId() {
-        return chatId;
-    }
-
-    public void setChatId(long chatId) {
-        this.chatId = chatId;
-    }
-
     public long getId() {
         return id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Chat getChat() {
+        return chat;
+    }
+
+    public void setChat(Chat chat) {
+        this.chat = chat;
+    }
+
+    public List<FavoriteMessage> getFavoriteMessages() {
+        return favoriteMessages;
+    }
+
+    public void setFavoriteMessages(List<FavoriteMessage> favoriteMessages) {
+        this.favoriteMessages = favoriteMessages;
     }
 }

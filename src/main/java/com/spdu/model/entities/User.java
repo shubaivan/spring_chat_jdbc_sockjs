@@ -1,7 +1,6 @@
 package com.spdu.model.entities;
 
 import com.spdu.model.constants.UserRole;
-import com.spdu.model.entities.relations.ChatsUsers;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -50,6 +49,15 @@ public class User {
 
     @Column(name = "userRole")
     private UserRole userRole;
+
+    @OneToMany(mappedBy = "user")
+    private List<Chat> chats;
+
+    @OneToMany(mappedBy = "user")
+    private List<Message> messages;
+
+    @OneToMany(mappedBy = "user")
+    private List<FileEntity> files;
 
     public User() {
 
@@ -166,5 +174,29 @@ public class User {
 
     public long getId() {
         return id;
+    }
+
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
+
+    public List<FileEntity> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<FileEntity> files) {
+        this.files = files;
+    }
+
+    public List<Chat> getChats() {
+        return chats;
+    }
+
+    public void setChats(List<Chat> chats) {
+        this.chats = chats;
     }
 }

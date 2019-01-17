@@ -11,11 +11,13 @@ public class FavoriteMessage {
     @GeneratedValue
     private long id;
 
-    @Column(name = "chatId")
-    private long chatId;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "chat_id", nullable = false)
+    private Chat chat;
 
-    @Column(name = "userId")
-    private long userId;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(name = "text")
     private String text;
@@ -26,30 +28,15 @@ public class FavoriteMessage {
     @Column(name = "dateOfCreated")
     private LocalDateTime dateOfCreated;
 
-    @Column(name = "messageId")
-    private long messageId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "message_id", unique = true, nullable = false, updatable = false)
+    private Message message;
 
     public FavoriteMessage() {
     }
 
     public long getId() {
         return id;
-    }
-
-    public long getChatId() {
-        return chatId;
-    }
-
-    public void setChatId(long chatId) {
-        this.chatId = chatId;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
     }
 
     public String getText() {
@@ -76,11 +63,27 @@ public class FavoriteMessage {
         this.dateOfCreated = dateOfCreated;
     }
 
-    public long getMessageId() {
-        return messageId;
+    public Message getMessage() {
+        return message;
     }
 
-    public void setMessageId(long messageId) {
-        this.messageId = messageId;
+    public void setMessage(Message message) {
+        this.message = message;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Chat getChat() {
+        return chat;
+    }
+
+    public void setChat(Chat chat) {
+        this.chat = chat;
     }
 }
