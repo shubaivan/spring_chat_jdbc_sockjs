@@ -8,6 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.HttpClientErrorException;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("chats")
@@ -20,7 +23,12 @@ public class ChatController {
     }
 
     @GetMapping
-    public ResponseEntity<Chat> getById(long id) {
-        return new ResponseEntity<>(chatService.getById(id), HttpStatus.OK);
+    public ResponseEntity getById(long id) {
+        Optional<Chat> result = chatService.getById(id);
+        if (result.isPresent()) {
+            return new ResponseEntity(result.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity("Chat not found!", HttpStatus.BAD_REQUEST);
+        }
     }
 }
