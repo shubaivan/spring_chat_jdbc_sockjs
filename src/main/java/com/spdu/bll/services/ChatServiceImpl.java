@@ -1,4 +1,4 @@
-package com.spdu.bll.service;
+package com.spdu.bll.services;
 
 import com.spdu.bll.interfaces.ChatService;
 import com.spdu.dal.repository.ChatRepository;
