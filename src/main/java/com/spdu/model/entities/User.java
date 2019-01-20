@@ -2,61 +2,25 @@ package com.spdu.model.entities;
 
 import com.spdu.model.constants.UserRole;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
-@Entity
-@Table(name = "users")
 public class User {
-
-    @Id
-    @GeneratedValue
     private long id;
-
-    @Column(name = "firstName")
     private String firstName;
-
-    @Column(name = "lastName")
     private String lastName;
-
-    @Column(name = "email", unique = true)
     private String email;
-
-    @Column(name = "userName", unique = true)
     private String userName;
-
-    @Column(name = "password")
     private String password;
-
-    @Column(name = "dateOfRegistration")
     private LocalDate dateOfRegistration;
-
-    @Column(name = "avatar")
     private long avatar;
-
-    @Column(name = "urlLinkedin")
     private String urlLinkedin;
-
-    @Column(name = "urlFacebook")
     private String urlFacebook;
-
-    @Column(name = "urlGit")
     private String urlGit;
-
-    @Column(name = "dateOfBirth")
     private LocalDate dateOfBirth;
-
-    @Column(name = "userRole")
     private UserRole userRole;
-
-    @OneToMany(mappedBy = "user")
     private List<Chat> chats;
-
-    @OneToMany(mappedBy = "user")
     private List<Message> messages;
-
-    @OneToMany(mappedBy = "user")
     private List<FileEntity> files;
 
     public User() {

@@ -2,38 +2,17 @@ package com.spdu.model.entities;
 
 import com.spdu.model.constants.ChatType;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
-@Table(name = "chats")
 public class Chat {
-
-    @Id
-    @GeneratedValue
     private long id;
-
-    @Column(name = "name")
     private String name;
-
-    @Column(name = "dateOfCreated")
     private LocalDateTime dateOfCreated;
-
-    @Column(name = "chatType")
     private ChatType chatType;
-
-    @Column(name = "tags")
     private String tags;
-
-    @Column(name = "description")
     private String description;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "owner_id", unique = true, nullable = false, updatable = false)
     private User user;
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "chat")
     private List<Message> messages;
 
     public Chat() {

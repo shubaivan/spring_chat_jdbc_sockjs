@@ -6,9 +6,9 @@ import com.spdu.model.entities.Chat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.sql.SQLException;
 
-@Service("chatService")
+@Service
 public class ChatServiceImpl implements ChatService {
     private final ChatRepository chatRepository;
 
@@ -18,9 +18,12 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public Chat create(Chat chat) {
-        chat.setDateOfCreated(LocalDateTime.now());
-        long chatId = chatRepository.create(chat);
-        return chatRepository.findById(Chat.class, chatId).get();
+    public Chat getById(long id) {
+        try {
+            return chatRepository.getById(id);
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+            return null;
+        }
     }
 }

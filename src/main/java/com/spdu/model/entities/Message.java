@@ -1,38 +1,16 @@
 package com.spdu.model.entities;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
-@Table(name = "messages")
 public class Message {
-
-    @Id
-    @GeneratedValue
     private long id;
-
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "chat_id", nullable = false)
     private Chat chat;
-
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
-    @Column(name = "text")
     private String text;
-
-    @Column(name = "dateOfCreated")
     private LocalDateTime dateOfCreated;
-
-    @Column(name = "relativeMessageId")
     private long relativeMessageId;
-
-    @Column(name = "relativeChatId")
     private long relativeChatId;
-
-    @OneToMany(mappedBy = "message")
     private List<FavoriteMessage> favoriteMessages;
 
     public Message() {

@@ -2,5 +2,9 @@ package com.spdu.dal.repository;
 
 import com.spdu.model.entities.Chat;
 
-public interface ChatRepository extends BaseRepository<Chat, Long> {
+import java.sql.SQLException;
+
+public interface ChatRepository {
+
+    Chat getById(long id) throws SQLException;
 }

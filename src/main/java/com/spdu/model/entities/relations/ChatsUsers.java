@@ -1,23 +1,11 @@
 package com.spdu.model.entities.relations;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "chatsUsers")
 public class ChatsUsers {
-
-    @Id
-    @GeneratedValue
     private long id;
-
-    @Column(name = "chatId")
     private long chatId;
-
-    @Column(name = "userId")
     private long userId;
-
-    @Column(name = "dateOfJoined")
     private LocalDateTime dateOfJoined;
 
     public ChatsUsers() {

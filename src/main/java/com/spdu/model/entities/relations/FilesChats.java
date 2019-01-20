@@ -1,19 +1,8 @@
 package com.spdu.model.entities.relations;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name = "filesChats")
 public class FilesChats {
-
-    @Id
-    @GeneratedValue
     private long id;
-
-    @Column(name = "fileId")
     private long fileId;
-
-    @Column(name = "chatId")
     private long chatId;
 
     public FilesChats() {
