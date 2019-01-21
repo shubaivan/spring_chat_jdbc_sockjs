@@ -15,7 +15,7 @@ public class ChatMapper implements RowMapper<Chat> {
         chat.setName(rs.getString("name"));
         chat.setDescription(rs.getString("description"));
         chat.setDateOfCreated(rs.getTimestamp("date_of_created").toLocalDateTime());
-        chat.setChatType(ChatType.values()[rs.getInt("type")]);
+        chat.setChatType(ChatType.values()[rs.getInt("chat_type")]);
         chat.setTags(rs.getString("tags"));
         chat.setId(rs.getLong("id"));
         chat.setOwnerId(rs.getLong("owner_id"));
