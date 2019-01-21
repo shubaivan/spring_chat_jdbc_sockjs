@@ -27,4 +27,14 @@ public class ChatServiceImpl implements ChatService {
             return Optional.empty();
         }
     }
+
+    @Override
+    public Optional<Chat> create(Chat chat) {
+        try {
+            return chatRepository.create(chat);
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+            return Optional.empty();
+        }
+    }
 }

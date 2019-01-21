@@ -1,1 +1,0 @@
-ALTER TABLE db_users ALTER COLUMN date_of_birth TYPE DATE;

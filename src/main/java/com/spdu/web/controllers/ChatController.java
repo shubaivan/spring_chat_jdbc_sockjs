@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Optional;
@@ -32,6 +34,16 @@ public class ChatController {
             return new ResponseEntity(result.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity("Chat not found!", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity create(@RequestBody Chat chat) {
+        Optional<Chat> result = chatService.create(chat);
+        if (result.isPresent()) {
+            return new ResponseEntity(result.get(), HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity("Can't create chat", HttpStatus.BAD_REQUEST);
         }
     }
 }

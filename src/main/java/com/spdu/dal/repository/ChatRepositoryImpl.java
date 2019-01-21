@@ -7,6 +7,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
@@ -34,5 +36,18 @@ public class ChatRepositoryImpl implements ChatRepository {
             e.printStackTrace();
             return Optional.empty();
         }
+    }
+
+    @Override
+    public Optional<Chat> create(Chat chat) throws SQLException {
+        String query = "INSERT INTO chats (" +
+                "chat_type, date_of_created," +
+                " description, name," +
+                "tags, owner_id) VALUES (?,?,?,?,?,?)";
+
+        jdbcTemplate.update(query, chat.getChatType(), LocalDateTime.now(),
+                chat.getDescription(), chat.getName(),
+                chat.getTags(), chat.getOwnerId());
+        return Optional.of(chat);
     }
 }

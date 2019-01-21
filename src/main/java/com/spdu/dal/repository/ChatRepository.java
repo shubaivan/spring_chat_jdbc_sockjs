@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface ChatRepository {
 
     Optional<Chat> getById(long id) throws SQLException;
+
+    Optional<Chat> create(Chat chat) throws SQLException;
 }
