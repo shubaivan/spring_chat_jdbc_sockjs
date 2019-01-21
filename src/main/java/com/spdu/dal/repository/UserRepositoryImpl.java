@@ -1,38 +1,44 @@
 package com.spdu.dal.repository;
 
-import com.spdu.dal.mappers.ChatMapper;
-import com.spdu.model.entities.Chat;
+import com.spdu.dal.mappers.UserMapper;
+import com.spdu.model.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class ChatRepositoryImpl implements ChatRepository {
+public class UserRepositoryImpl implements UserRepository {
     private final DataSource dataSource;
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public ChatRepositoryImpl(DataSource dataSource, JdbcTemplate jdbcTemplate) {
+    public UserRepositoryImpl(DataSource dataSource, JdbcTemplate jdbcTemplate) {
         this.dataSource = dataSource;
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public Optional<Chat> getById(long id) {
+    public Optional<User> getById(long id) {
         try {
-            String query = "SELECT * FROM chats WHERE chats.id =" + id;
+            String query = "SELECT * FROM db_users WHERE id =" + id;
 
-            Chat chat = jdbcTemplate.queryForObject(query,
+            User user = jdbcTemplate.queryForObject(query,
                     new Object[]{},
-                    new ChatMapper());
+                    new UserMapper());
 
-            return Optional.of(chat);
+            return Optional.of(user);
         } catch (Exception e) {
             e.printStackTrace();
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<User> getAll() {
+        return null;
     }
 }

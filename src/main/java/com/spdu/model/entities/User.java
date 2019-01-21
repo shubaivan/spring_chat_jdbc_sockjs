@@ -3,6 +3,7 @@ package com.spdu.model.entities;
 import com.spdu.model.constants.UserRole;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class User {
@@ -12,7 +13,7 @@ public class User {
     private String email;
     private String userName;
     private String password;
-    private LocalDate dateOfRegistration;
+    private LocalDateTime dateOfRegistration;
     private long avatar;
     private String urlLinkedin;
     private String urlFacebook;
@@ -24,13 +25,12 @@ public class User {
     private List<FileEntity> files;
 
     public User() {
-
     }
 
     public User(long id,
                 String firstName, String lastName,
                 String email, String userName,
-                String password, LocalDate dateOfRegistration) {
+                String password, LocalDateTime dateOfRegistration) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -38,6 +38,14 @@ public class User {
         this.userName = userName;
         this.password = password;
         this.dateOfRegistration = dateOfRegistration;
+    }
+
+    public long getUserId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public UserRole getUserRole() {
@@ -88,11 +96,11 @@ public class User {
         this.avatar = avatar;
     }
 
-    public LocalDate getDateOfRegistration() {
+    public LocalDateTime getDateOfRegistration() {
         return dateOfRegistration;
     }
 
-    public void setDateOfRegistration(LocalDate dateOfRegistration) {
+    public void setDateOfRegistration(LocalDateTime dateOfRegistration) {
         this.dateOfRegistration = dateOfRegistration;
     }
 

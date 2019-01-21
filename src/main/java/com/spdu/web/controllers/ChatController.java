@@ -2,13 +2,14 @@ package com.spdu.web.controllers;
 
 import com.spdu.bll.interfaces.ChatService;
 import com.spdu.model.entities.Chat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Optional;
 
@@ -16,6 +17,8 @@ import java.util.Optional;
 @RequestMapping("chats")
 public class ChatController {
     private final ChatService chatService;
+    private static final Logger logger =
+            LoggerFactory.getLogger(ChatController.class);
 
     @Autowired
     public ChatController(ChatService chatService) {

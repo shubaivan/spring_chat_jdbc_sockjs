@@ -12,6 +12,7 @@ public class Chat {
     private ChatType chatType;
     private String tags;
     private String description;
+    private long ownerId;
     private User user;
     private List<Message> messages;
 
@@ -80,5 +81,13 @@ public class Chat {
 
     public void setMessages(List<Message> messages) {
         this.messages = messages;
+    }
+
+    public long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(long ownerId) {
+        this.ownerId = ownerId;
     }
 }
