@@ -5,7 +5,7 @@ CREATE TABLE users (
   user_name VARCHAR(255) NOT NULL,
   password VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
-  cretaed_at DATETIME NOT NULL,
+  cretaed_at TIMESTAMP NOT NULL,
 PRIMARY KEY (id)
 );
 
@@ -13,7 +13,7 @@ CREATE TABLE chat (
   id BIGINT NOT NULL,
   name VARCHAR(255),
   type INT NOT NULL,
-  cretaed_at DATETIME NOT NULL,
+  cretaed_at TIMESTAMP NOT NULL,
   tags VARCHAR(255),
 PRIMARY KEY (id)
 );
@@ -40,8 +40,8 @@ CREATE TABLE events (
   id BIGINT NOT NULL,
   name_event VARCHAR(255) NOT NULL,
   description VARCHAR(255) NOT NULL,
-  start_event_at DATETIME NOT NULL,
-  finsih_event_at DATETIME NOT NULL,
+  start_event_at TIMESTAMP NOT NULL,
+  finsih_event_at TIMESTAMP NOT NULL,
   author_id BIGINT NOT NULL,
 PRIMARY KEY (id)
 );

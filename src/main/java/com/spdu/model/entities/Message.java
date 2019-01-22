@@ -7,10 +7,32 @@ public class Message {
     private long id;
     private String text;
     private LocalDateTime dateOfCreated;
+    private long authorID;
     private long relativeMessageId;
     private long relativeChatId;
+    private long chatId;
 
     public Message() {
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(long chatId) {
+        this.chatId = chatId;
+    }
+
+    public long getAuthorID() {
+        return authorID;
+    }
+
+    public void setAuthorID(long authorID) {
+        this.authorID = authorID;
     }
 
     public String getText() {
