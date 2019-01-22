@@ -14,7 +14,7 @@ function setConnected(connected) {
 }
 
 function connect() {
-    ws = new WebSocket('ws://localhost:8080/all');
+    ws = new WebSocket('ws://localhost:8080/all?idSession=3');
     ws.binaryType = "arraybuffer";
     ws.onmessage = function (data) {
         includeContent(data.data);
