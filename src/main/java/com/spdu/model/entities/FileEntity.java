@@ -2,7 +2,6 @@ package com.spdu.model.entities;
 
 public class FileEntity {
     private long id;
-    private User user;
     private String name;
     private String path;
     private String contentType;
@@ -36,13 +35,5 @@ public class FileEntity {
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 }

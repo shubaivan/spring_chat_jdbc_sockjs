@@ -20,9 +20,6 @@ public class User {
     private String urlGit;
     private LocalDate dateOfBirth;
     private UserRole userRole;
-    private List<Chat> chats;
-    private List<Message> messages;
-    private List<FileEntity> files;
 
     public User() {
     }
@@ -146,29 +143,5 @@ public class User {
 
     public long getId() {
         return id;
-    }
-
-    public List<Message> getMessages() {
-        return messages;
-    }
-
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
-    }
-
-    public List<FileEntity> getFiles() {
-        return files;
-    }
-
-    public void setFiles(List<FileEntity> files) {
-        this.files = files;
-    }
-
-    public List<Chat> getChats() {
-        return chats;
-    }
-
-    public void setChats(List<Chat> chats) {
-        this.chats = chats;
     }
 }

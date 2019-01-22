@@ -5,13 +5,10 @@ import java.util.List;
 
 public class Message {
     private long id;
-    private Chat chat;
-    private User user;
     private String text;
     private LocalDateTime dateOfCreated;
     private long relativeMessageId;
     private long relativeChatId;
-    private List<FavoriteMessage> favoriteMessages;
 
     public Message() {
     }
@@ -50,29 +47,5 @@ public class Message {
 
     public long getId() {
         return id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Chat getChat() {
-        return chat;
-    }
-
-    public void setChat(Chat chat) {
-        this.chat = chat;
-    }
-
-    public List<FavoriteMessage> getFavoriteMessages() {
-        return favoriteMessages;
-    }
-
-    public void setFavoriteMessages(List<FavoriteMessage> favoriteMessages) {
-        this.favoriteMessages = favoriteMessages;
     }
 }

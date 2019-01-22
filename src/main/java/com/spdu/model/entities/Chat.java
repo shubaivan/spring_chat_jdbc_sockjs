@@ -3,7 +3,6 @@ package com.spdu.model.entities;
 import com.spdu.model.constants.ChatType;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class Chat {
     private long id;
@@ -13,8 +12,6 @@ public class Chat {
     private String tags;
     private String description;
     private long ownerId;
-    private User user;
-    private List<Message> messages;
 
     public Chat() {
     }
@@ -65,22 +62,6 @@ public class Chat {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public List<Message> getMessages() {
-        return messages;
-    }
-
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
     }
 
     public long getOwnerId() {
