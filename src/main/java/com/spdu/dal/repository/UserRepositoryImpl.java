@@ -44,7 +44,7 @@ public class UserRepositoryImpl implements UserRepository {
             ps.setString(3, user.getFirstName());
             ps.setString(4, user.getLastName());
             ps.setString(5, user.getUserName());
-            ps.setString(6, user.getPassword());
+            ps.setString(6, user.getPassword().trim());
             ps.setString(7, user.getEmail());
             return ps;
         }, keyHolder);
@@ -94,10 +94,10 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Optional<User> getByEmail(String email) {
         try {
-            String query = "SELECT * FROM db_users WHERE email =" + email;
+            String query = "SELECT * FROM db_users WHERE email=?";
 
             User user = jdbcTemplate.queryForObject(query,
-                    new Object[]{},
+                    new Object[]{email},
                     new UserMapper());
 
             return Optional.of(user);

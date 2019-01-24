@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,12 +17,17 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    private final CustomUserDetailsService customUserDetailsService;
+    private final DataSource dataSource;
+
     @Autowired
-    private CustomUserDetailsService customUserDetailsService;
-    @Autowired
-    private DataSource dataSource;
+    public WebSecurityConfiguration(CustomUserDetailsService customUserDetailsService, DataSource dataSource) {
+        this.customUserDetailsService = customUserDetailsService;
+        this.dataSource = dataSource;
+    }
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -42,6 +48,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return authProvider;
     }
 
+
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserDetailsService)
@@ -49,7 +56,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authenticationProvider(authenticationProvider())
                 .jdbcAuthentication()
-                .dataSource(dataSource);
+                .dataSource(dataSource)
+                .usersByUsernameQuery("select user_name, password, true from db_users where email=?")
+                .authoritiesByUsernameQuery("select email, name from roles " +
+                        "join user_roles on " +
+                        "user_roles.id = roles.id " +
+                        "join db_users on " +
+                        "db_users.id = user_roles.user_id " +
+                        "where db_users.email=?");
     }
 
     @Override
@@ -59,6 +73,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .formLogin()
+                .loginProcessingUrl("/perform_login")
                 .permitAll()
                 .and()
                 .csrf()

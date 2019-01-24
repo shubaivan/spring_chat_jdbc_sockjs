@@ -45,7 +45,8 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = new User();
-        String encoded = new BCryptPasswordEncoder().encode(userRegisterDTO.getPassword());
+        String encoded = new BCryptPasswordEncoder().
+                encode(userRegisterDTO.getPassword());
 
         user.setPassword(encoded);
         user.setEmail(userRegisterDTO.getEmail());
