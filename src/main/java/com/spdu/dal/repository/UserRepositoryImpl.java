@@ -1,6 +1,7 @@
 package com.spdu.dal.repository;
 
 import com.spdu.dal.mappers.UserMapper;
+import com.spdu.model.constants.UserRole;
 import com.spdu.model.entities.User;
 import com.spdu.model.entities.relations.UserRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class UserRepositoryImpl implements UserRepository {
             ps.setString(3, user.getFirstName());
             ps.setString(4, user.getLastName());
             ps.setString(5, user.getUserName());
-            ps.setString(6, user.getPassword().trim());
+            ps.setString(6, user.getPassword());
             ps.setString(7, user.getEmail());
             return ps;
         }, keyHolder);
@@ -73,10 +74,10 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Optional<User> getById(long id) {
         try {
-            String query = "SELECT * FROM db_users WHERE id =" + id;
+            String query = "SELECT * FROM db_users WHERE id =?";
 
             User user = jdbcTemplate.queryForObject(query,
-                    new Object[]{},
+                    new Object[]{id},
                     new UserMapper());
 
             return Optional.of(user);
@@ -104,6 +105,20 @@ public class UserRepositoryImpl implements UserRepository {
         } catch (Exception e) {
             e.printStackTrace();
             return Optional.empty();
+        }
+    }
+
+    @Override
+    public UserRole getUserRole(long userId) {
+        try {
+            String query = "SELECT name FROM roles " +
+                    "JOIN user_roles on user_roles.role_id = roles.id " +
+                    "WHERE user_roles.user_id=?";
+            String roleName = jdbcTemplate.queryForObject(query,
+                    new Object[]{userId}, String.class);
+            return UserRole.valueOf(roleName);
+        } catch (Exception exception) {
+            return null;
         }
     }
 }

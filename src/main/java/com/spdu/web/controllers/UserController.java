@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Optional;
-
-import static org.springframework.security.authorization.AuthorityReactiveAuthorizationManager.hasRole;
 
 @Controller
 @RequestMapping("users")
@@ -46,8 +42,9 @@ public class UserController {
 
     @GetMapping
     @RequestMapping(value = "/test")
-    @PreAuthorize("hasRole(USER)")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity getDetails() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
         String s = SecurityContextHolder.getContext().getAuthentication().getName();
         return new ResponseEntity(s, HttpStatus.OK);
     }

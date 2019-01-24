@@ -2,6 +2,7 @@ package com.spdu.bll.services;
 
 import com.spdu.bll.returned_model.CustomUserDetails;
 import com.spdu.dal.repository.UserRepository;
+import com.spdu.model.constants.UserRole;
 import com.spdu.model.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,9 +23,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.getByEmail(email);
-        if (user.isPresent()) {
-            return new CustomUserDetails(user.get());
+        Optional<User> userOptional = userRepository.getByEmail(email);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            UserRole role = userRepository.getUserRole(user.getId());
+            return new CustomUserDetails(user, role);
         } else {
             throw new UsernameNotFoundException(email);
         }

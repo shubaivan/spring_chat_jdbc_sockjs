@@ -1,5 +1,6 @@
 package com.spdu.bll.returned_model;
 
+import com.spdu.model.constants.UserRole;
 import com.spdu.model.entities.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,9 +13,11 @@ import java.util.List;
 public class CustomUserDetails implements UserDetails {
 
     private final User user;
+    private final UserRole userRole;
 
-    public CustomUserDetails(User user) {
+    public CustomUserDetails(User user, UserRole userRole) {
         this.user = user;
+        this.userRole = userRole;
     }
 
     @Override
@@ -49,7 +52,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        final List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("User"));
+        final List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(userRole.name()));
         return authorities;
     }
 

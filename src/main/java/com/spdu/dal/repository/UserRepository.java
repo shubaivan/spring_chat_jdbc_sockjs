@@ -1,5 +1,6 @@
 package com.spdu.dal.repository;
 
+import com.spdu.model.constants.UserRole;
 import com.spdu.model.entities.User;
 import com.spdu.model.entities.relations.UserRoles;
 
@@ -17,4 +18,6 @@ public interface UserRepository {
     long setUserRole(UserRoles userRole) throws SQLException;
 
     Optional<User> getByEmail(String email);
+
+    UserRole getUserRole(long userId);
 }
