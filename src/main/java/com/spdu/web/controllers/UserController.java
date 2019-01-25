@@ -11,10 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -30,7 +27,7 @@ public class UserController {
         this.userDetailsService = userDetailsService;
     }
 
-    @GetMapping
+    @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity getById(long id) {
         Optional<User> result = userService.getById(id);
         if (result.isPresent()) {
@@ -40,16 +37,14 @@ public class UserController {
         }
     }
 
-    @GetMapping
-    @RequestMapping(value = "/info")
+    @RequestMapping(method = RequestMethod.GET, value = "/info")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity getDetails() {
         String s = SecurityContextHolder.getContext().getAuthentication().getName();
         return new ResponseEntity(s, HttpStatus.OK);
     }
 
-    @PostMapping
-    @RequestMapping(value = "/register")
+    @RequestMapping(method = RequestMethod.POST, value = "/register")
     public ResponseEntity register(@RequestBody UserRegisterDTO userRegisterDTO) {
         try {
             Optional<User> result = userService.register(userRegisterDTO);
