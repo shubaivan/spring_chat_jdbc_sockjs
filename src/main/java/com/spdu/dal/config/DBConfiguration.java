@@ -1,5 +1,7 @@
 package com.spdu.dal.config;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,12 +28,13 @@ public class DBConfiguration {
 
     @Bean
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(DB_DRIVER);
-        dataSource.setUrl(DB_URL);
-        dataSource.setUsername(DB_USERNAME);
-        dataSource.setPassword(DB_PASSWORD);
-        return dataSource;
+        HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setJdbcUrl(DB_URL);
+        hikariConfig.setUsername(DB_USERNAME);
+        hikariConfig.setPassword(DB_PASSWORD);
+        hikariConfig.setDriverClassName(DB_DRIVER);
+
+        return new HikariDataSource(hikariConfig);
     }
 
     @Bean
