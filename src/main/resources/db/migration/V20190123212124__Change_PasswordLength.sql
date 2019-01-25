@@ -1,0 +1,1 @@
+ALTER TABLE db_users ALTER COLUMN password TYPE VARCHAR(100);
