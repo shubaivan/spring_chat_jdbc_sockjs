@@ -1,10 +1,7 @@
 package com.spdu.model.entities;
 
-import com.spdu.model.constants.UserRole;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class User {
     private long id;
@@ -19,7 +16,6 @@ public class User {
     private String urlFacebook;
     private String urlGit;
     private LocalDate dateOfBirth;
-    private UserRole userRole;
 
     public User() {
     }
@@ -43,14 +39,6 @@ public class User {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public UserRole getUserRole() {
-        return userRole;
-    }
-
-    public void setUserRole(UserRole userRole) {
-        this.userRole = userRole;
     }
 
     public LocalDate getDateOfBirth() {

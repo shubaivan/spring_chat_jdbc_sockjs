@@ -1,6 +1,5 @@
 package com.spdu.dal.mappers;
 
-import com.spdu.model.constants.UserRole;
 import com.spdu.model.entities.User;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -23,7 +22,6 @@ public class UserMapper implements RowMapper<User> {
         user.setUrlFacebook(rs.getString("url_facebook"));
         user.setUrlGit(rs.getString("url_git"));
         user.setUrlLinkedin(rs.getString("url_linkedin"));
-        user.setUserRole(UserRole.values()[rs.getInt("user_role")]);
         return user;
     }
 }
