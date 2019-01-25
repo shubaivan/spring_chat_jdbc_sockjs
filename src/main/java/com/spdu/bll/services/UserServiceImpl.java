@@ -37,6 +37,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> getByEmail(String email) {
+        try {
+            return userRepository.getByEmail(email);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public Optional<User> register(UserRegisterDTO userRegisterDTO) throws UserException {
         if (emailExist(userRegisterDTO.getEmail())) {
             throw new UserException("Account with this email is exist!");

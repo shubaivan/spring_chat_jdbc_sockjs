@@ -50,7 +50,12 @@ public class UserController {
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity getDetails() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return new ResponseEntity(email, HttpStatus.OK);
+        Optional<User> user = userService.getByEmail(email);
+        if (user.isPresent()) {
+            return new ResponseEntity(user, HttpStatus.OK);
+        } else {
+            return new ResponseEntity("User not found!", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping

@@ -1,9 +1,7 @@
 package com.spdu.dal.repository;
 
-import com.spdu.dal.mappers.MessageMapper;
 import com.spdu.dal.mappers.UserMapper;
 import com.spdu.model.constants.UserRole;
-import com.spdu.model.entities.Message;
 import com.spdu.model.entities.User;
 import com.spdu.model.entities.relations.UserRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +10,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,12 +18,10 @@ import java.util.Optional;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
-    private final DataSource dataSource;
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public UserRepositoryImpl(DataSource dataSource, JdbcTemplate jdbcTemplate) {
-        this.dataSource = dataSource;
+    public UserRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

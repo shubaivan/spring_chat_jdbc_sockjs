@@ -13,4 +13,6 @@ public interface UserService {
     Optional<User> register(UserRegisterDTO userRegisterDTO) throws UserException;
 
     List<User> getAll(String currentUserEmail);
+
+    Optional<User> getByEmail(String email);
 }
