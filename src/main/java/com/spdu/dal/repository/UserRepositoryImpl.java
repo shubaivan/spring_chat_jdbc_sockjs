@@ -1,7 +1,9 @@
 package com.spdu.dal.repository;
 
+import com.spdu.dal.mappers.MessageMapper;
 import com.spdu.dal.mappers.UserMapper;
 import com.spdu.model.constants.UserRole;
+import com.spdu.model.entities.Message;
 import com.spdu.model.entities.User;
 import com.spdu.model.entities.relations.UserRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,7 +92,23 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> getAll() {
-        return null;
+        List<User> users = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM db_users";
+
+            users = jdbcTemplate.query(query,
+                    rs -> {
+                        List<User> list = new ArrayList<>();
+                        while (rs.next()) {
+                            list.add(new UserMapper().mapRow(rs, rs.getRow()));
+                        }
+                        return list;
+                    });
+            return users;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return users;
+        }
     }
 
     @Override

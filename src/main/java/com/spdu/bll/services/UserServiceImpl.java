@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -64,6 +66,15 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
         }
         return Optional.empty();
+    }
+
+    @Override
+    public List<User> getAll(String currentUserEmail) {
+        List<User> users = userRepository.getAll()
+                .stream()
+                .filter(user -> !user.getEmail().equals(currentUserEmail))
+                .collect(Collectors.toList());
+        return users;
     }
 
     private void setUserRole(UserRole role, long userId) throws SQLException {
