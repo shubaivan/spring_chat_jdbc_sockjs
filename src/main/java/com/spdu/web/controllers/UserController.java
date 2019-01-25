@@ -10,15 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
-@Controller
+@RestController
 @RequestMapping("users")
 public class UserController {
     private final UserService userService;
@@ -30,8 +27,8 @@ public class UserController {
         this.userDetailsService = userDetailsService;
     }
 
-    @GetMapping
-    public ResponseEntity getById(long id) {
+    @GetMapping({"id"})
+    public ResponseEntity getById(@PathVariable long id) {
         Optional<User> result = userService.getById(id);
         if (result.isPresent()) {
             return new ResponseEntity(result.get(), HttpStatus.OK);
@@ -41,11 +38,24 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity getAllUsers() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<User> users = userService.getAll(email);
+        return new ResponseEntity(users, HttpStatus.OK);
+    }
+
+    @GetMapping
     @RequestMapping(value = "/info")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity getDetails() {
-        String s = SecurityContextHolder.getContext().getAuthentication().getName();
-        return new ResponseEntity(s, HttpStatus.OK);
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> user = userService.getByEmail(email);
+        if (user.isPresent()) {
+            return new ResponseEntity(user, HttpStatus.OK);
+        } else {
+            return new ResponseEntity("User not found!", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping

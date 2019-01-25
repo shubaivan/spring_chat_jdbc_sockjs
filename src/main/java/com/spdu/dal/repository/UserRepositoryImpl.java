@@ -10,20 +10,18 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
-    private final DataSource dataSource;
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public UserRepositoryImpl(DataSource dataSource, JdbcTemplate jdbcTemplate) {
-        this.dataSource = dataSource;
+    public UserRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -89,7 +87,23 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> getAll() {
-        return null;
+        List<User> users = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM db_users";
+
+            users = jdbcTemplate.query(query,
+                    rs -> {
+                        List<User> list = new ArrayList<>();
+                        while (rs.next()) {
+                            list.add(new UserMapper().mapRow(rs, rs.getRow()));
+                        }
+                        return list;
+                    });
+            return users;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return users;
+        }
     }
 
     @Override
