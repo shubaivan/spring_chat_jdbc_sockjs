@@ -2,5 +2,6 @@ package com.spdu.model.constants;
 
 public enum ChatType {
     PRIVATE,
-    PUBLIC
+    PUBLIC,
+    DEFAULT
 }

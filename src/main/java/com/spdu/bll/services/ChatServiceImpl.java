@@ -38,4 +38,14 @@ public class ChatServiceImpl implements ChatService {
             return Optional.empty();
         }
     }
+
+    @Override
+    public long joinToChat(long userId, long chatId) {
+        try {
+            return chatRepository.joinToChat(userId, chatId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
 }

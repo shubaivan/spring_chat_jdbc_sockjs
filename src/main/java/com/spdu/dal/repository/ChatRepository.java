@@ -10,4 +10,6 @@ public interface ChatRepository {
     Optional<Chat> getById(long id) throws SQLException;
 
     long create(Chat chat) throws SQLException;
+
+    long joinToChat(long userId, long chatId) throws SQLException;
 }

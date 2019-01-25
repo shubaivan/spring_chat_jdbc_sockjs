@@ -18,12 +18,10 @@ import java.util.Optional;
 
 @Repository
 public class ChatRepositoryImpl implements ChatRepository {
-    private final DataSource dataSource;
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public ChatRepositoryImpl(DataSource dataSource, JdbcTemplate jdbcTemplate) {
-        this.dataSource = dataSource;
+    public ChatRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -61,6 +59,26 @@ public class ChatRepositoryImpl implements ChatRepository {
             ps.setString(4, chat.getName());
             ps.setString(5, chat.getTags());
             ps.setLong(6, chat.getOwnerId());
+            return ps;
+        }, keyHolder);
+
+        return Long.valueOf(keyHolder.getKeys().get("id").toString());
+    }
+
+    @Override
+    public long joinToChat(long userId, long chatId) throws SQLException {
+        String query = "INSERT INTO chats_users (" +
+                "chat_id, user_id," +
+                " date_of_joined) VALUES (?,?,?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection
+                    .prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setLong(1, chatId);
+            ps.setLong(2, userId);
+            ps.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
             return ps;
         }, keyHolder);
 
