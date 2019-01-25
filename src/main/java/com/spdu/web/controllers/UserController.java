@@ -41,10 +41,9 @@ public class UserController {
     }
 
     @GetMapping
-    @RequestMapping(value = "/test")
-    @PreAuthorize("hasRole('USER')")
+    @RequestMapping(value = "/info")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity getDetails() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
         String s = SecurityContextHolder.getContext().getAuthentication().getName();
         return new ResponseEntity(s, HttpStatus.OK);
     }

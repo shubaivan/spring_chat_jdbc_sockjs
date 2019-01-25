@@ -17,11 +17,10 @@ plugins {
 flyway {
     url = 'jdbc:postgresql://localhost:5432/spd_talks'
     user = 'postgres'
-    password = '12345'
+    password = 'root'
 }
 
 apply plugin: 'java'
-apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
