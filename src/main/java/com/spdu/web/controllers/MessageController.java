@@ -1,21 +1,16 @@
 package com.spdu.web.controllers;
 
 import com.spdu.bll.interfaces.MessageService;
-import com.spdu.bll.interfaces.UserService;
-import com.spdu.bll.services.CustomUserDetailsService;
 import com.spdu.model.entities.Message;
-import com.spdu.model.entities.User;
 import com.spdu.web.websocket.SocketHandler;
 import com.spdu.web.websocket.kop.AppConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.socket.TextMessage;
 
 import java.sql.SQLException;

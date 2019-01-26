@@ -3,7 +3,6 @@ package com.spdu.bll.services;
 import com.spdu.bll.interfaces.MessageService;
 import com.spdu.dal.repository.MessageRepository;
 import com.spdu.model.entities.Message;
-import com.spdu.model.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
