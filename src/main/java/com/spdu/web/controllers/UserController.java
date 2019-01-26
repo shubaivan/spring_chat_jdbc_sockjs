@@ -46,8 +46,7 @@ public class UserController {
         return new ResponseEntity(users, HttpStatus.OK);
     }
 
-    @GetMapping
-    @RequestMapping(value = "/info")
+    @GetMapping("/info")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity getDetails() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -59,8 +58,7 @@ public class UserController {
         }
     }
 
-    @PostMapping
-    @RequestMapping(value = "/register")
+    @PostMapping("/register")
     public ResponseEntity register(@RequestBody UserRegisterDTO userRegisterDTO) {
         try {
             Optional<User> result = userService.register(userRegisterDTO);
