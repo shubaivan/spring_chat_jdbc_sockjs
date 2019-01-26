@@ -1,7 +1,6 @@
 package com.spdu.model.entities;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class Message {
     private long id;

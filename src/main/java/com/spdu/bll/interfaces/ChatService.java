@@ -6,6 +6,5 @@ import java.util.Optional;
 
 public interface ChatService {
     Optional<Chat> getById(long id);
-
     Optional<Chat> create(Chat chat);
 }
