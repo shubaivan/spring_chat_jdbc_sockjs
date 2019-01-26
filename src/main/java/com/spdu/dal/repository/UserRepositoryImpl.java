@@ -1,9 +1,9 @@
 package com.spdu.dal.repository;
 
 import com.spdu.dal.mappers.UserMapper;
-import com.spdu.model.constants.UserRole;
-import com.spdu.model.entities.User;
-import com.spdu.model.entities.relations.UserRoles;
+import com.spdu.bll.models.constants.UserRole;
+import com.spdu.domain_models.entities.User;
+import com.spdu.domain_models.entities.relations.UserRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

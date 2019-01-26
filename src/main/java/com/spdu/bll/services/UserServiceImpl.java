@@ -2,12 +2,12 @@ package com.spdu.bll.services;
 
 import com.spdu.bll.exceptions.UserException;
 import com.spdu.bll.interfaces.UserService;
-import com.spdu.bll.returned_model.UserRegisterDTO;
+import com.spdu.bll.models.UserRegisterDTO;
 import com.spdu.dal.repository.ChatRepository;
 import com.spdu.dal.repository.UserRepository;
-import com.spdu.model.constants.UserRole;
-import com.spdu.model.entities.User;
-import com.spdu.model.entities.relations.UserRoles;
+import com.spdu.bll.models.constants.UserRole;
+import com.spdu.domain_models.entities.User;
+import com.spdu.domain_models.entities.relations.UserRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

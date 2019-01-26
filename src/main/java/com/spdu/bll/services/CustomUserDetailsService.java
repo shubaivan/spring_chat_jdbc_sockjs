@@ -1,9 +1,9 @@
 package com.spdu.bll.services;
 
-import com.spdu.bll.returned_model.CustomUserDetails;
+import com.spdu.bll.models.CustomUserDetails;
 import com.spdu.dal.repository.UserRepository;
-import com.spdu.model.constants.UserRole;
-import com.spdu.model.entities.User;
+import com.spdu.bll.models.constants.UserRole;
+import com.spdu.domain_models.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

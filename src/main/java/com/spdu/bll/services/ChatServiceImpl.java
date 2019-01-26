@@ -2,7 +2,7 @@ package com.spdu.bll.services;
 
 import com.spdu.bll.interfaces.ChatService;
 import com.spdu.dal.repository.ChatRepository;
-import com.spdu.model.entities.Chat;
+import com.spdu.domain_models.entities.Chat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,11 +44,20 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public long joinToChat(long userId, long chatId) {
         try {
+            if (userIsPresentInChat(userId, chatId)) {
+                return 0;
+            }
+
             return chatRepository.joinToChat(userId, chatId);
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
         }
+    }
+
+    @Override
+    public boolean userIsPresentInChat(long userId, long chatId) {
+        return chatRepository.userIsPresentInChat(userId, chatId);
     }
 
     @Override

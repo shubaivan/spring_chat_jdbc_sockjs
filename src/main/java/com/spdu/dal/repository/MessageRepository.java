@@ -1,6 +1,6 @@
 package com.spdu.dal.repository;
 
-import com.spdu.model.entities.Message;
+import com.spdu.domain_models.entities.Message;
 
 import java.sql.SQLException;
 import java.util.List;

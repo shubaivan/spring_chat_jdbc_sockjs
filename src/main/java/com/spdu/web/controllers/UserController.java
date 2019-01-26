@@ -2,9 +2,9 @@ package com.spdu.web.controllers;
 
 import com.spdu.bll.exceptions.UserException;
 import com.spdu.bll.interfaces.UserService;
-import com.spdu.bll.returned_model.UserRegisterDTO;
+import com.spdu.bll.models.UserRegisterDTO;
 import com.spdu.bll.services.CustomUserDetailsService;
-import com.spdu.model.entities.User;
+import com.spdu.domain_models.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

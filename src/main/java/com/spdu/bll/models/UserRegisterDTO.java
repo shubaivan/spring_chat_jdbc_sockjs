@@ -1,6 +1,6 @@
-package com.spdu.bll.returned_model;
+package com.spdu.bll.models;
 
-import com.spdu.model.constants.UserRole;
+import com.spdu.bll.models.constants.UserRole;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;

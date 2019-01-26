@@ -1,7 +1,7 @@
-package com.spdu.bll.returned_model;
+package com.spdu.bll.models;
 
-import com.spdu.model.constants.UserRole;
-import com.spdu.model.entities.User;
+import com.spdu.bll.models.constants.UserRole;
+import com.spdu.domain_models.entities.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

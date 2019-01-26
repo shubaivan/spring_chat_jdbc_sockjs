@@ -1,6 +1,6 @@
-package com.spdu.model.entities;
+package com.spdu.domain_models.entities;
 
-import com.spdu.model.constants.ChatType;
+import com.spdu.bll.models.constants.ChatType;
 
 import java.time.LocalDateTime;
 
