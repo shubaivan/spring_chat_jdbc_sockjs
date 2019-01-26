@@ -3,6 +3,7 @@ package com.spdu.bll.services;
 import com.spdu.bll.exceptions.UserException;
 import com.spdu.bll.interfaces.UserService;
 import com.spdu.bll.returned_model.UserRegisterDTO;
+import com.spdu.dal.repository.ChatRepository;
 import com.spdu.dal.repository.UserRepository;
 import com.spdu.model.constants.UserRole;
 import com.spdu.model.entities.User;
@@ -20,10 +21,12 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final ChatRepository chatRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, ChatRepository chatRepository) {
         this.userRepository = userRepository;
+        this.chatRepository = chatRepository;
     }
 
     @Override
@@ -70,6 +73,8 @@ public class UserServiceImpl implements UserService {
 
         try {
             long userId = userRepository.register(user);
+
+            chatRepository.joinToChat(userId, 1);
             setUserRole(userRegisterDTO.getUserRole(), userId);
             return getById(userId);
         } catch (SQLException e) {

@@ -27,8 +27,9 @@ public class UserController {
         this.userDetailsService = userDetailsService;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity getById(long id) {
+    @GetMapping({"id"})
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity getById(@PathVariable long id) {
         Optional<User> result = userService.getById(id);
         if (result.isPresent()) {
             return new ResponseEntity(result.get(), HttpStatus.OK);
