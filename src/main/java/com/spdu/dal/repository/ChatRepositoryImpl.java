@@ -1,8 +1,9 @@
 package com.spdu.dal.repository;
 
 import com.spdu.dal.mappers.ChatMapper;
-import com.spdu.model.constants.ChatType;
-import com.spdu.model.entities.Chat;
+import com.spdu.bll.models.constants.ChatType;
+import com.spdu.domain_models.entities.Chat;
+import com.spdu.domain_models.entities.relations.ChatsUsers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -98,6 +99,14 @@ public class ChatRepositoryImpl implements ChatRepository {
             e.printStackTrace();
             return chats;
         }
+    }
+
+    @Override
+    public boolean userIsPresentInChat(long userId, long chatId) {
+        String query = "SELECT * FROM chats_users " +
+                "WHERE chats_users.user_id=" + userId
+                + "AND chats_users.user_id=" + chatId;
+        return jdbcTemplate.queryForRowSet(query).next();
     }
 
     @Override

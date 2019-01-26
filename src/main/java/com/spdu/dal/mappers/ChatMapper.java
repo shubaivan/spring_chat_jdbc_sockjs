@@ -1,7 +1,7 @@
 package com.spdu.dal.mappers;
 
-import com.spdu.model.constants.ChatType;
-import com.spdu.model.entities.Chat;
+import com.spdu.bll.models.constants.ChatType;
+import com.spdu.domain_models.entities.Chat;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

@@ -1,4 +1,4 @@
-package com.spdu.model.entities;
+package com.spdu.domain_models.entities;
 
 import java.time.LocalDateTime;
 

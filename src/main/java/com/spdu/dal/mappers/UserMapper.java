@@ -1,6 +1,6 @@
 package com.spdu.dal.mappers;
 
-import com.spdu.model.entities.User;
+import com.spdu.domain_models.entities.User;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

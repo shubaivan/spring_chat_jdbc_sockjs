@@ -1,6 +1,7 @@
 package com.spdu.bll.interfaces;
 
-import com.spdu.model.entities.Message;
+import com.spdu.bll.models.MessageReturnDTO;
+import com.spdu.domain_models.entities.Message;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -14,4 +15,6 @@ public interface MessageService {
     List<Message> getAllMessages() throws SQLException;
 
     Optional<Message> create(Message message);
+
+    Optional<MessageReturnDTO> send(String userEmail, Message message);
 }

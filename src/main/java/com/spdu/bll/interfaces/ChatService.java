@@ -1,6 +1,6 @@
 package com.spdu.bll.interfaces;
 
-import com.spdu.model.entities.Chat;
+import com.spdu.domain_models.entities.Chat;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,4 +17,6 @@ public interface ChatService {
     List<Chat> getAllOwn(long userId);
 
     List<Chat> getPublic(long userId);
+
+    boolean userIsPresentInChat(long userId, long chatId);
 }

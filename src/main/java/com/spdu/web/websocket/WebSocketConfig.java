@@ -1,6 +1,5 @@
 package com.spdu.web.websocket;
 
-import com.spdu.web.websocket.kop.AppConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
@@ -11,11 +10,14 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
 @Configuration
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
-    public SocketHandler socketHandler;
+    private final SocketHandler socketHandler;
+
+    public WebSocketConfig(SocketHandler socketHandler){
+        this.socketHandler = socketHandler;
+    }
 
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        socketHandler = new SocketHandler();
-        registry.addHandler(mySocketHandler(), "/all").setAllowedOrigins("*");
+        registry.addHandler(socketHandler, "/all").setAllowedOrigins("*");
     }
 
     @Bean
@@ -23,11 +25,5 @@ public class WebSocketConfig implements WebSocketConfigurer {
         ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
         container.setMaxBinaryMessageBufferSize(1024000);
         return container;
-    }
-
-    @Bean
-    public SocketHandler mySocketHandler() {
-        AppConfig.configSocketHandler = socketHandler;
-        return socketHandler;
     }
 }

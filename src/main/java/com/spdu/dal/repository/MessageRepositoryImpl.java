@@ -1,7 +1,7 @@
 package com.spdu.dal.repository;
 
 import com.spdu.dal.mappers.MessageMapper;
-import com.spdu.model.entities.Message;
+import com.spdu.domain_models.entities.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
