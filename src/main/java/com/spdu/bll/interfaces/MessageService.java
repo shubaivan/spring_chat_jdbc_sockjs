@@ -11,5 +11,9 @@ public interface MessageService {
     List<Message> getByChatId(long id) throws SQLException;
     List<Message> getAllMessages() throws SQLException;
 
+    List<Message> getByChatId(long id) throws SQLException;
+
+    List<Message> getAllMessages() throws SQLException;
+
     Optional<Message> create(Message message);
 }

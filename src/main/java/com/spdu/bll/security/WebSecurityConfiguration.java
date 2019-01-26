@@ -75,7 +75,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginProcessingUrl("/perform_login")
                 .permitAll()
-                .successForwardUrl("/users/info")
+                .successForwardUrl("/users/auth")
                 .and()
                 .csrf()
                 .disable();
