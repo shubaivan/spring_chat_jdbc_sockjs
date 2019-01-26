@@ -52,12 +52,12 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public List<Message> getAllMessages() throws SQLException {
+    public List<Message> getAllMessages() {
         String query = "SELECT * FROM messages";
         return getMessagesList(query);
     }
 
-    private List<Message> getMessagesList(String query) throws SQLException {
+    private List<Message> getMessagesList(String query) {
         List<Message> messages = jdbcTemplate.query(query,
                 rs -> {
                     List<Message> list = new ArrayList<Message>();
