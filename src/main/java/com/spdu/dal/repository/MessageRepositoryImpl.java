@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -29,7 +30,7 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public Optional<Message> getById(long id) {
+    public Optional<Message> getById(long id) throws SQLException {
         try {
             String query = "SELECT * FROM messages WHERE messages.id =" + id;
 
@@ -45,8 +46,18 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public List<Message> getByChatId(long id) {
+    public List<Message> getByChatId(long id) throws SQLException {
         String query = "SELECT * FROM messages WHERE messages.chat_id =" + id;
+        return getMessagesList(query);
+    }
+
+    @Override
+    public List<Message> getAllMessages() throws SQLException {
+        String query = "SELECT * FROM messages";
+        return getMessagesList(query);
+    }
+
+    private List<Message> getMessagesList(String query) throws SQLException {
         List<Message> messages = jdbcTemplate.query(query,
                 rs -> {
                     List<Message> list = new ArrayList<Message>();
@@ -59,14 +70,12 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public long create(Message message) {
+    public long create(Message message) throws SQLException {
         String query = "INSERT INTO messages (" +
                 "text, date_of_created," +
                 " author_id, relative_message_id," +
                 "relative_chat_id, chat_id) VALUES (?,?,?,?,?,?)";
-
         KeyHolder keyHolder = new GeneratedKeyHolder();
-
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection
                     .prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -75,10 +84,9 @@ public class MessageRepositoryImpl implements MessageRepository {
             ps.setLong(3, message.getAuthorID());
             ps.setLong(4, message.getRelativeMessageId());
             ps.setLong(5, message.getRelativeChatId());
-            ps.setLong(6, message.getId());
+            ps.setLong(6, message.getChatId());
             return ps;
         }, keyHolder);
-
         return Long.valueOf(keyHolder.getKeys().get("id").toString());
     }
 }

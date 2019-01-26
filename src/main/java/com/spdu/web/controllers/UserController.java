@@ -58,6 +58,18 @@ public class UserController {
         }
     }
 
+    @PostMapping("/auth")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity getAuth() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> user = userService.getByEmail(email);
+        if (user.isPresent()) {
+            return new ResponseEntity(user, HttpStatus.OK);
+        } else {
+            return new ResponseEntity("User not found!", HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody UserRegisterDTO userRegisterDTO) {
         try {
