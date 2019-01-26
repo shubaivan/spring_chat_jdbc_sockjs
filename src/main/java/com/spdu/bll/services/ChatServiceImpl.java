@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,6 +33,7 @@ public class ChatServiceImpl implements ChatService {
     public Optional<Chat> create(Chat chat) {
         try {
             long chatId = chatRepository.create(chat);
+            joinToChat(chat.getOwnerId(), chatId);
             return getById(chatId);
         } catch (SQLException exception) {
             exception.printStackTrace();
@@ -47,5 +49,20 @@ public class ChatServiceImpl implements ChatService {
             e.printStackTrace();
             return 0;
         }
+    }
+
+    @Override
+    public List<Chat> getAll(long userId) {
+        return chatRepository.getAll(userId);
+    }
+
+    @Override
+    public List<Chat> getAllOwn(long userId) {
+        return chatRepository.getAllOwn(userId);
+    }
+
+    @Override
+    public List<Chat> getPublic(long userId) {
+        return chatRepository.getPublic(userId);
     }
 }

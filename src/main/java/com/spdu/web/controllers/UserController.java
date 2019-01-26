@@ -28,6 +28,7 @@ public class UserController {
     }
 
     @GetMapping({"id"})
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity getById(@PathVariable long id) {
         Optional<User> result = userService.getById(id);
         if (result.isPresent()) {
