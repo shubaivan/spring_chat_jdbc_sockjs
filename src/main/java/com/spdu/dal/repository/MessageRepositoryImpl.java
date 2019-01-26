@@ -47,6 +47,16 @@ public class MessageRepositoryImpl implements MessageRepository {
     @Override
     public List<Message> getByChatId(long id) {
         String query = "SELECT * FROM messages WHERE messages.chat_id =" + id;
+        return getMessagesList(query);
+    }
+
+    @Override
+    public List<Message> getAllMessages() {
+        String query = "SELECT * FROM messages";
+        return getMessagesList(query);
+    }
+
+    private List<Message> getMessagesList(String query) {
         List<Message> messages = jdbcTemplate.query(query,
                 rs -> {
                     List<Message> list = new ArrayList<Message>();
@@ -64,9 +74,7 @@ public class MessageRepositoryImpl implements MessageRepository {
                 "text, date_of_created," +
                 " author_id, relative_message_id," +
                 "relative_chat_id, chat_id) VALUES (?,?,?,?,?,?)";
-
         KeyHolder keyHolder = new GeneratedKeyHolder();
-
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection
                     .prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -78,7 +86,6 @@ public class MessageRepositoryImpl implements MessageRepository {
             ps.setLong(6, message.getId());
             return ps;
         }, keyHolder);
-
         return Long.valueOf(keyHolder.getKeys().get("id").toString());
     }
 }

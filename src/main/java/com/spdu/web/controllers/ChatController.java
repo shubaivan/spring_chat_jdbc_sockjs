@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("chats")
 public class ChatController {
     private final ChatService chatService;
     private final UserService userService;
