@@ -10,12 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
-@Controller
+@RestController
 @RequestMapping("users")
 public class UserController {
     private final UserService userService;
@@ -38,14 +38,39 @@ public class UserController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/info")
+    @GetMapping
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity getDetails() {
-        String s = SecurityContextHolder.getContext().getAuthentication().getName();
-        return new ResponseEntity(s, HttpStatus.OK);
+    public ResponseEntity getAllUsers() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<User> users = userService.getAll(email);
+        return new ResponseEntity(users, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/register")
+    @GetMapping("/info")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity getDetails() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> user = userService.getByEmail(email);
+        if (user.isPresent()) {
+            return new ResponseEntity(user, HttpStatus.OK);
+        } else {
+            return new ResponseEntity("User not found!", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/auth")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity getAuth() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> user = userService.getByEmail(email);
+        if (user.isPresent()) {
+            return new ResponseEntity(user, HttpStatus.OK);
+        } else {
+            return new ResponseEntity("User not found!", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/register")
     public ResponseEntity register(@RequestBody UserRegisterDTO userRegisterDTO) {
         try {
             Optional<User> result = userService.register(userRegisterDTO);

@@ -8,8 +8,6 @@ import java.util.Optional;
 
 public interface MessageService {
     Optional<Message> getById(long id);
-    List<Message> getByChatId(long id) throws SQLException;
-    List<Message> getAllMessages() throws SQLException;
 
     List<Message> getByChatId(long id) throws SQLException;
 
