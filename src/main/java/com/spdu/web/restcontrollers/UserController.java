@@ -1,4 +1,4 @@
-package com.spdu.web.controllers;
+package com.spdu.web.restcontrollers;
 
 import com.spdu.bll.exceptions.UserException;
 import com.spdu.bll.interfaces.UserService;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("users")
+@RequestMapping("api/users")
 public class UserController {
     private final UserService userService;
     private final CustomUserDetailsService userDetailsService;
