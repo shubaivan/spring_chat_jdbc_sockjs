@@ -48,7 +48,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return authProvider;
     }
 
-
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserDetailsService)
@@ -75,7 +74,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginProcessingUrl("/perform_login")
                 .permitAll()
-                .successForwardUrl("/users/auth")
+                .successForwardUrl("/api/users/auth")
                 .and()
                 .csrf()
                 .disable();

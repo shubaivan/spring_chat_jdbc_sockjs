@@ -1,4 +1,4 @@
-package com.spdu.web.controllers;
+package com.spdu.web.restcontrollers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("messages")
+@RequestMapping("api/messages")
 public class MessageController {
     private final MessageService messageService;
     private final SocketHandler socketHandler;
