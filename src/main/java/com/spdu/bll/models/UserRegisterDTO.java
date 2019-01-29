@@ -1,6 +1,7 @@
 package com.spdu.bll.models;
 
 import com.spdu.bll.models.constants.UserRole;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -28,6 +29,7 @@ public class UserRegisterDTO {
     @NotEmpty
     private String matchingPassword;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dateOfBirth;
 
     private UserRole userRole;

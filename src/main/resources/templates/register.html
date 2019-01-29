@@ -28,10 +28,10 @@
         <input type="password" class="text" th:field="*{password}">
         <span>password</span>
         <br>
-        <input type="text" class="text" th:field="*{matchingPassword}">
+        <input type="password" class="text" th:field="*{matchingPassword}">
         <span>matchingPassword</span>
         <br>
-        <input type="date" class="text" th:field="*{dateOfBirth}">
+        <input type="date" class="text" th:value="*{dateOfBirth}" th:field="*{dateOfBirth}">
         <span>dateOfBirth</span>
         <br>
         <input type="text" class="text" th:field="*{userRole}">
