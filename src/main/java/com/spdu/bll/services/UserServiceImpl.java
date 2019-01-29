@@ -67,15 +67,13 @@ public class UserServiceImpl implements UserService {
         user.setEmail(userRegisterDTO.getEmail());
         user.setDateOfBirth(userRegisterDTO.getDateOfBirth());
         user.setDateOfRegistration(LocalDateTime.now());
-        user.setFirstName(userRegisterDTO.getFirstName());
-        user.setLastName(userRegisterDTO.getLastName());
         user.setUserName(userRegisterDTO.getUserName());
 
         try {
             long userId = userRepository.register(user);
 
             chatRepository.joinToChat(userId, 1);
-            setUserRole(userRegisterDTO.getUserRole(), userId);
+            setUserRole(UserRole.USER, userId);
             return getById(userId);
         } catch (SQLException e) {
             e.printStackTrace();

@@ -13,12 +13,6 @@
 
     <!--/*@thymesVar id="userRegisterDTO" type="com.spdu.bll.models.UserRegisterDTO"*/-->
     <form action="#" th:action="@{/register}" th:object="${userRegisterDTO}" method="post">
-        <input type="text" class="text" th:field="*{firstName}">
-        <span>firstName</span>
-        <br>
-        <input type="text" class="text" th:field="*{lastName}">
-        <span>lastName</span>
-        <br>
         <input type="text" class="text" th:field="*{email}">
         <span>email</span>
         <br>
@@ -33,9 +27,6 @@
         <br>
         <input type="date" class="text" th:value="*{dateOfBirth}" th:field="*{dateOfBirth}">
         <span>dateOfBirth</span>
-        <br>
-        <input type="text" class="text" th:field="*{userRole}">
-        <span>userRole</span>
         <button class="signin">Register</button>
     </form>
 

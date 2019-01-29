@@ -9,10 +9,6 @@ import java.time.LocalDate;
 
 public class UserRegisterDTO {
 
-    private String firstName;
-
-    private String lastName;
-
     @NotNull
     @NotEmpty
     private String email;
@@ -32,39 +28,17 @@ public class UserRegisterDTO {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dateOfBirth;
 
-    private UserRole userRole;
-
     public UserRegisterDTO() {
     }
 
-    public UserRegisterDTO(String firstName, String lastName,
-                           String email, String userName,
+    public UserRegisterDTO(String email, String userName,
                            String password, String matchingPassword,
-                           LocalDate dateOfBirth, UserRole userRole) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+                           LocalDate dateOfBirth) {
         this.email = email;
         this.userName = userName;
         this.password = password;
         this.matchingPassword = matchingPassword;
         this.dateOfBirth = dateOfBirth;
-        this.userRole = userRole;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -105,13 +79,5 @@ public class UserRegisterDTO {
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
-    }
-
-    public UserRole getUserRole() {
-        return userRole;
-    }
-
-    public void setUserRole(UserRole userRole) {
-        this.userRole = userRole;
     }
 }
