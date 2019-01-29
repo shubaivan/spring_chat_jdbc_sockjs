@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <head>
     <title>Login page</title>
 </head>
 <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" th:href="@{/css/login.css}" href="../../css/login.css" />
+<link rel="stylesheet" th:href="@{/css/login.css}" href="../../css/login.css"/>
+
 <div class="login">
-    <h2 class="active"> sign in </h2>
-    <h2 class="nonactive"> sign up </h2>
+
+    <a href="/login" th:href="@{/login}">
+    <h2 class="active"> sign in</h2></a>
+
+    <a href="/register" th:href="@{/register}">
+    <h2 class="nonactive">sign up</h2></a>
+
     <form th:action="@{perform_login}" method="post">
         <input type="text" class="text" id="username" name="username">
         <span>username</span>
@@ -16,11 +23,7 @@
         <input type="password" class="text" id="password" name="password">
         <span>password</span>
         <br>
-        <input type="checkbox" id="checkbox-1-1" class="custom-checkbox"/>
-        <label for="checkbox-1-1">Keep me Signed in</label>
         <button class="signin">Sign In</button>
-        <hr>
-        <a href="#">Forgot Password?</a>
     </form>
 </div>
 </html>

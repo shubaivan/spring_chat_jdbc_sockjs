@@ -13,7 +13,23 @@ body,
     width: 405px;
     margin: auto;
     padding: 60px 60px;
-    background: url(http://mikeyoungweb.com/img/bg4.jpg) no-repeat   center center #505050;
+    background: url(http://mikeyoungweb.com/img/bg4.jpg) no-repeat center center #505050;
+    background-size: cover;
+    box-shadow: 0px 30px 60px -5px #000;
+
+}
+
+h2:hover {
+    cursor: pointer;
+}
+
+.register {
+    position: relative;
+    height: 680px;
+    width: 405px;
+    margin: auto;
+    padding: 60px 60px;
+    background: url(http://mikeyoungweb.com/img/bg4.jpg) no-repeat center center #505050;
     background-size: cover;
     box-shadow: 0px 30px 60px -5px #000;
 }
@@ -84,7 +100,6 @@ input[type="password"] {
     font-family: 'Montserrat', sans-serif;
     color: #fff;
 }
-
 
 
 input {
@@ -160,13 +175,4 @@ hr {
     border: 1px solid rgba(255, 255, 255, 0.1);
     top: 85px;
     position: relative;
-}
-
-a {
-    text-align: center;
-    display: block;
-    top: 120px;
-    position: relative;
-    text-decoration: none;
-    color: rgba(255, 255, 255, 0.2);
 }
