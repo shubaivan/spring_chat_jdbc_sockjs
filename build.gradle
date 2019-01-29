@@ -60,4 +60,7 @@ dependencies {
     compile group: 'org.springframework', name: 'spring-context', version: '5.1.4.RELEASE'
 
     compile group: 'com.zaxxer', name: 'HikariCP', version: '3.3.0'
+
+    compile group: 'org.thymeleaf', name: 'thymeleaf', version: '3.0.11.RELEASE'
+    compile group: 'org.thymeleaf', name: 'thymeleaf-spring5', version: '3.0.11.RELEASE'
 }
