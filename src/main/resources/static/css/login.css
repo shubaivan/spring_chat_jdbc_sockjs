@@ -1,4 +1,5 @@
-signin {
+body,
+.signin {
     background-color: #d3d3d3;
     font-family: 'Montserrat', sans-serif;
     color: #fff;
@@ -6,13 +7,13 @@ signin {
     letter-spacing: 1px;
 }
 
-login {
+.login {
     position: relative;
     height: 560px;
     width: 405px;
     margin: auto;
     padding: 60px 60px;
-    background: url(http://mikeyoungweb.com/img/bg4.jpg) no-repeat center center #505050;
+    background: url(http://mikeyoungweb.com/img/bg4.jpg) no-repeat   center center #505050;
     background-size: cover;
     box-shadow: 0px 30px 60px -5px #000;
 }
@@ -21,11 +22,11 @@ form {
     padding-top: 80px;
 }
 
-active {
+.active {
     border-bottom: 2px solid #1161ed;
 }
 
-nonactive {
+.nonactive {
     color: rgba(255, 255, 255, 0.2);
 }
 
@@ -53,7 +54,7 @@ span {
     transition: all 0.5s ease-in-out;
 }
 
-text {
+.text {
     border: none;
     width: 89%;
     padding: 10px 20px;
@@ -67,14 +68,14 @@ text {
     transition: all 0.5s ease-in-out;
 }
 
-text:focus {
+.text:focus {
     outline: 0;
     border: 2px solid rgba(255, 255, 255, 0.5);
     border-radius: 20px;
     background: rgba(0, 0, 0, 0);
 }
 
-text:focus + span {
+.text:focus + span {
     opacity: 0.6;
 }
 
@@ -84,6 +85,8 @@ input[type="password"] {
     color: #fff;
 }
 
+
+
 input {
     display: inline-block;
     padding-top: 20px;
@@ -92,11 +95,11 @@ input {
 
 h2,
 span,
-custom-checkbox {
+.custom-checkbox {
     margin-left: 20px;
 }
 
-custom-checkbox {
+.custom-checkbox {
     -webkit-appearance: none;
     background-color: rgba(255, 255, 255, 0.1);
     padding: 8px;
@@ -106,11 +109,11 @@ custom-checkbox {
     top: 6px;
 }
 
-custom-checkbox:checked {
+.custom-checkbox:checked {
     background-color: rgba(17, 97, 237, 1);
 }
 
-custom-checkbox:checked:after {
+.custom-checkbox:checked:after {
     content: '\2714';
     font-size: 10px;
     position: absolute;
@@ -119,7 +122,7 @@ custom-checkbox:checked:after {
     color: #fff;
 }
 
-custom-checkbox:focus {
+.custom-checkbox:focus {
     outline: none;
 }
 
@@ -129,7 +132,7 @@ label {
     padding-left: 5px;
 }
 
-signin {
+.signin {
     background-color: #1161ed;
     color: #FFF;
     width: 100%;
@@ -143,13 +146,13 @@ signin {
     text-transform: uppercase;
 }
 
-signin:hover {
+.signin:hover {
     background: #4082f5;
     box-shadow: 0px 4px 35px -5px #4082f5;
     cursor: pointer;
 }
 
-signin:focus {
+.signin:focus {
     outline: none;
 }
 
