@@ -35,4 +35,9 @@ public class AuthenticationController {
         }
         return "login";
     }
+
+    @RequestMapping("/mainform")
+    public String mainForm() {
+        return "mainform";
+    }
 }
