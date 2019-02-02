@@ -3,7 +3,7 @@ package com.spdu.web.restcontrollers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spdu.bll.interfaces.MessageService;
-import com.spdu.bll.models.MessageReturnDTO;
+import com.spdu.bll.models.MessageReturnDto;
 import com.spdu.domain_models.entities.Message;
 import com.spdu.web.websocket.SocketHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.socket.TextMessage;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +33,7 @@ public class MessageController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity create(@RequestBody Message message) {
+    public ResponseEntity create(@RequestBody Message message){
         Optional<Message> newMessage = messageService.create(message);
         if (newMessage.isPresent()) {
             return new ResponseEntity(newMessage.get(), HttpStatus.CREATED);
@@ -57,11 +58,7 @@ public class MessageController {
     public ResponseEntity getByChatId(@PathVariable long id) {
 
         List<Message> listMessages = null;
-        try {
             listMessages = messageService.getByChatId(id);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         if (!listMessages.isEmpty()) {
             return new ResponseEntity(listMessages, HttpStatus.OK);
         } else {
@@ -71,11 +68,11 @@ public class MessageController {
 
     @PostMapping("/default-chat")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity sendMessage(@RequestBody Message message) {
+    public ResponseEntity sendMessage(@RequestBody Message message){
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         ObjectMapper mapper = new ObjectMapper();
         try {
-            Optional<MessageReturnDTO> newMessage = messageService.send(email, message);
+            Optional<MessageReturnDto> newMessage = messageService.send(email, message);
             if (newMessage.isPresent()) {
                 socketHandler.sendMess(new TextMessage(mapper.writeValueAsString(newMessage.get())));
                 return new ResponseEntity(newMessage.get(), HttpStatus.CREATED);

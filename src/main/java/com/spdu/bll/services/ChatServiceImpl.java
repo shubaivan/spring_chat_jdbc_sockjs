@@ -21,38 +21,22 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public Optional<Chat> getById(long id) {
-        try {
-            return chatRepository.getById(id);
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-            return Optional.empty();
-        }
+        return chatRepository.getById(id);
     }
 
     @Override
     public Optional<Chat> create(Chat chat) {
-        try {
-            long chatId = chatRepository.create(chat);
-            joinToChat(chat.getOwnerId(), chatId);
-            return getById(chatId);
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-            return Optional.empty();
-        }
+        long chatId = chatRepository.create(chat);
+        joinToChat(chat.getOwnerId(), chatId);
+        return getById(chatId);
     }
 
     @Override
     public long joinToChat(long userId, long chatId) {
-        try {
-            if (userIsPresentInChat(userId, chatId)) {
-                return 0;
-            }
-
-            return chatRepository.joinToChat(userId, chatId);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (userIsPresentInChat(userId, chatId)) {
             return 0;
         }
+        return chatRepository.joinToChat(userId, chatId);
     }
 
     @Override

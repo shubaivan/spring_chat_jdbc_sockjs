@@ -2,15 +2,15 @@ package com.spdu.bll.models;
 
 import java.time.LocalDateTime;
 
-public class MessageReturnDTO {
+public class MessageReturnDto {
     private String userName;
     private String content;
     private LocalDateTime date;
 
-    public MessageReturnDTO() {
+    public MessageReturnDto() {
     }
 
-    public MessageReturnDTO(String userName, String content, LocalDateTime date) {
+    public MessageReturnDto(String userName, String content, LocalDateTime date) {
         this.userName = userName;
         this.content = content;
         this.date = date;

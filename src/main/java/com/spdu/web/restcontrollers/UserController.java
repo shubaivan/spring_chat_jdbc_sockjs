@@ -2,7 +2,7 @@ package com.spdu.web.restcontrollers;
 
 import com.spdu.bll.exceptions.UserException;
 import com.spdu.bll.interfaces.UserService;
-import com.spdu.bll.models.UserRegisterDTO;
+import com.spdu.bll.models.UserRegisterDto;
 import com.spdu.bll.services.CustomUserDetailsService;
 import com.spdu.domain_models.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ public class UserController {
 
     @GetMapping({"id"})
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity getById(@PathVariable long id) {
+    public ResponseEntity getById(@PathVariable long id) throws SQLException {
         Optional<User> result = userService.getById(id);
         if (result.isPresent()) {
             return new ResponseEntity(result.get(), HttpStatus.OK);
@@ -71,17 +72,12 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody UserRegisterDTO userRegisterDTO) {
-        try {
+    public ResponseEntity register(@RequestBody UserRegisterDto userRegisterDTO) throws SQLException, UserException {
             Optional<User> result = userService.register(userRegisterDTO);
             if (result.isPresent()) {
                 return new ResponseEntity(result.get(), HttpStatus.CREATED);
             } else {
                 return new ResponseEntity("User doesn't created!", HttpStatus.BAD_REQUEST);
             }
-        } catch (UserException e) {
-            e.printStackTrace();
-            return new ResponseEntity(e, HttpStatus.BAD_REQUEST);
-        }
     }
 }

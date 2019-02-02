@@ -30,29 +30,21 @@ public class ChatRepositoryImpl implements ChatRepository {
 
     @Override
     public Optional<Chat> getById(long id) {
-        try {
-            String query = "SELECT * FROM chats WHERE chats.id =" + id;
+        String query = "SELECT * FROM chats WHERE chats.id =" + id;
 
-            Chat chat = jdbcTemplate.queryForObject(query,
-                    new Object[]{},
-                    new ChatMapper());
-
-            return Optional.of(chat);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Optional.empty();
-        }
+        Chat chat = jdbcTemplate.queryForObject(query,
+                new Object[]{},
+                new ChatMapper());
+        return Optional.of(chat);
     }
 
     @Override
-    public long create(Chat chat) throws SQLException {
+    public long create(Chat chat) {
         String query = "INSERT INTO chats (" +
-                "chat_type, date_of_created," +
+                "chat_type, created_at," +
                 " description, name," +
                 "tags, owner_id) VALUES (?,?,?,?,?,?)";
-
         KeyHolder keyHolder = new GeneratedKeyHolder();
-
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection
                     .prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -64,18 +56,15 @@ public class ChatRepositoryImpl implements ChatRepository {
             ps.setLong(6, chat.getOwnerId());
             return ps;
         }, keyHolder);
-
         return Long.valueOf(keyHolder.getKeys().get("id").toString());
     }
 
     @Override
-    public long joinToChat(long userId, long chatId) throws SQLException {
+    public long joinToChat(long userId, long chatId) {
         String query = "INSERT INTO chats_users (" +
                 "chat_id, user_id," +
                 " date_of_joined) VALUES (?,?,?)";
-
         KeyHolder keyHolder = new GeneratedKeyHolder();
-
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection
                     .prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -84,21 +73,13 @@ public class ChatRepositoryImpl implements ChatRepository {
             ps.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
             return ps;
         }, keyHolder);
-
         return Long.valueOf(keyHolder.getKeys().get("id").toString());
     }
 
     @Override
     public List<Chat> getAllOwn(long userId) {
-        List<Chat> chats = new LinkedList<>();
-        try {
-            String query = "SELECT * FROM chats WHERE chats.owner_id=" + userId;
-            chats = getByQuery(query);
-            return chats;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return chats;
-        }
+        String query = "SELECT * FROM chats WHERE chats.owner_id=" + userId;
+        return getByQuery(query);
     }
 
     @Override
@@ -111,16 +92,9 @@ public class ChatRepositoryImpl implements ChatRepository {
 
     @Override
     public List<Chat> getAll(long userId) {
-        List<Chat> chats = new LinkedList<>();
-        try {
-            String query = "SELECT * FROM chats JOIN chats_users u on chats.id = u.chat_id" +
-                    "  WHERE u.user_id=" + userId;
-            chats = getByQuery(query);
-            return chats;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return chats;
-        }
+        String query = "SELECT * FROM chats JOIN chats_users u on chats.id = u.chat_id" +
+                "  WHERE u.user_id=" + userId;
+        return getByQuery(query);
     }
 
     private List<Chat> getByQuery(String query) {
@@ -136,16 +110,8 @@ public class ChatRepositoryImpl implements ChatRepository {
 
     @Override
     public List<Chat> getPublic(long userId) {
-        List<Chat> chats = new LinkedList<>();
-        try {
-            String query = "SELECT * FROM chats JOIN chats_users u on chats.id = u.chat_id  WHERE u.user_id <> " + userId +
-                    " AND chats.chat_type=" + ChatType.PUBLIC.ordinal();
-
-            chats = getByQuery(query);
-            return chats;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return chats;
-        }
+        String query = "SELECT * FROM chats JOIN chats_users u on chats.id = u.chat_id  WHERE u.user_id <> " + userId +
+                " AND chats.chat_type=" + ChatType.PUBLIC.ordinal();
+        return getByQuery(query);
     }
 }

@@ -26,15 +26,13 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public long register(User user) throws SQLException {
+    public long register(User user) {
         String query = "INSERT INTO db_users (" +
                 "date_of_birth, date_of_registration," +
                 "first_name, last_name," +
                 "user_name, password," +
                 "email) VALUES (?,?,?,?,?,?,?)";
-
         KeyHolder keyHolder = new GeneratedKeyHolder();
-
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection
                     .prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -47,17 +45,14 @@ public class UserRepositoryImpl implements UserRepository {
             ps.setString(7, user.getEmail());
             return ps;
         }, keyHolder);
-
         return Long.valueOf(keyHolder.getKeys().get("id").toString());
     }
 
     @Override
-    public long setUserRole(UserRoles userRole) throws SQLException {
+    public long setUserRole(UserRoles userRole) {
         String query = "INSERT INTO user_roles (" +
                 "user_id, role_id) VALUES (?,?)";
-
         KeyHolder keyHolder = new GeneratedKeyHolder();
-
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection
                     .prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -65,74 +60,48 @@ public class UserRepositoryImpl implements UserRepository {
             ps.setLong(2, userRole.getRoleId());
             return ps;
         }, keyHolder);
-
         return Long.valueOf(keyHolder.getKeys().get("id").toString());
     }
 
     @Override
     public Optional<User> getById(long id) {
-        try {
-            String query = "SELECT * FROM db_users WHERE id =?";
-
-            User user = jdbcTemplate.queryForObject(query,
-                    new Object[]{id},
-                    new UserMapper());
-
-            return Optional.of(user);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Optional.empty();
-        }
+        String query = "SELECT * FROM db_users WHERE id =?";
+        User user = jdbcTemplate.queryForObject(query,
+                new Object[]{id},
+                new UserMapper());
+        return Optional.ofNullable(user);
     }
 
     @Override
     public List<User> getAll() {
-        List<User> users = new ArrayList<>();
-        try {
-            String query = "SELECT * FROM db_users";
-
-            users = jdbcTemplate.query(query,
-                    rs -> {
-                        List<User> list = new ArrayList<>();
-                        while (rs.next()) {
-                            list.add(new UserMapper().mapRow(rs, rs.getRow()));
-                        }
-                        return list;
-                    });
-            return users;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return users;
-        }
+        String query = "SELECT * FROM db_users";
+        List<User> users = jdbcTemplate.query(query,
+                rs -> {
+                    List<User> list = new ArrayList<>();
+                    while (rs.next()) {
+                        list.add(new UserMapper().mapRow(rs, rs.getRow()));
+                    }
+                    return list;
+                });
+        return users;
     }
 
     @Override
     public Optional<User> getByEmail(String email) {
-        try {
-            String query = "SELECT * FROM db_users WHERE email=?";
-
-            User user = jdbcTemplate.queryForObject(query,
-                    new Object[]{email},
-                    new UserMapper());
-
-            return Optional.of(user);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Optional.empty();
-        }
+        String query = "SELECT * FROM db_users WHERE email=?";
+        User user = jdbcTemplate.queryForObject(query,
+                new Object[]{email},
+                new UserMapper());
+        return Optional.ofNullable(user);
     }
 
     @Override
     public UserRole getUserRole(long userId) {
-        try {
-            String query = "SELECT name FROM roles " +
-                    "JOIN user_roles on user_roles.role_id = roles.id " +
-                    "WHERE user_roles.user_id=?";
-            String roleName = jdbcTemplate.queryForObject(query,
-                    new Object[]{userId}, String.class);
-            return UserRole.valueOf(roleName);
-        } catch (Exception exception) {
-            return null;
-        }
+        String query = "SELECT name FROM roles " +
+                "JOIN user_roles on user_roles.role_id = roles.id " +
+                "WHERE user_roles.user_id=?";
+        String roleName = jdbcTemplate.queryForObject(query,
+                new Object[]{userId}, String.class);
+        return UserRole.valueOf(roleName);
     }
 }

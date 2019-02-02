@@ -3,14 +3,12 @@ package com.spdu.bll.services;
 import com.spdu.bll.interfaces.ChatService;
 import com.spdu.bll.interfaces.MessageService;
 import com.spdu.bll.interfaces.UserService;
-import com.spdu.bll.models.MessageReturnDTO;
+import com.spdu.bll.models.MessageReturnDto;
 import com.spdu.dal.repository.MessageRepository;
 import com.spdu.domain_models.entities.Message;
 import com.spdu.domain_models.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,16 +29,11 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Optional<Message> getById(long id) {
-        try {
-            return messageRepository.getById(id);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return Optional.empty();
-        }
+        return messageRepository.getById(id);
     }
 
     @Override
-    public List<Message> getByChatId(long id) throws SQLException {
+    public List<Message> getByChatId(long id) {
         List<Message> messages = messageRepository.getAllMessages()
                 .stream()
                 .filter(message -> message.getChatId() == id)
@@ -49,25 +42,18 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> getAllMessages() throws SQLException {
+    public List<Message> getAllMessages() {
         return messageRepository.getAllMessages();
     }
 
     @Override
-    public Optional<Message> create(Message message) {
-        try {
-            long messageId = messageRepository.create(message);
-            return getById(messageId);
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-            return Optional.empty();
-        }
+    public Optional<Message> create(Message message){
+        long messageId = messageRepository.create(message);
+        return getById(messageId);
     }
 
-    public Optional<MessageReturnDTO> send(String userEmail, Message message) {
-        try {
+    public Optional<MessageReturnDto> send(String userEmail, Message message){
             Optional<User> userOpt = userService.getByEmail(userEmail);
-
             if (userOpt.isPresent()) {
                 User user = userOpt.get();
                 if (chatService.userIsPresentInChat(user.getId(), message.getChatId())) {
@@ -78,17 +64,13 @@ public class MessageServiceImpl implements MessageService {
                     if (optionalMessage.isPresent()) {
                         Message createdMessage = optionalMessage.get();
 
-                        MessageReturnDTO messageReturnDTO = new MessageReturnDTO(
+                        MessageReturnDto messageReturnDTO = new MessageReturnDto(
                                 userEmail, createdMessage.getText(),
                                 createdMessage.getDateOfCreated());
                         return Optional.of(messageReturnDTO);
                     }
                 }
             }
-
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-        }
         return Optional.empty();
     }
 }
