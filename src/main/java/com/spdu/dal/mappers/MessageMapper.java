@@ -19,7 +19,6 @@ public class MessageMapper implements RowMapper<Message> {
         message.setChatId(rs.getLong("chat_id"));
         message.setDateOfCreated(rs.getTimestamp("created_at").toLocalDateTime());
         message.setText(rs.getString("text"));
-//        return message;
-        throw new SQLException();
+        return message;
     }
 }
