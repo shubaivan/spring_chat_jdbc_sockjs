@@ -33,4 +33,9 @@ public class AuthenticationController {
         userService.register(userRegisterDTO);
         return "login";
     }
+
+    @RequestMapping("/mainform")
+    public String mainForm() {
+        return "mainform";
+    }
 }

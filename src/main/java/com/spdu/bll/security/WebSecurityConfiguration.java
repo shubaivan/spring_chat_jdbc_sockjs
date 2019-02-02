@@ -70,10 +70,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .and()
                 .formLogin()
-                .loginPage("/login.html")
+                .loginPage("/login")
                 .loginProcessingUrl("/perform_login")
                 .permitAll()
-                .successForwardUrl("/api/users/auth")
+                .successForwardUrl("/mainform")
                 .and()
                 .csrf()
                 .disable();
