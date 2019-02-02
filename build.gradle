@@ -17,7 +17,7 @@ plugins {
 flyway {
     url = 'jdbc:postgresql://localhost:5432/spd_talks'
     user = 'postgres'
-    password = 'root'
+    password = '12345'
 }
 
 apply plugin: 'java'
@@ -52,6 +52,7 @@ dependencies {
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.4'
 
     compile group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.25'
+    compile group: 'log4j', name: 'log4j', version: '1.2.17'
 
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 

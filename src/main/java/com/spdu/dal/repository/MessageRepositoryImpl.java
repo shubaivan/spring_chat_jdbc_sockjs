@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -30,34 +32,27 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public Optional<Message> getById(long id) throws SQLException {
-        try {
-            String query = "SELECT * FROM messages WHERE messages.id =" + id;
-
-            Message message = jdbcTemplate.queryForObject(query,
-                    new Object[]{},
-                    new MessageMapper());
-
-            return Optional.of(message);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Optional.empty();
-        }
+    public Optional<Message> getById(long id) {
+        String query = "SELECT * FROM messages WHERE messages.id =" + id;
+        Message message = jdbcTemplate.queryForObject(query,
+                new Object[]{},
+                new MessageMapper());
+        return Optional.ofNullable(message);
     }
 
     @Override
-    public List<Message> getByChatId(long id) throws SQLException {
+    public List<Message> getByChatId(long id) {
         String query = "SELECT * FROM messages WHERE messages.chat_id =" + id;
         return getMessagesList(query);
     }
 
     @Override
-    public List<Message> getAllMessages() throws SQLException {
+    public List<Message> getAllMessages() {
         String query = "SELECT * FROM messages";
         return getMessagesList(query);
     }
 
-    private List<Message> getMessagesList(String query) throws SQLException {
+    private List<Message> getMessagesList(String query) {
         List<Message> messages = jdbcTemplate.query(query,
                 rs -> {
                     List<Message> list = new ArrayList<Message>();
@@ -70,9 +65,9 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public long create(Message message) throws SQLException {
+    public long create(Message message) {
         String query = "INSERT INTO messages (" +
-                "text, date_of_created," +
+                "text, created_at," +
                 " author_id, relative_message_id," +
                 "relative_chat_id, chat_id) VALUES (?,?,?,?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();

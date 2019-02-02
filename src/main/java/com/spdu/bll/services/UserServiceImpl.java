@@ -2,7 +2,7 @@ package com.spdu.bll.services;
 
 import com.spdu.bll.exceptions.UserException;
 import com.spdu.bll.interfaces.UserService;
-import com.spdu.bll.models.UserRegisterDTO;
+import com.spdu.bll.models.UserRegisterDto;
 import com.spdu.dal.repository.ChatRepository;
 import com.spdu.dal.repository.UserRepository;
 import com.spdu.bll.models.constants.UserRole;
@@ -30,64 +30,43 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> getById(long id) {
-        try {
-            return userRepository.getById(id);
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-            return Optional.empty();
-        }
+    public Optional<User> getById(long id) throws SQLException {
+        return userRepository.getById(id);
     }
 
     @Override
     public Optional<User> getByEmail(String email) {
-        try {
-            return userRepository.getByEmail(email);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            return Optional.empty();
-        }
+        return userRepository.getByEmail(email);
     }
 
     @Override
-    public Optional<User> register(UserRegisterDTO userRegisterDTO) throws UserException {
-        if (emailExist(userRegisterDTO.getEmail())) {
-            throw new UserException("Account with this email is exist!");
+    public Optional<User> register(UserRegisterDto userRegisterDto) throws UserException, SQLException {
+        if (emailExist(userRegisterDto.getEmail())) {
+            throw new UserException("Account with ethis email is exist!");
         }
-
-        if (!userRegisterDTO.getPassword().equals(userRegisterDTO.getMatchingPassword())) {
+        if (!userRegisterDto.getPassword().equals(userRegisterDto.getMatchingPassword())) {
             throw new UserException("Password doesn't match!");
         }
-
         User user = new User();
         String encoded = new BCryptPasswordEncoder().
-                encode(userRegisterDTO.getPassword());
-
+                encode(userRegisterDto.getPassword());
         user.setPassword(encoded);
-        user.setEmail(userRegisterDTO.getEmail());
-        user.setDateOfBirth(userRegisterDTO.getDateOfBirth());
+        user.setEmail(userRegisterDto.getEmail());
+        user.setDateOfBirth(userRegisterDto.getDateOfBirth());
         user.setDateOfRegistration(LocalDateTime.now());
-        user.setUserName(userRegisterDTO.getUserName());
-
-        try {
-            long userId = userRepository.register(user);
-
-            chatRepository.joinToChat(userId, 1);
-            setUserRole(UserRole.USER, userId);
-            return getById(userId);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return Optional.empty();
+        user.setUserName(userRegisterDto.getUserName());
+        long userId = userRepository.register(user);
+        chatRepository.joinToChat(userId, 1);
+        setUserRole(UserRole.USER, userId);
+        return getById(userId);
     }
 
     @Override
     public List<User> getAll(String currentUserEmail) {
-        List<User> users = userRepository.getAll()
+        return userRepository.getAll()
                 .stream()
                 .filter(user -> !user.getEmail().equals(currentUserEmail))
                 .collect(Collectors.toList());
-        return users;
     }
 
     private void setUserRole(UserRole role, long userId) throws SQLException {
@@ -99,9 +78,6 @@ public class UserServiceImpl implements UserService {
 
     private boolean emailExist(String email) {
         Optional<User> user = userRepository.getByEmail(email);
-        if (user.isPresent()) {
-            return true;
-        }
-        return false;
+        return user.isPresent();
     }
 }

@@ -8,11 +8,11 @@ import java.util.Optional;
 
 public interface ChatRepository {
 
-    Optional<Chat> getById(long id) throws SQLException;
+    Optional<Chat> getById(long id);
 
-    long create(Chat chat) throws SQLException;
+    long create(Chat chat);
 
-    long joinToChat(long userId, long chatId) throws SQLException;
+    long joinToChat(long userId, long chatId);
 
     List<Chat> getAll(long userId);
 

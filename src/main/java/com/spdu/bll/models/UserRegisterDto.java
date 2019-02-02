@@ -7,7 +7,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-public class UserRegisterDTO {
+public class UserRegisterDto {
 
     @NotNull
     @NotEmpty
@@ -28,10 +28,10 @@ public class UserRegisterDTO {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dateOfBirth;
 
-    public UserRegisterDTO() {
+    public UserRegisterDto() {
     }
 
-    public UserRegisterDTO(String email, String userName,
+    public UserRegisterDto(String email, String userName,
                            String password, String matchingPassword,
                            LocalDate dateOfBirth) {
         this.email = email;

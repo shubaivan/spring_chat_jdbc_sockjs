@@ -11,7 +11,7 @@
     <a href="/login" th:href="@{/login}"><h2 class="nonactive"> sign in</h2></a>
     <a href="/register" th:href="@{/register}"><h2 class="active">sign up</h2></a>
 
-    <!--/*@thymesVar id="userRegisterDTO" type="com.spdu.bll.models.UserRegisterDTO"*/-->
+    <!--/*@thymesVar id="userRegisterDTO" type="com.spdu.bll.models.UserRegisterDto"*/-->
     <form action="#" th:action="@{/register}" th:object="${userRegisterDTO}" method="post">
         <input type="text" class="text" th:field="*{email}">
         <span>email</span>
