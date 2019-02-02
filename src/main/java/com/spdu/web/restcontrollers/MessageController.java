@@ -33,7 +33,7 @@ public class MessageController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity create(@RequestBody Message message){
+    public ResponseEntity create(@RequestBody Message message) {
         Optional<Message> newMessage = messageService.create(message);
         if (newMessage.isPresent()) {
             return new ResponseEntity(newMessage.get(), HttpStatus.CREATED);
@@ -56,9 +56,7 @@ public class MessageController {
     @GetMapping("/chat/{id}")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity getByChatId(@PathVariable long id) {
-
-        List<Message> listMessages = null;
-            listMessages = messageService.getByChatId(id);
+        List<Message> listMessages = messageService.getByChatId(id);
         if (!listMessages.isEmpty()) {
             return new ResponseEntity(listMessages, HttpStatus.OK);
         } else {
@@ -68,7 +66,7 @@ public class MessageController {
 
     @PostMapping("/default-chat")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity sendMessage(@RequestBody Message message){
+    public ResponseEntity sendMessage(@RequestBody Message message) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         ObjectMapper mapper = new ObjectMapper();
         try {

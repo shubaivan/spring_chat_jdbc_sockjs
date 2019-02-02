@@ -59,11 +59,9 @@ public class MessageServiceImpl implements MessageService {
                 if (chatService.userIsPresentInChat(user.getId(), message.getChatId())) {
                     message.setAuthorID(user.getId());
                     long messageId = messageRepository.create(message);
-
                     Optional<Message> optionalMessage = getById(messageId);
                     if (optionalMessage.isPresent()) {
                         Message createdMessage = optionalMessage.get();
-
                         MessageReturnDto messageReturnDTO = new MessageReturnDto(
                                 userEmail, createdMessage.getText(),
                                 createdMessage.getDateOfCreated());
