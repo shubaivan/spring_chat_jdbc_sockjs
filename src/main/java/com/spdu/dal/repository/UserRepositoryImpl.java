@@ -88,12 +88,18 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional<User> getByEmail(String email) {
-        String query = "SELECT * FROM db_users WHERE email=?";
-        User user = jdbcTemplate.queryForObject(query,
-                new Object[]{email},
-                new UserMapper());
-        return Optional.ofNullable(user);
+        try {
+            String query = "SELECT * FROM db_users WHERE email=?";
+            User user = jdbcTemplate.queryForObject(query,
+                    new Object[]{email},
+                    new UserMapper());
+            return Optional.of(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
     }
+
 
     @Override
     public UserRole getUserRole(long userId) {

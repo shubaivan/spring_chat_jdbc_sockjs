@@ -40,21 +40,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> register(UserRegisterDto userRegisterDTO) throws UserException, SQLException {
-        if (emailExist(userRegisterDTO.getEmail())) {
-            throw new UserException("Account with this email is exist!");
+    public Optional<User> register(UserRegisterDto userRegisterDto) throws UserException, SQLException {
+        if (emailExist(userRegisterDto.getEmail())) {
+            throw new UserException("Account with ethis email is exist!");
         }
-        if (!userRegisterDTO.getPassword().equals(userRegisterDTO.getMatchingPassword())) {
+        if (!userRegisterDto.getPassword().equals(userRegisterDto.getMatchingPassword())) {
             throw new UserException("Password doesn't match!");
         }
         User user = new User();
         String encoded = new BCryptPasswordEncoder().
-                encode(userRegisterDTO.getPassword());
+                encode(userRegisterDto.getPassword());
         user.setPassword(encoded);
-        user.setEmail(userRegisterDTO.getEmail());
-        user.setDateOfBirth(userRegisterDTO.getDateOfBirth());
+        user.setEmail(userRegisterDto.getEmail());
+        user.setDateOfBirth(userRegisterDto.getDateOfBirth());
         user.setDateOfRegistration(LocalDateTime.now());
-        user.setUserName(userRegisterDTO.getUserName());
+        user.setUserName(userRegisterDto.getUserName());
         long userId = userRepository.register(user);
         chatRepository.joinToChat(userId, 1);
         setUserRole(UserRole.USER, userId);
