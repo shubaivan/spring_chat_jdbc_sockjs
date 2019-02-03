@@ -3,7 +3,7 @@ id SERIAL PRIMARY KEY,
 name VARCHAR (20)
 );
 
-INSERT INTO roles(name) VALUES ('ADMIN'), ('USER');
+INSERT INTO roles(name) VALUES ('ROLE_ADMIN'), ('ROLE_USER');
 
 CREATE TABLE user_roles(
 id SERIAL PRIMARY KEY,

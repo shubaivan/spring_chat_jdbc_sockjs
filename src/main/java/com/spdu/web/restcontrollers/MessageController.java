@@ -75,7 +75,6 @@ public class MessageController {
                 socketHandler.sendMess(new TextMessage(mapper.writeValueAsString(newMessage.get())));
                 return new ResponseEntity(newMessage.get(), HttpStatus.CREATED);
             }
-
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

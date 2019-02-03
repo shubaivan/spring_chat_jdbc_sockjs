@@ -1,6 +1,5 @@
 package com.spdu.bll.models;
 
-import com.spdu.bll.models.constants.UserRole;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotEmpty;

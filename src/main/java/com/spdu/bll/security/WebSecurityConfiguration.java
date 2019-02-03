@@ -36,7 +36,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/static/**");
         web.ignoring().antMatchers("/resources/**");
+        web.ignoring().antMatchers("/css/**");
     }
 
     @Bean
@@ -63,19 +65,26 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "join db_users on " +
                         "db_users.id = user_roles.user_id " +
                         "where db_users.email=?");
+
     }
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/register*").anonymous()
+                .anyRequest().hasAnyRole("ADMIN", "USER")
+                .antMatchers("/chats").access("hasRole('USER')")
+
                 .and()
                 .formLogin()
                 .loginPage("/login")
                 .loginProcessingUrl("/perform_login")
                 .permitAll()
                 .successForwardUrl("/mainform")
+
                 .and()
-                .csrf()
-                .disable();
+                .logout().logoutSuccessUrl("/login").permitAll();
     }
 }
