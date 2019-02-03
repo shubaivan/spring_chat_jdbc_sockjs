@@ -1,6 +1,6 @@
 package com.spdu.bll.models.constants;
 
 public enum UserRole {
-    ADMIN,
-    USER
+    ROLE_ADMIN,
+    ROLE_USER
 }

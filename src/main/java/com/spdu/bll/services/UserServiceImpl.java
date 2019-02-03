@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
 
         long userId = userRepository.register(user);
         chatRepository.joinToChat(userId, 1);
-        setUserRole(UserRole.USER, userId);
+        setUserRole(UserRole.ROLE_USER, userId);
         return getById(userId);
     }
 
