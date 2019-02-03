@@ -1,5 +1,6 @@
 package com.spdu.domain_models.entities;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -42,7 +43,7 @@ public class User {
     }
 
     public LocalDate getDateOfBirth() {
-        return dateOfBirth;
+        return dateOfBirth != null ? dateOfBirth : LocalDate.now();
     }
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
@@ -125,11 +126,17 @@ public class User {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
+    public User setFirstName(String firstName) {
         this.firstName = firstName;
+
+        return this;
     }
 
     public long getId() {
         return id;
+    }
+
+    public boolean isEnabled() {
+        return true;
     }
 }

@@ -38,44 +38,52 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/resources/**");
     }
-
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider
-                = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(customUserDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
+//
+//    @Bean
+//    public DaoAuthenticationProvider authenticationProvider() {
+//        DaoAuthenticationProvider authProvider
+//                = new DaoAuthenticationProvider();
+//        authProvider.setUserDetailsService(customUserDetailsService);
+//        authProvider.setPasswordEncoder(passwordEncoder());
+//        return authProvider;
+//    }
 
     @Override
-    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(customUserDetailsService)
-                .passwordEncoder(passwordEncoder())
-                .and()
-                .authenticationProvider(authenticationProvider())
-                .jdbcAuthentication()
-                .dataSource(dataSource)
-                .usersByUsernameQuery("select user_name, password, true from db_users where email=?")
-                .authoritiesByUsernameQuery("select email, name from roles " +
-                        "join user_roles on " +
-                        "user_roles.id = roles.id " +
-                        "join db_users on " +
-                        "db_users.id = user_roles.user_id " +
-                        "where db_users.email=?");
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
     }
+
+
+//    @Override
+//    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
+//        auth.userDetailsService(customUserDetailsService)
+//                .passwordEncoder(passwordEncoder())
+//                .and()
+//                .authenticationProvider(authenticationProvider())
+//                .jdbcAuthentication()
+//                .dataSource(dataSource)
+//                .usersByUsernameQuery("select user_name, password, true from db_users where user_name=?")
+//                .authoritiesByUsernameQuery("select email, name from roles " +
+//                        "join user_roles on " +
+//                        "user_roles.id = roles.id " +
+//                        "join db_users on " +
+//                        "db_users.id = user_roles.user_id " +
+//                        "where db_users.user_name=?");
+//    }
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http
+                .csrf().disable()
+                .authorizeRequests()
+                .anyRequest().hasAnyRole("ADMIN", "USER")
+                .antMatchers("/chats").access("hasRole('USER')")
+
                 .and()
                 .formLogin()
                 .loginPage("/login")
                 .loginProcessingUrl("/perform_login")
                 .permitAll()
-                .successForwardUrl("/mainform")
-                .and()
-                .csrf()
-                .disable();
+                .successForwardUrl("/mainform");
     }
 }

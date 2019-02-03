@@ -4,9 +4,12 @@ import com.spdu.bll.exceptions.UserException;
 import com.spdu.bll.interfaces.UserService;
 import com.spdu.bll.models.UserRegisterDto;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.security.Principal;
 import java.sql.SQLException;
 
 @Controller
@@ -15,6 +18,14 @@ public class AuthenticationController {
 
     public AuthenticationController(UserService userService) {
         this.userService = userService;
+    }
+
+    @GetMapping("/")
+    public ModelAndView index(Model model, Principal principal) {
+        model.addAttribute("message", "You are logged in as " + principal.getName());
+//        return "index";
+
+        return new ModelAndView("redirect:" + "chats");
     }
 
     @RequestMapping("/login")

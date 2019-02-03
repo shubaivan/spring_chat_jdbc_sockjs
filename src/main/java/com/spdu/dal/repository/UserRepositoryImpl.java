@@ -49,7 +49,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public long setUserRole(UserRoles userRole) {
+    public void setUserRole(UserRoles userRole) {
         String query = "INSERT INTO user_roles (" +
                 "user_id, role_id) VALUES (?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -60,7 +60,7 @@ public class UserRepositoryImpl implements UserRepository {
             ps.setLong(2, userRole.getRoleId());
             return ps;
         }, keyHolder);
-        return Long.valueOf(keyHolder.getKeys().get("id").toString());
+        Long.valueOf(keyHolder.getKeys().get("id").toString());
     }
 
     @Override
@@ -92,6 +92,20 @@ public class UserRepositoryImpl implements UserRepository {
             String query = "SELECT * FROM db_users WHERE email=?";
             User user = jdbcTemplate.queryForObject(query,
                     new Object[]{email},
+                    new UserMapper());
+            return Optional.of(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<User> getByUserName(String userName) {
+        try {
+            String query = "SELECT * FROM db_users WHERE user_name=?";
+            User user = jdbcTemplate.queryForObject(query,
+                    new Object[]{userName},
                     new UserMapper());
             return Optional.of(user);
         } catch (Exception e) {
