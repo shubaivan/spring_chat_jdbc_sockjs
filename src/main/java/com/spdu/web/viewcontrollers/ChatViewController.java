@@ -27,13 +27,17 @@ public class ChatViewController {
     }
 
     @GetMapping
-    public String registerForm(ModelMap modelMap) {
+    public String setChatsContent(ModelMap modelMap) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> user = userService.getByEmail(email);
         if (user.isPresent()) {
-            List<Chat> chats = chatService.getAllOwn(user.get().getId());
-            modelMap.addAttribute("chats", chats);
+            List<Chat> ownChats = chatService.getAllOwn(user.get().getId());
+            List<Chat> allChats = chatService.getAll(user.get().getId());
+            List<Chat> allPublic = chatService.getPublic(user.get().getId());
+            modelMap.addAttribute("ownChats", ownChats);
+            modelMap.addAttribute("allChats", allChats);
+            modelMap.addAttribute("allPublic", allPublic);
         }
-        return "chats";
+        return "mainform";
     }
 }

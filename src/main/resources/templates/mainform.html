@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>SPD-Talks</title>
@@ -29,11 +29,36 @@
 
 <div id='side-menu' class='side-nav'>
     <a href="#" class='btn-close' onclick='closeSideMenu()'>&times;</a>
-    <div th:insert="chats :: chats"></div>
-    <!--<a href="#">Default Chat</a>-->
-    <!--<a href="#">First Chat</a>-->
-    <!--<a href="#">Second Chat</a>-->
-    <!--<a href="#">Third Chat</a>-->
+
+    <h2 class="text"> Own chats</h2>
+    <div layout:fragment="content">
+        <div th:each="chat: ${ownChats}">
+            <a href="#">
+                <h th:text="${chat.name}">Name</h>
+            </a>
+            <br>
+        </div>
+    </div>
+
+    <h2 class="text"> All chats</h2>
+    <div layout:fragment="content">
+        <div th:each="chat: ${allChats}">
+            <a href="#">
+                <h th:text="${chat.name}">Name</h>
+            </a>
+            <br>
+        </div>
+    </div>
+
+    <h2 class="text"> All public chats</h2>
+    <div layout:fragment="content">
+        <div th:each="chat: ${allPublic}">
+            <a href="#">
+                <h th:text="${chat.name}">Name</h>
+            </a>
+            <br>
+        </div>
+    </div>
 </div>
 
 <div id="main">

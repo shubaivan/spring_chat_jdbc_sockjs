@@ -74,7 +74,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> getAll() {
-        String query = "SELECT * FROM db_users";
+        String query = "SELECT * FROM db_users ";
         List<User> users = jdbcTemplate.query(query,
                 rs -> {
                     List<User> list = new ArrayList<>();
@@ -99,7 +99,6 @@ public class UserRepositoryImpl implements UserRepository {
             return Optional.empty();
         }
     }
-
 
     @Override
     public UserRole getUserRole(long userId) {
