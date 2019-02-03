@@ -33,6 +33,11 @@ public class ChatViewController {
         this.userRepository = userRepository;
     }
 
+    @RequestMapping("/area")
+    public String login() {
+        return "messagearea";
+    }
+
     @GetMapping
     public String setChatsContent(ModelMap modelMap, Principal principal) {
         Optional<User> user = userRepository.getByUserName(principal.getName());

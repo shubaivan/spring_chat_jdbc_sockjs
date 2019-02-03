@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spdu.bll.interfaces.MessageService;
 import com.spdu.bll.models.MessageReturnDto;
 import com.spdu.domain_models.entities.Message;
-import com.spdu.web.websocket.SocketHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.socket.TextMessage;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,12 +20,9 @@ import java.util.Optional;
 @RequestMapping("api/messages")
 public class MessageController {
     private final MessageService messageService;
-    private final SocketHandler socketHandler;
-
     @Autowired
-    public MessageController(MessageService messageService, SocketHandler socketHandler) {
+    public MessageController(MessageService messageService) {
         this.messageService = messageService;
-        this.socketHandler = socketHandler;
     }
 
     @PostMapping
@@ -72,10 +66,10 @@ public class MessageController {
         try {
             Optional<MessageReturnDto> newMessage = messageService.send(email, message);
             if (newMessage.isPresent()) {
-                socketHandler.sendMess(new TextMessage(mapper.writeValueAsString(newMessage.get())));
+                //socketHandler.sendMess(new TextMessage(mapper.writeValueAsString(newMessage.get())));
                 return new ResponseEntity(newMessage.get(), HttpStatus.CREATED);
             }
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
