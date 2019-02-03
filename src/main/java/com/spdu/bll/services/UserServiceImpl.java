@@ -56,10 +56,6 @@ public class UserServiceImpl implements UserService {
         user.setDateOfRegistration(LocalDateTime.now());
         user.setUserName(userRegisterDto.getUserName());
 
-        user
-                .setFirstName(userRegisterDto.getFirstName())
-                .setLastName(userRegisterDto.getLastName());
-
         long userId = userRepository.register(user);
         chatRepository.joinToChat(userId, 1);
         setUserRole(UserRole.ROLE_USER, userId);

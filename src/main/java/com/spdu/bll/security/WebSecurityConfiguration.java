@@ -58,13 +58,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authenticationProvider(authenticationProvider())
                 .jdbcAuthentication()
                 .dataSource(dataSource)
-                .usersByUsernameQuery("select user_name, password, true from db_users where user_name=?")
+                .usersByUsernameQuery("select user_name, password, true from db_users where email=?")
                 .authoritiesByUsernameQuery("select email, name from roles " +
                         "join user_roles on " +
                         "user_roles.id = roles.id " +
                         "join db_users on " +
                         "db_users.id = user_roles.user_id " +
-                        "where db_users.user_name=?");
+                        "where db_users.email=?");
+
     }
 
     @Override
@@ -81,7 +82,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .loginProcessingUrl("/perform_login")
                 .permitAll()
-                .successForwardUrl("/chats")
+                .successForwardUrl("/mainform")
 
                 .and()
                 .logout().logoutSuccessUrl("/login").permitAll();

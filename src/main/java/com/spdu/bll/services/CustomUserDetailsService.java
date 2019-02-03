@@ -22,14 +22,14 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        Optional<User> userOptional = userRepository.getByUserName(userName);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<User> userOptional = userRepository.getByEmail(email);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             UserRole role = userRepository.getUserRole(user.getId());
             return new CustomUserDetails(user, role);
         } else {
-            throw new UsernameNotFoundException(userName);
+            throw new UsernameNotFoundException(email);
         }
     }
 }
