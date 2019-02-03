@@ -87,6 +87,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .loginProcessingUrl("/perform_login")
                 .permitAll()
-                .successForwardUrl("/mainform");
+                .successForwardUrl("/mainform")
+
+                .and()
+                .logout().logoutSuccessUrl("/login").permitAll();
     }
 }

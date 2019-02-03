@@ -29,7 +29,7 @@ public class ChatController {
     }
 
     @GetMapping("{id}")
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity getById(@PathVariable long id) {
         try {
             Optional<Chat> result = chatService.getById(id);
