@@ -7,8 +7,6 @@
 <body>
 
 <link rel='stylesheet' th:href="@{/css/mainform.css}" href="../../css/mainform.css"/>
-<script th:href="@{/js/mainform.js}" src="../../js/mainform.js"></script>
-
 
 <nav class="navbar">
  <span class="open-slide">
@@ -44,7 +42,7 @@
     <h2 class="text"> All chats</h2>
     <div layout:fragment="content">
         <div th:each="chat: ${allChats}">
-            <a href="#" class="chats_info" th:attr="data-el_id=${chat.getId()}">
+            <a href="#" class="chats_info" th:attr="data-el-id=${chat.getId()}">
                 <h th:text="${chat.name}">Name</h>
             </a>
             <br>
@@ -73,4 +71,5 @@
     window.jQuery || document.write('<script src="js/vendor/jquery-3.2.1.min.js"><\/script>');
     // ]]>
 </script>
+<script th:href="@{/js/mainform.js}" src="../../js/mainform.js"></script>
 </html>

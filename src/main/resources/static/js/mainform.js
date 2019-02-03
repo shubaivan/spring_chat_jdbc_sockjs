@@ -1,7 +1,7 @@
 jQuery(document).ready(function () {
     jQuery('.chats_info').on('click', function () {
         var current = jQuery(this);
-        alert(current.attr('el_id'));
+        alert(current.data('elId'));
     });
 });
 

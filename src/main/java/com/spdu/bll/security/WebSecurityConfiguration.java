@@ -36,7 +36,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/static/**");
         web.ignoring().antMatchers("/resources/**");
+        web.ignoring().antMatchers("/css/**");
     }
 //
 //    @Bean
@@ -76,6 +78,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
+                .antMatchers("/register*").anonymous()
                 .anyRequest().hasAnyRole("ADMIN", "USER")
                 .antMatchers("/chats").access("hasRole('USER')")
 
