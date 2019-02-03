@@ -43,7 +43,6 @@ public class UserServiceImpl implements UserService {
     public Optional<User> register(UserRegisterDto userRegisterDto) throws UserException, SQLException {
         if (emailExist(userRegisterDto.getEmail())) {
             throw new RuntimeException("Account with this email is exist!");
-//            throw new UserException("Account with this email is exist!");
         }
         if (!userRegisterDto.getPassword().equals(userRegisterDto.getMatchingPassword())) {
             throw new RuntimeException("Password doesn't match!");

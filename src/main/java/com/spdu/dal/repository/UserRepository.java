@@ -19,7 +19,7 @@ public interface UserRepository {
 
     Optional<User> getByEmail(String email);
 
-    public Optional<User> getByUserName(String userName);
+    Optional<User> getByUserName(String userName);
 
     UserRole getUserRole(long userId);
 }

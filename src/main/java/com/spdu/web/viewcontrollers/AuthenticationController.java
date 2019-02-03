@@ -23,8 +23,6 @@ public class AuthenticationController {
     @GetMapping("/")
     public ModelAndView index(Model model, Principal principal) {
         model.addAttribute("message", "You are logged in as " + principal.getName());
-//        return "index";
-
         return new ModelAndView("redirect:" + "chats");
     }
 

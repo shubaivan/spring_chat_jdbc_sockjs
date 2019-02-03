@@ -50,12 +50,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return authProvider;
     }
 
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
-//    }
-
-
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserDetailsService)
@@ -87,7 +81,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .loginProcessingUrl("/perform_login")
                 .permitAll()
-                .successForwardUrl("/mainform")
+                .successForwardUrl("/chats")
 
                 .and()
                 .logout().logoutSuccessUrl("/login").permitAll();

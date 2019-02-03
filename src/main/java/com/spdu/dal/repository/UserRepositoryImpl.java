@@ -32,10 +32,12 @@ public class UserRepositoryImpl implements UserRepository {
                 "first_name, last_name," +
                 "user_name, password," +
                 "email) VALUES (?,?,?,?,?,?,?)";
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection
                     .prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
             ps.setDate(1, Date.valueOf(user.getDateOfBirth()));
             ps.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
             ps.setString(3, user.getFirstName());
@@ -52,10 +54,12 @@ public class UserRepositoryImpl implements UserRepository {
     public void setUserRole(UserRoles userRole) {
         String query = "INSERT INTO user_roles (" +
                 "user_id, role_id) VALUES (?,?)";
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection
                     .prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
             ps.setLong(1, userRole.getUserId());
             ps.setLong(2, userRole.getRoleId());
             return ps;
@@ -66,6 +70,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Optional<User> getById(long id) {
         String query = "SELECT * FROM db_users WHERE id =?";
+
         User user = jdbcTemplate.queryForObject(query,
                 new Object[]{id},
                 new UserMapper());

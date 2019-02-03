@@ -1,6 +1,5 @@
 package com.spdu.bll.services;
 
-import org.springframework.security.core.userdetails.User.UserBuilder;
 import com.spdu.bll.models.CustomUserDetails;
 import com.spdu.dal.repository.UserRepository;
 import com.spdu.bll.models.constants.UserRole;
@@ -27,18 +26,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         Optional<User> userOptional = userRepository.getByUserName(userName);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-//
-//            UserBuilder builder = null;
-//
-//            builder = org.springframework.security.core.userdetails.User.withUsername(userName);
-//            builder.disabled(!user.isEnabled());
-//            builder.password(user.getPassword());
-//            String[] authorities = {"ROLE_USER"};
-//
-//            builder.authorities(authorities);
-//
-//            return builder.build();
-
             UserRole role = userRepository.getUserRole(user.getId());
             return new CustomUserDetails(user, role);
         } else {

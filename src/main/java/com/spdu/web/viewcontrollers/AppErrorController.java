@@ -30,6 +30,7 @@ public class AppErrorController implements ErrorController {
 
     /**
      * Controller for the Error Controller
+     *
      * @param errorAttributes
      */
     public AppErrorController(ErrorAttributes errorAttributes) {
@@ -38,25 +39,22 @@ public class AppErrorController implements ErrorController {
 
     /**
      * Supports the HTML Error View
+     *
      * @param request
      * @return
      */
     @RequestMapping(value = ERROR_PATH, produces = "text/html")
     public ModelAndView errorHtml(HttpServletRequest request, WebRequest webRequest) {
-
-//        Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
-//        Exception exception = (Exception) request.getAttribute("javax.servlet.error.exception");
-
         Map<String, Object> renderValues = getErrorAttributes(request, webRequest, true);
-
         ModelAndView mav = new ModelAndView("errorPage");
-        mav.addObject("messages", renderValues);
 
+        mav.addObject("messages", renderValues);
         return mav;
     }
 
     /**
      * Supports other formats like JSON, XML
+     *
      * @param request
      * @return
      */
@@ -67,7 +65,7 @@ public class AppErrorController implements ErrorController {
                 request, webRequest, getTraceParameter(request)
         );
         HttpStatus status = getStatus(request);
-        return new ResponseEntity<Map<String, Object>>(body, status);
+        return new ResponseEntity<>(body, status);
     }
 
     /**
@@ -79,7 +77,6 @@ public class AppErrorController implements ErrorController {
     public String getErrorPath() {
         return ERROR_PATH;
     }
-
 
     private boolean getTraceParameter(HttpServletRequest request) {
         String parameter = request.getParameter("trace");
@@ -102,8 +99,7 @@ public class AppErrorController implements ErrorController {
         if (statusCode != null) {
             try {
                 return HttpStatus.valueOf(statusCode);
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
             }
         }
         return HttpStatus.INTERNAL_SERVER_ERROR;

@@ -6,13 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -70,10 +67,12 @@ public class MessageRepositoryImpl implements MessageRepository {
                 "text, created_at," +
                 " author_id, relative_message_id," +
                 "relative_chat_id, chat_id) VALUES (?,?,?,?,?,?)";
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection
                     .prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
             ps.setString(1, message.getText());
             ps.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
             ps.setLong(3, message.getAuthorID());

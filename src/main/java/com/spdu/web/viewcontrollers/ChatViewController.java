@@ -6,7 +6,6 @@ import com.spdu.dal.repository.UserRepository;
 import com.spdu.domain_models.entities.Chat;
 import com.spdu.domain_models.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,7 +35,6 @@ public class ChatViewController {
 
     @GetMapping
     public String setChatsContent(ModelMap modelMap, Principal principal) {
-//        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> user = userRepository.getByUserName(principal.getName());
         if (user.isPresent()) {
             List<Chat> ownChats = chatService.getAllOwn(user.get().getId());

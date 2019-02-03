@@ -41,7 +41,6 @@ public class ChatController {
         } catch (Exception excetion) {
             return new ResponseEntity("Chat not found! " + excetion.getStackTrace(), HttpStatus.BAD_REQUEST);
         }
-
     }
 
     @GetMapping("/public")

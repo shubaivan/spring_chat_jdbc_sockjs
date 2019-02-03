@@ -37,6 +37,4 @@ public class GlobalExceptionHandler {
     public void handleUsernameNotFoundException() {
         logger.error("UsernameNotFoundException executed");
     }
-
-
 }
