@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class MessageServiceImpl implements MessageService {
@@ -34,10 +33,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<Message> getByChatId(long id) {
-        List<Message> messages = messageRepository.getAllMessages()
-                .stream()
-                .filter(message -> message.getChatId() == id)
-                .collect(Collectors.toList());
+        List<Message> messages = messageRepository.getByChatId(id);
         return messages;
     }
 
