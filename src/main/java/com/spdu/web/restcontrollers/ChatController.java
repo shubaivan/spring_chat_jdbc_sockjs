@@ -44,7 +44,7 @@ public class ChatController {
     }
 
     @GetMapping("/public")
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity getPublicChats() {
         try {
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -61,7 +61,7 @@ public class ChatController {
     }
 
     @GetMapping("/own")
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity getOwnChats() {
         try {
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -78,7 +78,7 @@ public class ChatController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity getAllChats() {
         try {
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -95,7 +95,7 @@ public class ChatController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity create(@RequestBody Chat chat) {
         try {
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -118,7 +118,7 @@ public class ChatController {
     }
 
     @GetMapping("join/{chatId}")
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity joinToChat(@PathVariable long chatId) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> user = userService.getByEmail(email);

@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @GetMapping({"id"})
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity getById(@PathVariable long id) throws SQLException {
         Optional<User> result = userService.getById(id);
         if (result.isPresent()) {
@@ -40,7 +40,7 @@ public class UserController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity getAllUsers() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         List<User> users = userService.getAll(email);
@@ -48,7 +48,7 @@ public class UserController {
     }
 
     @GetMapping("/info")
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity getDetails() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> user = userService.getByEmail(email);
@@ -60,7 +60,7 @@ public class UserController {
     }
 
     @PostMapping("/auth")
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity getAuth() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> user = userService.getByEmail(email);
