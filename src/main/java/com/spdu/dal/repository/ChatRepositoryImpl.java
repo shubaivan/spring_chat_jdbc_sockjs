@@ -3,7 +3,6 @@ package com.spdu.dal.repository;
 import com.spdu.dal.mappers.ChatMapper;
 import com.spdu.bll.models.constants.ChatType;
 import com.spdu.domain_models.entities.Chat;
-import com.spdu.domain_models.entities.relations.ChatsUsers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -11,7 +10,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;

@@ -41,10 +41,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> register(UserRegisterDto userRegisterDto) throws UserException, SQLException {
         if (emailExist(userRegisterDto.getEmail())) {
-            throw new UserException("Account with ethis email is exist!");
+            throw new RuntimeException("Account with this email is exist!");
         }
         if (!userRegisterDto.getPassword().equals(userRegisterDto.getMatchingPassword())) {
-            throw new UserException("Password doesn't match!");
+            throw new RuntimeException("Password doesn't match!");
         }
         User user = new User();
         String encoded = new BCryptPasswordEncoder().
@@ -54,9 +54,10 @@ public class UserServiceImpl implements UserService {
         user.setDateOfBirth(userRegisterDto.getDateOfBirth());
         user.setDateOfRegistration(LocalDateTime.now());
         user.setUserName(userRegisterDto.getUserName());
+
         long userId = userRepository.register(user);
         chatRepository.joinToChat(userId, 1);
-        setUserRole(UserRole.USER, userId);
+        setUserRole(UserRole.ROLE_USER, userId);
         return getById(userId);
     }
 

@@ -32,10 +32,12 @@ public class UserRepositoryImpl implements UserRepository {
                 "first_name, last_name," +
                 "user_name, password," +
                 "email) VALUES (?,?,?,?,?,?,?)";
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection
                     .prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
             ps.setDate(1, Date.valueOf(user.getDateOfBirth()));
             ps.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
             ps.setString(3, user.getFirstName());
@@ -49,23 +51,26 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public long setUserRole(UserRoles userRole) {
+    public void setUserRole(UserRoles userRole) {
         String query = "INSERT INTO user_roles (" +
                 "user_id, role_id) VALUES (?,?)";
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection
                     .prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
             ps.setLong(1, userRole.getUserId());
             ps.setLong(2, userRole.getRoleId());
             return ps;
         }, keyHolder);
-        return Long.valueOf(keyHolder.getKeys().get("id").toString());
+        Long.valueOf(keyHolder.getKeys().get("id").toString());
     }
 
     @Override
     public Optional<User> getById(long id) {
         String query = "SELECT * FROM db_users WHERE id =?";
+
         User user = jdbcTemplate.queryForObject(query,
                 new Object[]{id},
                 new UserMapper());
@@ -74,7 +79,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> getAll() {
-        String query = "SELECT * FROM db_users";
+        String query = "SELECT * FROM db_users ";
         List<User> users = jdbcTemplate.query(query,
                 rs -> {
                     List<User> list = new ArrayList<>();
@@ -100,6 +105,19 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
+    @Override
+    public Optional<User> getByUserName(String userName) {
+        try {
+            String query = "SELECT * FROM db_users WHERE user_name=?";
+            User user = jdbcTemplate.queryForObject(query,
+                    new Object[]{userName},
+                    new UserMapper());
+            return Optional.of(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
+    }
 
     @Override
     public UserRole getUserRole(long userId) {

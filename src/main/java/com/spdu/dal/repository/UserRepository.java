@@ -15,9 +15,11 @@ public interface UserRepository {
 
     long register(User user) throws SQLException;
 
-    long setUserRole(UserRoles userRole) throws SQLException;
+    void setUserRole(UserRoles userRole) throws SQLException;
 
     Optional<User> getByEmail(String email);
+
+    Optional<User> getByUserName(String userName);
 
     UserRole getUserRole(long userId);
 }
