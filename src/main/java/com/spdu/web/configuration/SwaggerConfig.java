@@ -1,4 +1,4 @@
-package com.spdu.configuration;
+package com.spdu.web.configuration;
 
 import com.google.common.base.Predicates;
 import org.springframework.context.annotation.Bean;

@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class Message {
     private long id;
     private String text;
-    private LocalDateTime dateOfCreated;
+    private LocalDateTime createdAt;
     private long authorID;
     private long relativeMessageId;
     private long relativeChatId;
@@ -54,12 +54,12 @@ public class Message {
         this.relativeMessageId = relativeMessageId;
     }
 
-    public LocalDateTime getDateOfCreated() {
-        return dateOfCreated;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setDateOfCreated(LocalDateTime dateOfCreated) {
-        this.dateOfCreated = dateOfCreated;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public void setText(String text) {

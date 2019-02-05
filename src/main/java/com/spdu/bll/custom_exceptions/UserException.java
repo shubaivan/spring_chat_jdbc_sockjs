@@ -1,4 +1,4 @@
-package com.spdu.bll.exceptions;
+package com.spdu.bll.custom_exceptions;
 
 public class UserException extends Exception {
     public UserException(String message) {

@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 @Service
@@ -26,8 +27,14 @@ public class CustomUserDetailsService implements UserDetailsService {
         Optional<User> userOptional = userRepository.getByEmail(email);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            UserRole role = userRepository.getUserRole(user.getId());
-            return new CustomUserDetails(user, role);
+
+            try {
+                UserRole role = userRepository.getUserRole(user.getId());
+                return new CustomUserDetails(user, role);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
         } else {
             throw new UsernameNotFoundException(email);
         }

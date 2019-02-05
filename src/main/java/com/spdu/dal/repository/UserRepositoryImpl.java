@@ -5,6 +5,7 @@ import com.spdu.bll.models.constants.UserRole;
 import com.spdu.domain_models.entities.User;
 import com.spdu.domain_models.entities.relations.UserRoles;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -26,7 +27,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public long register(User user) {
+    public long register(User user) throws SQLException {
         String query = "INSERT INTO db_users (" +
                 "date_of_birth, date_of_registration," +
                 "first_name, last_name," +
@@ -51,7 +52,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void setUserRole(UserRoles userRole) {
+    public void setUserRole(UserRoles userRole) throws SQLException {
         String query = "INSERT INTO user_roles (" +
                 "user_id, role_id) VALUES (?,?)";
 
@@ -68,17 +69,16 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> getById(long id) {
+    public Optional<User> getById(long id) throws EmptyResultDataAccessException {
         String query = "SELECT * FROM db_users WHERE id =?";
-
         User user = jdbcTemplate.queryForObject(query,
                 new Object[]{id},
                 new UserMapper());
-        return Optional.ofNullable(user);
+        return Optional.of(user);
     }
 
     @Override
-    public List<User> getAll() {
+    public List<User> getAll() throws EmptyResultDataAccessException {
         String query = "SELECT * FROM db_users ";
         List<User> users = jdbcTemplate.query(query,
                 rs -> {
@@ -92,35 +92,25 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> getByEmail(String email) {
-        try {
-            String query = "SELECT * FROM db_users WHERE email=?";
-            User user = jdbcTemplate.queryForObject(query,
-                    new Object[]{email},
-                    new UserMapper());
-            return Optional.of(user);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Optional.empty();
-        }
+    public Optional<User> getByEmail(String email) throws EmptyResultDataAccessException {
+        String query = "SELECT * FROM db_users WHERE email=?";
+        User user = jdbcTemplate.queryForObject(query,
+                new Object[]{email},
+                new UserMapper());
+        return Optional.of(user);
     }
 
     @Override
-    public Optional<User> getByUserName(String userName) {
-        try {
-            String query = "SELECT * FROM db_users WHERE user_name=?";
-            User user = jdbcTemplate.queryForObject(query,
-                    new Object[]{userName},
-                    new UserMapper());
-            return Optional.of(user);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Optional.empty();
-        }
+    public Optional<User> getByUserName(String userName) throws EmptyResultDataAccessException {
+        String query = "SELECT * FROM db_users WHERE user_name=?";
+        User user = jdbcTemplate.queryForObject(query,
+                new Object[]{userName},
+                new UserMapper());
+        return Optional.of(user);
     }
 
     @Override
-    public UserRole getUserRole(long userId) {
+    public UserRole getUserRole(long userId) throws EmptyResultDataAccessException {
         String query = "SELECT name FROM roles " +
                 "JOIN user_roles on user_roles.role_id = roles.id " +
                 "WHERE user_roles.user_id=?";

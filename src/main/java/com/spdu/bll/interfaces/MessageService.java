@@ -2,18 +2,15 @@ package com.spdu.bll.interfaces;
 
 import com.spdu.bll.models.MessageReturnDto;
 import com.spdu.domain_models.entities.Message;
+import org.springframework.dao.EmptyResultDataAccessException;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
 public interface MessageService {
-    Optional<Message> getById(long id);
+    Optional<Message> getById(long id) throws EmptyResultDataAccessException;
 
-    List<Message> getByChatId(long id);
-
-    List<Message> getAllMessages();
+    List<Message> getByChatId(long id) throws EmptyResultDataAccessException;
 
     Optional<Message> create(Message message);
 

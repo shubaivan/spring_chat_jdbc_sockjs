@@ -1,6 +1,6 @@
 package com.spdu.bll.services;
 
-import com.spdu.bll.exceptions.UserException;
+import com.spdu.bll.custom_exceptions.UserException;
 import com.spdu.bll.interfaces.UserService;
 import com.spdu.bll.models.UserRegisterDto;
 import com.spdu.dal.repository.ChatRepository;
@@ -9,6 +9,7 @@ import com.spdu.bll.models.constants.UserRole;
 import com.spdu.domain_models.entities.User;
 import com.spdu.domain_models.entities.relations.UserRoles;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,13 +30,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> getById(long id) throws SQLException {
+    public Optional<User> getById(long id) throws EmptyResultDataAccessException {
         return userRepository.getById(id);
     }
 
     @Override
-    public Optional<User> getByEmail(String email) {
+    public Optional<User> getByEmail(String email) throws EmptyResultDataAccessException {
         return userRepository.getByEmail(email);
+    }
+
+    @Override
+    public Optional<User> getByUserName(String name) throws EmptyResultDataAccessException {
+        return userRepository.getByUserName(name);
     }
 
     @Override
@@ -62,7 +68,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAll(String currentUserEmail) {
+    public List<User> getAll(String currentUserEmail) throws EmptyResultDataAccessException {
         return userRepository.getAll();
     }
 
@@ -73,8 +79,12 @@ public class UserServiceImpl implements UserService {
         userRepository.setUserRole(userRole);
     }
 
-    private boolean emailExist(String email) {
-        Optional<User> user = userRepository.getByEmail(email);
-        return user.isPresent();
+    private boolean emailExist(String email) throws EmptyResultDataAccessException {
+        Optional<User> user = Optional.empty();
+        try {
+            user = userRepository.getByEmail(email);
+        } finally {
+            return user.isPresent();
+        }
     }
 }

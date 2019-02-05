@@ -4,12 +4,14 @@ import com.spdu.dal.mappers.ChatMapper;
 import com.spdu.bll.models.constants.ChatType;
 import com.spdu.domain_models.entities.Chat;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -27,17 +29,17 @@ public class ChatRepositoryImpl implements ChatRepository {
     }
 
     @Override
-    public Optional<Chat> getById(long id) {
-        String query = "SELECT * FROM chats WHERE chats.id =" + id;
+    public Optional<Chat> getById(long id) throws EmptyResultDataAccessException {
+        String query = "SELECT * FROM chats WHERE chats.id =?";
 
         Chat chat = jdbcTemplate.queryForObject(query,
-                new Object[]{},
+                new Object[]{id},
                 new ChatMapper());
         return Optional.of(chat);
     }
 
     @Override
-    public long create(Chat chat) {
+    public long create(Chat chat) throws SQLException {
         String query = "INSERT INTO chats (" +
                 "chat_type, created_at," +
                 " description, name," +
@@ -75,13 +77,13 @@ public class ChatRepositoryImpl implements ChatRepository {
     }
 
     @Override
-    public List<Chat> getAllOwn(long userId) {
+    public List<Chat> getAllOwn(long userId) throws EmptyResultDataAccessException {
         String query = "SELECT * FROM chats WHERE chats.owner_id=" + userId;
         return getByQuery(query);
     }
 
     @Override
-    public boolean userIsPresentInChat(long userId, long chatId) {
+    public boolean userIsPresentInChat(long userId, long chatId) throws EmptyResultDataAccessException {
         String query = "SELECT * FROM chats_users " +
                 "WHERE chats_users.user_id=" + userId
                 + "AND chats_users.user_id=" + chatId;
@@ -89,13 +91,13 @@ public class ChatRepositoryImpl implements ChatRepository {
     }
 
     @Override
-    public List<Chat> getAll(long userId) {
+    public List<Chat> getAll(long userId) throws EmptyResultDataAccessException {
         String query = "SELECT * FROM chats JOIN chats_users u on chats.id = u.chat_id" +
                 "  WHERE u.user_id=" + userId;
         return getByQuery(query);
     }
 
-    private List<Chat> getByQuery(String query) {
+    private List<Chat> getByQuery(String query) throws EmptyResultDataAccessException {
         return jdbcTemplate.query(query,
                 rs -> {
                     List<Chat> list = new LinkedList<>();
@@ -107,7 +109,7 @@ public class ChatRepositoryImpl implements ChatRepository {
     }
 
     @Override
-    public List<Chat> getPublic(long userId) {
+    public List<Chat> getPublic(long userId) throws EmptyResultDataAccessException {
         String query = "SELECT * FROM chats JOIN chats_users u on chats.id = u.chat_id  WHERE u.user_id <> " + userId +
                 " AND chats.chat_type=" + ChatType.PUBLIC.ordinal();
         return getByQuery(query);

@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public class Chat {
     private long id;
     private String name;
-    private LocalDateTime dateOfCreated;
+    private LocalDateTime createdAt;
     private ChatType chatType;
     private String tags;
     private String description;
@@ -32,12 +32,12 @@ public class Chat {
         this.name = name;
     }
 
-    public LocalDateTime getDateOfCreated() {
-        return dateOfCreated;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setDateOfCreated(LocalDateTime dateOfCreated) {
-        this.dateOfCreated = dateOfCreated;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public ChatType getChatType() {
