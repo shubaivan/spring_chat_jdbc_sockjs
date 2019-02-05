@@ -28,7 +28,7 @@ public class UserController {
         this.userDetailsService = userDetailsService;
     }
 
-    @GetMapping({"id"})
+    @GetMapping("{id}")
     @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity getById(@PathVariable long id) throws SQLException {
         Optional<User> result = userService.getById(id);
