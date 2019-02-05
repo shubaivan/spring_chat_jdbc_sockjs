@@ -35,7 +35,7 @@ public class ChatViewController {
 
     @GetMapping
     public String setChatsContent(ModelMap modelMap, Principal principal) {
-        Optional<User> user = userRepository.getByUserName(principal.getName());
+        Optional<User> user = userService.getByEmail(principal.getName());
         if (user.isPresent()) {
             List<Chat> ownChats = chatService.getAllOwn(user.get().getId());
             List<Chat> allChats = chatService.getAll(user.get().getId());

@@ -38,11 +38,6 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> getAllMessages() {
-        return messageRepository.getAllMessages();
-    }
-
-    @Override
     public Optional<Message> create(Message message){
         long messageId = messageRepository.create(message);
         return getById(messageId);
@@ -52,15 +47,17 @@ public class MessageServiceImpl implements MessageService {
             Optional<User> userOpt = userService.getByEmail(userEmail);
             if (userOpt.isPresent()) {
                 User user = userOpt.get();
+
                 if (chatService.userIsPresentInChat(user.getId(), message.getChatId())) {
                     message.setAuthorID(user.getId());
                     long messageId = messageRepository.create(message);
                     Optional<Message> optionalMessage = getById(messageId);
+
                     if (optionalMessage.isPresent()) {
                         Message createdMessage = optionalMessage.get();
                         MessageReturnDto messageReturnDTO = new MessageReturnDto(
                                 userEmail, createdMessage.getText(),
-                                createdMessage.getDateOfCreated());
+                                createdMessage.getCreatedAt());
                         return Optional.of(messageReturnDTO);
                     }
                 }

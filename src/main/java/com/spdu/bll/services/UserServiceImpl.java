@@ -39,6 +39,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> getByUserName(String name) {
+        return userRepository.getByUserName(name);
+    }
+
+    @Override
     public Optional<User> register(UserRegisterDto userRegisterDto) throws UserException, SQLException {
         if (emailExist(userRegisterDto.getEmail())) {
             throw new RuntimeException("Account with this email is exist!");

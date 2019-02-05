@@ -16,4 +16,6 @@ public interface UserService {
     List<User> getAll(String currentUserEmail);
 
     Optional<User> getByEmail(String email);
+
+    Optional<User> getByUserName(String userName);
 }

@@ -13,8 +13,6 @@ public interface MessageService {
 
     List<Message> getByChatId(long id);
 
-    List<Message> getAllMessages();
-
     Optional<Message> create(Message message);
 
     Optional<MessageReturnDto> send(String userEmail, Message message);

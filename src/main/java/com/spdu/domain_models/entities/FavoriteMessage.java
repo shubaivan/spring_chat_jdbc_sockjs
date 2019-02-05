@@ -6,7 +6,7 @@ public class FavoriteMessage {
     private long id;
     private String text;
     private String userName;
-    private LocalDateTime dateOfCreated;
+    private LocalDateTime createdAt;
 
     public FavoriteMessage() {
     }
@@ -31,11 +31,11 @@ public class FavoriteMessage {
         this.userName = userName;
     }
 
-    public LocalDateTime getDateOfCreated() {
-        return dateOfCreated;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setDateOfCreated(LocalDateTime dateOfCreated) {
-        this.dateOfCreated = dateOfCreated;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

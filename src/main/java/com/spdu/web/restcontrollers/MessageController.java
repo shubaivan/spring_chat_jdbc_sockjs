@@ -10,12 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.socket.TextMessage;
 
-import java.io.IOException;
-import java.sql.SQLException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +30,7 @@ public class MessageController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
     public ResponseEntity create(@RequestBody Message message) {
         Optional<Message> newMessage = messageService.create(message);
         if (newMessage.isPresent()) {
@@ -43,7 +41,7 @@ public class MessageController {
     }
 
     @GetMapping("{id}")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
     public ResponseEntity getById(@PathVariable long id) {
         Optional<Message> newMessage = messageService.getById(id);
         if (newMessage.isPresent()) {
@@ -54,23 +52,18 @@ public class MessageController {
     }
 
     @GetMapping("/chat/{id}")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
     public ResponseEntity getByChatId(@PathVariable long id) {
         List<Message> listMessages = messageService.getByChatId(id);
-        if (!listMessages.isEmpty()) {
-            return new ResponseEntity(listMessages, HttpStatus.OK);
-        } else {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity(listMessages, HttpStatus.OK);
     }
 
     @PostMapping("/default-chat")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
-    public ResponseEntity sendMessage(@RequestBody Message message) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
+    public ResponseEntity sendMessage(@RequestBody Message message, Principal principal) {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            Optional<MessageReturnDto> newMessage = messageService.send(email, message);
+            Optional<MessageReturnDto> newMessage = messageService.send(principal.getName(), message);
             if (newMessage.isPresent()) {
                 socketHandler.sendMess(new TextMessage(mapper.writeValueAsString(newMessage.get())));
                 return new ResponseEntity(newMessage.get(), HttpStatus.CREATED);

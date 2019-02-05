@@ -10,7 +10,5 @@ public interface MessageRepository {
 
     List<Message> getByChatId(long id);
 
-    List<Message> getAllMessages();
-
     long create(Message message);
 }

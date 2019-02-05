@@ -8,7 +8,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
@@ -19,40 +18,29 @@ import java.util.Optional;
 
 @Repository
 public class MessageRepositoryImpl implements MessageRepository {
-    private final DataSource dataSource;
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public MessageRepositoryImpl(DataSource dataSource, JdbcTemplate jdbcTemplate) {
-        this.dataSource = dataSource;
+    public MessageRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public Optional<Message> getById(long id) {
-        String query = "SELECT * FROM messages WHERE messages.id =" + id;
+        String query = "SELECT * FROM messages WHERE messages.id =?";
         Message message = jdbcTemplate.queryForObject(query,
-                new Object[]{},
+                new Object[]{id},
                 new MessageMapper());
         return Optional.ofNullable(message);
     }
 
     @Override
     public List<Message> getByChatId(long id) {
-        String query = "SELECT * FROM messages WHERE messages.chat_id =" + id;
-        return getMessagesList(query);
-    }
-
-    @Override
-    public List<Message> getAllMessages() {
-        String query = "SELECT * FROM messages";
-        return getMessagesList(query);
-    }
-
-    private List<Message> getMessagesList(String query) {
+        String query = "SELECT * FROM messages WHERE messages.chat_id =?";
         List<Message> messages = jdbcTemplate.query(query,
+                new Object[]{id},
                 rs -> {
-                    List<Message> list = new ArrayList<Message>();
+                    List<Message> list = new ArrayList<>();
                     while (rs.next()) {
                         list.add(new MessageMapper().mapRow(rs, rs.getRow()));
                     }
