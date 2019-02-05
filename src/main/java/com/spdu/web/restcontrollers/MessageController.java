@@ -61,15 +61,15 @@ public class MessageController {
     @PostMapping("/default-chat")
     @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
     public ResponseEntity sendMessage(@RequestBody Message message, Principal principal) {
-        ObjectMapper mapper = new ObjectMapper();
         try {
+            ObjectMapper mapper = new ObjectMapper();
             Optional<MessageReturnDto> newMessage = messageService.send(principal.getName(), message);
             if (newMessage.isPresent()) {
                 socketHandler.sendMess(new TextMessage(mapper.writeValueAsString(newMessage.get())));
                 return new ResponseEntity(newMessage.get(), HttpStatus.CREATED);
             }
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }

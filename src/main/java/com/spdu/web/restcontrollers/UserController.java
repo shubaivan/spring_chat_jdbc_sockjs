@@ -1,6 +1,6 @@
 package com.spdu.web.restcontrollers;
 
-import com.spdu.bll.exceptions.UserException;
+import com.spdu.bll.custom_exceptions.UserException;
 import com.spdu.bll.interfaces.UserService;
 import com.spdu.bll.models.UserRegisterDto;
 import com.spdu.bll.services.CustomUserDetailsService;
