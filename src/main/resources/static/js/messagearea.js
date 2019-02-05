@@ -17,17 +17,17 @@ var colors = [
 ];
 
 function connect(event) {
-    username = document.querySelector('#name').value.trim();
+    //username = document.querySelector('#name').value.trim();
 
-    if(username) {
-        usernamePage.classList.add('hidden');
-        chatPage.classList.remove('hidden');
+    //if(username) {
+    //usernamePage.classList.add('hidden');
+    //chatPage.classList.remove('hidden');
 
-        var socket = new SockJS('/ws');
-        stompClient = Stomp.over(socket);
+    var socket = new SockJS('/ws');
+    stompClient = Stomp.over(socket);
 
-        stompClient.connect({}, onConnected, onError);
-    }
+    stompClient.connect({}, onConnected, onError);
+    //}
     event.preventDefault();
 }
 
@@ -54,7 +54,12 @@ function onError(error) {
 
 function sendMessage(event) {
     var messageContent = messageInput.value.trim();
-    if(messageContent && stompClient) {
+    console.log("content");
+    console.log(messageContent);
+    console.log("message input");
+    console.log(messageInput.value);
+
+    if (messageContent && stompClient) {
         var chatMessage = {
             sender: username,
             content: messageInput.value,
@@ -79,19 +84,19 @@ function onMessageReceived(payload) {
     //     messageElement.classList.add('event-message');
     //     message.content = message.sender + ' left!';
     // } else {
-    //     messageElement.classList.add('chat-message');
+    messageElement.classList.add('chat-message');
 
-        var avatarElement = document.createElement('i');
-        var avatarText = document.createTextNode(message);
-        avatarElement.appendChild(avatarText);
-        avatarElement.style['background-color'] = getAvatarColor(message.authorID);
+    var avatarElement = document.createElement('i');
+    var avatarText = document.createTextNode(message);
+    avatarElement.appendChild(avatarText);
+    avatarElement.style['background-color'] = getAvatarColor(message.authorID);
 
-        messageElement.appendChild(avatarElement);
+    messageElement.appendChild(avatarElement);
 
-        var usernameElement = document.createElement('span');
-        var usernameText = document.createTextNode(message.authorID);
-        usernameElement.appendChild(usernameText);
-        messageElement.appendChild(usernameElement);
+    var usernameElement = document.createElement('span');
+    var usernameText = document.createTextNode(message.authorID);
+    usernameElement.appendChild(usernameText);
+    messageElement.appendChild(usernameElement);
     //}
 
     var textElement = document.createElement('p');
@@ -115,5 +120,5 @@ function getAvatarColor(messageSender) {
     return colors[index];
 }
 
-usernameForm.addEventListener('submit', connect, true)
+//usernameForm.addEventListener('submit', connect, true)
 messageForm.addEventListener('submit', sendMessage, true)

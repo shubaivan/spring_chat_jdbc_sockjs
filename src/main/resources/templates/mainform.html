@@ -32,7 +32,7 @@
     <h2 class="text"> Own chats</h2>
     <div layout:fragment="content">
         <div th:each="chat: ${ownChats}">
-            <a href="#">
+            <a href="#" class="chats_info" onclick='connect()'>
                 <h th:text="${chat.name}">Name</h>
             </a>
             <br>
@@ -74,4 +74,5 @@
     // ]]>
 </script>
 <script th:href="@{/js/mainform.js}" src="../../js/mainform.js"></script>
+<script src="/js/messagearea.js"></script>
 </html>
