@@ -1,5 +1,6 @@
 package com.spdu.dal.repository;
 
+import com.spdu.bll.custom_exceptions.UserException;
 import com.spdu.bll.models.constants.UserRole;
 import com.spdu.domain_models.entities.User;
 import com.spdu.domain_models.entities.relations.UserRoles;
@@ -23,4 +24,6 @@ public interface UserRepository {
     Optional<User> getByUserName(String userName) throws EmptyResultDataAccessException;
 
     UserRole getUserRole(long userId) throws SQLException;
+
+    User update(long id, User user) throws SQLException, UserException;
 }

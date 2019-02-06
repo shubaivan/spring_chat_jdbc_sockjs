@@ -1,5 +1,6 @@
 package com.spdu.dal.repository;
 
+import com.spdu.bll.custom_exceptions.UserException;
 import com.spdu.dal.mappers.UserMapper;
 import com.spdu.bll.models.constants.UserRole;
 import com.spdu.domain_models.entities.User;
@@ -117,5 +118,26 @@ public class UserRepositoryImpl implements UserRepository {
         String roleName = jdbcTemplate.queryForObject(query,
                 new Object[]{userId}, String.class);
         return UserRole.valueOf(roleName);
+    }
+
+    @Override
+    public User update(long id, User user) throws SQLException, UserException {
+        String query = "UPDATE db_users SET date_of_birth = ?," +
+                " first_name = ?, last_name = ?, user_name = ?," +
+                " url_facebook = ?, url_git = ?, url_linkedin = ?" +
+                " WHERE id = ?";
+
+        jdbcTemplate.update(query,
+                user.getDateOfBirth(), user.getFirstName(),
+                user.getLastName(), user.getUserName(),
+                user.getUrlFacebook(), user.getUrlGit(),
+                user.getUrlLinkedin(), id);
+
+        Optional<User> modifiedUser = getById(id);
+        if (modifiedUser.isPresent()) {
+            return modifiedUser.get();
+        } else {
+            throw new UserException("Can't update user " + user.getEmail());
+        }
     }
 }

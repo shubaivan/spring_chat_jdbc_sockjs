@@ -1,41 +1,36 @@
-package com.spdu.domain_models.entities;
+package com.spdu.bll.models;
 
-import java.sql.Date;
+import com.spdu.domain_models.entities.User;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
-public class User {
+public class UserDto {
     private long id;
     private String firstName;
     private String lastName;
     private String email;
     private String userName;
-    private String password;
-    private LocalDateTime dateOfRegistration;
-    private long avatar;
     private String urlLinkedin;
     private String urlFacebook;
     private String urlGit;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dateOfBirth;
 
-    public User() {
+    public UserDto() {
     }
 
-    public User(long id,
-                String firstName, String lastName,
-                String email, String userName,
-                String password, LocalDateTime dateOfRegistration) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.userName = userName;
-        this.password = password;
-        this.dateOfRegistration = dateOfRegistration;
-    }
-
-    public long getUserId() {
-        return id;
+    public UserDto(User user) {
+        this.id = user.getId();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.email = user.getEmail();
+        this.userName = user.getUserName();
+        this.dateOfBirth = user.getDateOfBirth();
+        this.urlLinkedin = user.getUrlLinkedin();
+        this.urlFacebook = user.getUrlFacebook();
+        this.urlGit = user.getUrlGit();
     }
 
     public void setId(long id) {
@@ -74,30 +69,6 @@ public class User {
         this.urlLinkedin = urlLinkedin;
     }
 
-    public long getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(long avatar) {
-        this.avatar = avatar;
-    }
-
-    public LocalDateTime getDateOfRegistration() {
-        return dateOfRegistration;
-    }
-
-    public void setDateOfRegistration(LocalDateTime dateOfRegistration) {
-        this.dateOfRegistration = dateOfRegistration;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getUserName() {
         return userName;
     }
@@ -126,13 +97,15 @@ public class User {
         return firstName;
     }
 
-    public User setFirstName(String firstName) {
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
-
-        return this;
     }
 
     public long getId() {
         return id;
+    }
+
+    public boolean isEnabled() {
+        return true;
     }
 }

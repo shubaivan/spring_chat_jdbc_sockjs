@@ -2,6 +2,7 @@ package com.spdu.web.restcontrollers;
 
 import com.spdu.bll.custom_exceptions.UserException;
 import com.spdu.bll.interfaces.UserService;
+import com.spdu.bll.models.UserDto;
 import com.spdu.bll.models.UserRegisterDto;
 import com.spdu.bll.services.CustomUserDetailsService;
 import com.spdu.domain_models.entities.User;
@@ -52,6 +53,22 @@ public class UserController {
         Optional<User> user = userService.getByEmail(principal.getName());
         if (user.isPresent()) {
             return new ResponseEntity(user, HttpStatus.OK);
+        } else {
+            return new ResponseEntity("User not found!", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping
+    @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
+    public ResponseEntity update(@RequestBody UserDto userDTO, Principal principal) {
+        Optional<User> user = userService.getByEmail(principal.getName());
+        if (user.isPresent()) {
+            try {
+                UserDto result = userService.update(user.get().getId(), userDTO);
+                return new ResponseEntity(result, HttpStatus.OK);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         } else {
             return new ResponseEntity("User not found!", HttpStatus.BAD_REQUEST);
         }
