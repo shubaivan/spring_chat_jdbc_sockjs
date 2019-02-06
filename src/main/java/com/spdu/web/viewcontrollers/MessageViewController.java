@@ -1,5 +1,6 @@
 package com.spdu.web.viewcontrollers;
 
+import com.spdu.bll.models.ChatMessage;
 import com.spdu.domain_models.entities.Message;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -11,15 +12,16 @@ import org.springframework.stereotype.Controller;
 public class MessageViewController {
     @MessageMapping("/chat.sendMessage")
     @SendTo("/topic/public")
-    public Message sendMessage(@Payload Message message) {
+    public ChatMessage sendMessage(@Payload ChatMessage message) {
         return message;
     }
 
     @MessageMapping("/chat.addUser")
     @SendTo("/topic/public")
-    public Message addUser(@Payload Message message,
+    public ChatMessage addUser(@Payload ChatMessage message,
                                SimpMessageHeaderAccessor headerAccessor) {
-        headerAccessor.getSessionAttributes().put("username", message.getText());
+        headerAccessor.getSessionAttributes().put("username", message.getSender());
+
         return message;
     }
 }

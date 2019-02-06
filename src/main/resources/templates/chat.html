@@ -1,0 +1,23 @@
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
+<span id="username" th:utext="${username}"></span>
+<span id="chatId" th:utext="${chatId}"></span>
+<div id="chat-page">
+    <div class="main-container">
+        <div class="chat-header">
+            <h2 >SPD-Talks</h2>
+        </div>
+        <ul id="messageArea">
+
+        </ul>
+        <form id="messageForm" name="messageForm">
+            <div class="form-group">
+                <div class="input-group clearfix">
+                    <input type="text" id="message" placeholder="Type a message..." autocomplete="off"
+                           class="form-control"/>
+                    <button type="submit">Send</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</html>

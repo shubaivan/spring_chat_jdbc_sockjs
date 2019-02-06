@@ -38,7 +38,7 @@
     <h2 class="text"> Own chats</h2>
     <div layout:fragment="content">
         <div th:each="chat: ${ownChats}">
-            <a href="#" class="chats_info">
+            <a href="#" class="chats_info" th:attr="data-el-id=${chat.getId()}">
                 <h th:text="${chat.name}">Name</h>
             </a>
             <br>
@@ -58,7 +58,7 @@
     <h2 class="text"> All public chats</h2>
     <div layout:fragment="content">
         <div th:each="chat: ${allPublic}">
-            <a href="#">
+            <a href="#" class="chats_info" th:attr="data-el-id=${chat.getId()}">
                 <h th:text="${chat.name}">Name</h>
             </a>
             <br>
@@ -67,35 +67,9 @@
 </div>
 
 <div id="main" class=>
-    <!--<div id="main_container">-->
-    <!--<h1>SPD-Talks</h1>-->
-    <div id="chat-page">
-        <form id="usernameForm" name="usernameForm" action="submit">
-            <div class="form-group">
-                <button type="submit" class="accent username-submit">Connect</button>
-            </div>
-        </form>
-
-        <div class="main-container">
-            <div class="chat-header">
-                <h2>SPD-Talks</h2>
-            </div>
-            <ul id="messageArea">
-
-            </ul>
-            <form id="messageForm" name="messageForm">
-                <div class="form-group">
-                    <div class="input-group clearfix">
-                        <input type="text" id="message" placeholder="Type a message..." autocomplete="off"
-                               class="form-control"/>
-                        <button type="submit">Send</button>
-                    </div>
-                </div>
-            </form>
-        </div>
+    <div id="main_container">
+        <h1>SPD-Talks</h1>
     </div>
-
-    <!--</div>-->
 </div>
 
 
@@ -107,6 +81,6 @@
 </script>
 
 <script src="/js/mainform.js"></script>
-<script src="/js/messagearea.js"></script>
+
 </body>
 </html>
