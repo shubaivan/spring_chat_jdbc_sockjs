@@ -26,6 +26,11 @@ public class AuthenticationController {
         return new ModelAndView("redirect:" + "chats");
     }
 
+    @GetMapping("/loginAction")
+    public ModelAndView loginAction(Model model, Principal principal) {
+        return new ModelAndView("redirect:" + "chats");
+    }
+
     @RequestMapping("/login")
     public String login() {
         return "login";

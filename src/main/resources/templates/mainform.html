@@ -2,11 +2,17 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SPD-Talks</title>
 </head>
 <body>
 
 <link rel='stylesheet' th:href="@{/css/mainform.css}" href="../../css/mainform.css"/>
+<link rel="stylesheet" href="/css/messagearea.css"/>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
 
 <nav class="navbar">
  <span class="open-slide">
@@ -32,7 +38,7 @@
     <h2 class="text"> Own chats</h2>
     <div layout:fragment="content">
         <div th:each="chat: ${ownChats}">
-            <a href="#">
+            <a href="#" class="chats_info" th:attr="data-el-id=${chat.getId()}">
                 <h th:text="${chat.name}">Name</h>
             </a>
             <br>
@@ -52,7 +58,7 @@
     <h2 class="text"> All public chats</h2>
     <div layout:fragment="content">
         <div th:each="chat: ${allPublic}">
-            <a href="#">
+            <a href="#" class="chats_info" th:attr="data-el-id=${chat.getId()}">
                 <h th:text="${chat.name}">Name</h>
             </a>
             <br>
@@ -60,18 +66,21 @@
     </div>
 </div>
 
-<div id="main">
+<div id="main" class=>
     <div id="main_container">
         <h1>SPD-Talks</h1>
     </div>
 </div>
 
-</body>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
     // <![CDATA[
     window.jQuery || document.write('<script src="js/vendor/jquery-3.2.1.min.js"><\/script>');
     // ]]>
 </script>
-<script th:href="@{/js/mainform.js}" src="../../js/mainform.js"></script>
+
+<script src="/js/mainform.js"></script>
+
+</body>
 </html>

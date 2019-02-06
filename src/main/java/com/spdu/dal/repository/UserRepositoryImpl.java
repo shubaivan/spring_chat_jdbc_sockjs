@@ -94,11 +94,16 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional<User> getByEmail(String email) throws EmptyResultDataAccessException {
-        String query = "SELECT * FROM db_users WHERE email=?";
-        User user = jdbcTemplate.queryForObject(query,
-                new Object[]{email},
-                new UserMapper());
-        return Optional.of(user);
+        try {
+            String query = "SELECT * FROM db_users WHERE email=? OR user_name=?";
+            User user = jdbcTemplate.queryForObject(query,
+                    new Object[]{email, email},
+                    new UserMapper());
+            return Optional.of(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
     }
 
     @Override
