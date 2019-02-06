@@ -2,6 +2,7 @@ package com.spdu.bll.services;
 
 import com.spdu.bll.custom_exceptions.UserException;
 import com.spdu.bll.interfaces.UserService;
+import com.spdu.bll.models.UserDto;
 import com.spdu.bll.models.UserRegisterDto;
 import com.spdu.dal.repository.ChatRepository;
 import com.spdu.dal.repository.UserRepository;
@@ -10,6 +11,7 @@ import com.spdu.domain_models.entities.User;
 import com.spdu.domain_models.entities.relations.UserRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +44,28 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> getByUserName(String name) throws EmptyResultDataAccessException {
         return userRepository.getByUserName(name);
+    }
+
+    @Override
+    public UserDto update(long id, UserDto user) throws SQLException, UserException {
+        Optional<User> optionalUser = getById(id);
+        if (optionalUser.isPresent())
+        {
+            User oldUser = optionalUser.get();
+
+            oldUser.setFirstName(user.getFirstName());
+            oldUser.setLastName(user.getLastName());
+            oldUser.setDateOfBirth(user.getDateOfBirth());
+            oldUser.setUserName(user.getUserName());
+            oldUser.setUrlFacebook(user.getUrlFacebook());
+            oldUser.setUrlGit(user.getUrlGit());
+            oldUser.setUrlLinkedin(user.getUrlLinkedin());
+
+            User modifiedUser = userRepository.update(id, oldUser);
+            return new UserDto(modifiedUser);
+        } else {
+            throw new UserException("User not found");
+        }
     }
 
     @Override

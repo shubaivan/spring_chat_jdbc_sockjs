@@ -69,6 +69,7 @@ body {
     transition: 0.35s;
     padding: 20px;
     width: 100%;
+    overflow: hidden;
 }
 
 @media only screen and (max-width: 500px) {

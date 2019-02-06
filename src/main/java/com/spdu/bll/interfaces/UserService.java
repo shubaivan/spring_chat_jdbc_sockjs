@@ -1,6 +1,7 @@
 package com.spdu.bll.interfaces;
 
 import com.spdu.bll.custom_exceptions.UserException;
+import com.spdu.bll.models.UserDto;
 import com.spdu.bll.models.UserRegisterDto;
 import com.spdu.domain_models.entities.User;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -19,4 +20,6 @@ public interface UserService {
     Optional<User> getByEmail(String email) throws EmptyResultDataAccessException;
 
     Optional<User> getByUserName(String userName) throws EmptyResultDataAccessException;
+
+    UserDto update(long id, UserDto user) throws SQLException, UserException;
 }
