@@ -1,4 +1,4 @@
-package com.spdu.dal.repository;
+package com.spdu.dal.repositories;
 
 import com.spdu.domain_models.entities.Message;
 import org.springframework.dao.EmptyResultDataAccessException;

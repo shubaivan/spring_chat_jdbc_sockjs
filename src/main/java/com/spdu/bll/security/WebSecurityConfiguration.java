@@ -39,6 +39,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/static/**");
         web.ignoring().antMatchers("/resources/**");
         web.ignoring().antMatchers("/css/**");
+        web.ignoring().antMatchers("/swagger-resources/**");
     }
 
     @Bean

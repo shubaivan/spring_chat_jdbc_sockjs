@@ -4,14 +4,13 @@ import com.spdu.bll.custom_exceptions.UserException;
 import com.spdu.bll.interfaces.UserService;
 import com.spdu.bll.models.UserDto;
 import com.spdu.bll.models.UserRegisterDto;
-import com.spdu.dal.repository.ChatRepository;
-import com.spdu.dal.repository.UserRepository;
+import com.spdu.dal.repositories.ChatRepository;
+import com.spdu.dal.repositories.UserRepository;
 import com.spdu.bll.models.constants.UserRole;
 import com.spdu.domain_models.entities.User;
 import com.spdu.domain_models.entities.relations.UserRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

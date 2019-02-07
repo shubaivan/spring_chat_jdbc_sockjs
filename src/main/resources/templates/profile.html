@@ -38,6 +38,27 @@
         </form>
 
     </div>
+
+    <div class="update-form">
+        <form action="#" th:action="@{/profile/update}" th:method="PUT" modelAttribute="userDto" th:object="${userDTO}">
+            <h3>First name</h3>
+            <input type="text" class="text" th:field="*{firstName}">
+            <h3>Last name</h3>
+            <input type="text" class="text" th:field="*{lastName}">
+            <h3>User name</h3>
+            <input type="text" class="text" th:field="*{userName}">
+            <h3>Linkedin</h3>
+            <input type="text" class="text" th:field="*{urlLinkedin}">
+            <h3>Facebook</h3>
+            <input type="text" class="text" th:field="*{urlFacebook}">
+            <h3>GitLab</h3>
+            <input type="text" class="text" th:field="*{urlGit}">
+            <h3>Date Of Birthday</h3>
+            <input type="date" class="text" th:value="*{dateOfBirth}" th:field="*{dateOfBirth}">
+            <button class="update">Save changes</button>
+        </form>
+
+    </div>
 </div>
 
 </body>

@@ -4,7 +4,7 @@ import com.spdu.bll.interfaces.ChatService;
 import com.spdu.bll.interfaces.MessageService;
 import com.spdu.bll.interfaces.UserService;
 import com.spdu.bll.models.MessageReturnDto;
-import com.spdu.dal.repository.MessageRepository;
+import com.spdu.dal.repositories.MessageRepository;
 import com.spdu.domain_models.entities.Message;
 import com.spdu.domain_models.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;

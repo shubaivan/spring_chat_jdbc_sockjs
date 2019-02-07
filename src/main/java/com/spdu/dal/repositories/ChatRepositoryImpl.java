@@ -1,4 +1,4 @@
-package com.spdu.dal.repository;
+package com.spdu.dal.repositories;
 
 import com.spdu.dal.mappers.ChatMapper;
 import com.spdu.bll.models.constants.ChatType;

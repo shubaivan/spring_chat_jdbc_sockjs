@@ -1,4 +1,4 @@
-package com.spdu.dal.repository;
+package com.spdu.dal.repositories;
 
 import com.spdu.bll.custom_exceptions.UserException;
 import com.spdu.dal.mappers.UserMapper;
