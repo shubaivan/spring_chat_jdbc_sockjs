@@ -1,4 +1,4 @@
-package com.spdu.dal.repository;
+package com.spdu.dal.repositories;
 
 import com.spdu.bll.custom_exceptions.UserException;
 import com.spdu.bll.models.constants.UserRole;
@@ -26,4 +26,6 @@ public interface UserRepository {
     UserRole getUserRole(long userId) throws SQLException;
 
     User update(long id, User user) throws SQLException, UserException;
+
+    User updateAvatar(long id, long fileId) throws SQLException, UserException;
 }

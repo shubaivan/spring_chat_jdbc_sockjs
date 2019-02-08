@@ -1,4 +1,4 @@
-package com.spdu.dal.repository;
+package com.spdu.dal.repositories;
 
 import com.spdu.bll.custom_exceptions.UserException;
 import com.spdu.dal.mappers.UserMapper;
@@ -143,6 +143,21 @@ public class UserRepositoryImpl implements UserRepository {
             return modifiedUser.get();
         } else {
             throw new UserException("Can't update user " + user.getEmail());
+        }
+    }
+
+    @Override
+    public User updateAvatar(long id, long fileId) throws SQLException, UserException {
+        String query = "UPDATE db_users SET avatar = ?" +
+                " WHERE id = ?";
+        jdbcTemplate.update(query,
+                fileId, id);
+
+        Optional<User> modifiedUser = getById(id);
+        if (modifiedUser.isPresent()) {
+            return modifiedUser.get();
+        } else {
+            throw new UserException("Can't update user!");
         }
     }
 }

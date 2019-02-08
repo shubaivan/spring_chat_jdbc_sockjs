@@ -4,14 +4,14 @@ import com.spdu.bll.custom_exceptions.UserException;
 import com.spdu.bll.interfaces.UserService;
 import com.spdu.bll.models.UserDto;
 import com.spdu.bll.models.UserRegisterDto;
-import com.spdu.dal.repository.ChatRepository;
-import com.spdu.dal.repository.UserRepository;
+import com.spdu.dal.repositories.ChatRepository;
+import com.spdu.dal.repositories.FileEntityRepository;
+import com.spdu.dal.repositories.UserRepository;
 import com.spdu.bll.models.constants.UserRole;
 import com.spdu.domain_models.entities.User;
 import com.spdu.domain_models.entities.relations.UserRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,11 +24,14 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ChatRepository chatRepository;
+    private final FileEntityRepository fileEntityRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ChatRepository chatRepository) {
+    public UserServiceImpl(UserRepository userRepository, ChatRepository chatRepository,
+                           FileEntityRepository fileEntityRepository) {
         this.userRepository = userRepository;
         this.chatRepository = chatRepository;
+        this.fileEntityRepository = fileEntityRepository;
     }
 
     @Override
@@ -49,8 +52,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto update(long id, UserDto user) throws SQLException, UserException {
         Optional<User> optionalUser = getById(id);
-        if (optionalUser.isPresent())
-        {
+        if (optionalUser.isPresent()) {
             User oldUser = optionalUser.get();
 
             oldUser.setFirstName(user.getFirstName());
@@ -66,6 +68,12 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new UserException("User not found");
         }
+    }
+
+    @Override
+    public UserDto updateAvatar(long id, long fileId) throws SQLException, UserException {
+        userRepository.updateAvatar(id, fileId);
+        return null;
     }
 
     @Override
