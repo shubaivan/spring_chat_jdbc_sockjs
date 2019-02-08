@@ -1,5 +1,6 @@
 package com.spdu.dal.mappers;
 
+import com.spdu.bll.models.MessageType;
 import com.spdu.domain_models.entities.Message;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -16,6 +17,11 @@ public class MessageMapper implements RowMapper<Message> {
         message.setChatId(rs.getLong("chat_id"));
         message.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
         message.setText(rs.getString("text"));
+
+        if (rs.getString("message_type") != null) {
+            message.setMessageType(MessageType.valueOf(rs.getString("message_type")));
+        }
+
         return message;
     }
 }

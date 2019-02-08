@@ -57,7 +57,7 @@ public class MessageRepositoryImpl implements MessageRepository {
         String query = "INSERT INTO messages (" +
                 "text, created_at," +
                 " author_id, relative_message_id," +
-                "relative_chat_id, chat_id) VALUES (?,?,?,?,?,?)";
+                "relative_chat_id, chat_id, message_type) VALUES (?,?,?,?,?,?,?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -70,6 +70,7 @@ public class MessageRepositoryImpl implements MessageRepository {
             ps.setLong(4, message.getRelativeMessageId());
             ps.setLong(5, message.getRelativeChatId());
             ps.setLong(6, message.getChatId());
+            ps.setString(7, message.getMessageType().name());
             return ps;
         }, keyHolder);
         return Long.valueOf(keyHolder.getKeys().get("id").toString());

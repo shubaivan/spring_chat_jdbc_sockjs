@@ -43,7 +43,6 @@ public class ChatViewController {
         Chat chat = result.get();
         modelMap.addAttribute("chat", chat);
         modelMap.addAttribute("username", principal.getName());
-        modelMap.addAttribute("chatId", chat.getId());
 
         return "chat";
     }

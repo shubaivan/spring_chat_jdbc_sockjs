@@ -5,10 +5,7 @@ public class ChatMessage {
     private MessageType type;
     private String content;
     private String sender;
-
-    public enum MessageType {
-        CHAT, JOIN, LEAVE
-    }
+    private Integer chatId;
 
     public MessageType getType() {
         return type;
@@ -34,5 +31,12 @@ public class ChatMessage {
         this.sender = sender;
     }
 
+    public Integer getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(Integer chatId) {
+        this.chatId = chatId;
+    }
 }
 

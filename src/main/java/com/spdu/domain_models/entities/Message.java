@@ -1,5 +1,9 @@
 package com.spdu.domain_models.entities;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.spdu.bll.models.ChatMessage;
+import com.spdu.bll.models.MessageType;
+
 import java.time.LocalDateTime;
 
 public class Message {
@@ -10,6 +14,7 @@ public class Message {
     private long relativeMessageId;
     private long relativeChatId;
     private long chatId;
+    private MessageType messageType;
 
     public Message() {
     }
@@ -22,8 +27,10 @@ public class Message {
         return chatId;
     }
 
-    public void setChatId(long chatId) {
+    public Message setChatId(long chatId) {
         this.chatId = chatId;
+
+        return this;
     }
 
     public long getAuthorID() {
@@ -62,11 +69,21 @@ public class Message {
         this.createdAt = createdAt;
     }
 
-    public void setText(String text) {
+    public Message setText(String text) {
         this.text = text;
+
+        return this;
     }
 
     public long getId() {
         return id;
+    }
+
+    public MessageType getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(MessageType messageType) {
+        this.messageType = messageType;
     }
 }
