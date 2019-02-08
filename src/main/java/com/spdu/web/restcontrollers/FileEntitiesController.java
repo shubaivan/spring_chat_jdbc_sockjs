@@ -26,25 +26,6 @@ public class FileEntitiesController {
         this.userService = userService;
     }
 
-//    @GetMapping("/{id}")
-//    public HttpEntity<byte[]> getFile(@PathVariable long id) {
-//        try {
-//            FileEntityDto fileEntityDto = fileEntityService.getById(id);
-//
-//            Properties properties = new Properties();
-//            properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("application.properties"));
-//            String sServerLocation = properties.getProperty("server.upload.docs.path");
-//
-//            File test = new File(sServerLocation + fileEntityDto.getPath());
-//
-//            //File file = ResourceUtils.getFile(sServerLocation + fileEntityDto.getPath());
-//            byte[] content = Files.readAllBytes(test.toPath());
-//            return new HttpEntity<>(content);
-//        } catch (IOException | CustomFileException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
     @GetMapping("/{id}")
     public ResponseEntity getFile(@PathVariable long id) {
         try {
