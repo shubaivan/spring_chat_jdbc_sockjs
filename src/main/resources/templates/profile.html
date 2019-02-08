@@ -13,7 +13,6 @@
 
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-<script src="/js/avatar.js"></script>
 
 <nav class="navbar">
     <ul class="navbar-nav">
@@ -49,30 +48,24 @@
         <form enctype="multipart/form-data" th:action="@{/profile/avatar}" th:method="PUT" th:object="${userDTO}"
               class="avatar-upload">
             <div class="avatar-edit">
-                <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" name="multipartFile"
+                <input type='file' id="imageUpload" onchange="uploadFile(this)" accept=".png, .jpg, .jpeg"
+                       name="multipartFile"
                        class="{{ $errors->has('email') ? 'alert alert-danger' : '' }}"/>
                 <label for="imageUpload"></label>
             </div>
             <div class="avatar-preview container2">
                 <div id="avatar" th:field="*{avatar}">
-                    <script th:inline="javascript">
-                        /*<![CDATA[*/
-
-                        // var avatar = [[*{avatar}]];
-                        rewrite();
-
-                        /*]]>*/
-                    </script>
-                    <div id="imagePreview"
-                         style="background-image: url(http://localhost:8080/api/file_entities/);">
+                    <div id="imagePreview">
                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                         <input type="submit" class="btn btn-danger">
                     </div>
+
                 </div>
             </div>
         </form>
     </div>
 </div>
 
+<script src="/js/avatar.js"></script>
 </body>
 </html>
