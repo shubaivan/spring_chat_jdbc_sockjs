@@ -1,8 +1,9 @@
 package com.spdu.dal.repository;
 
 import com.spdu.domain_models.entities.Message;
-import com.spdu.domain_models.entities.User;
 import com.spdu.web.Application;
+import org.flywaydb.core.Flyway;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +24,14 @@ public class MessageRepositoryImplTest {
     @Autowired
     private MessageRepositoryImpl messageRepository;
 
-//    @Autowired
-//    Flyway flyway;
-//
-//    @Before
-//    public void init() {
-//        flyway.clean();
-//        flyway.migrate();
-//    }
+    @Autowired
+    Flyway flyway;
+
+    @Before
+    public void init() {
+        flyway.clean();
+        flyway.migrate();
+    }
 
     @Test
     @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -50,7 +51,7 @@ public class MessageRepositoryImplTest {
         message.setId(1);
         message.setAuthorID(1);
         message.setChatId(1);
-        message.setText("Text from id1 message");
+        message.setText("Text from message");
         message.setCreatedAt(LocalDateTime.of(2019, 12, 10, 1, 23, 22));
         messageRepository.create(message);
         Message message2 = new Message();
@@ -64,7 +65,7 @@ public class MessageRepositoryImplTest {
         assertEquals(1, testMessage.getId());
         assertEquals(1, testMessage.getAuthorID());
         assertEquals(1, testMessage.getChatId());
-        assertEquals("Text from id1 message", testMessage.getText());
+        assertEquals("Text from message", testMessage.getText());
     }
 
     @Test
@@ -74,7 +75,7 @@ public class MessageRepositoryImplTest {
         message.setId(1);
         message.setAuthorID(1);
         message.setChatId(1);
-        message.setText("Text from id1 message");
+        message.setText("Text from message");
         message.setCreatedAt(LocalDateTime.of(2019, 12, 10, 1, 23, 22));
         messageRepository.create(message);
         Message message2 = new Message();
@@ -88,9 +89,7 @@ public class MessageRepositoryImplTest {
         assertEquals(1, testMessage.getId());
         assertEquals(1, testMessage.getAuthorID());
         assertEquals(1, testMessage.getChatId());
-        assertEquals("Text from id1 message", testMessage.getText());
+        assertEquals("Text from message", testMessage.getText());
         assertEquals(2, messageRepository.getByChatId(1).size());
     }
-
-
 }
