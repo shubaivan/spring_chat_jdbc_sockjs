@@ -38,7 +38,10 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public List<Message> getByChatId(long id) throws EmptyResultDataAccessException {
-        String query = "SELECT * FROM messages WHERE messages.chat_id =?";
+        String query = "SELECT *, concat(u.first_name, ' ', u.last_name) as fullname\n" +
+                "FROM messages AS m \n" +
+                "LEFT JOIN db_users AS u ON u.id = m.author_id \n" +
+                "WHERE m.chat_id =?";
         List<Message> messages = jdbcTemplate.query(query,
                 new Object[]{id},
                 rs -> {

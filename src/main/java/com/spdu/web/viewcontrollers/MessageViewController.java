@@ -13,6 +13,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Controller;
 
 import java.security.Principal;
+import java.sql.Date;
+import java.sql.Time;
 
 @Controller
 public class MessageViewController {
@@ -35,12 +37,20 @@ public class MessageViewController {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
         CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
 
+        Date date = new Date(System.currentTimeMillis());
+        message.setCreatedDate(date);
+
+        Time time = new Time(System.currentTimeMillis());
+        message.setCreatedTime(time);
+
         Message messageModel = new Message();
 
         messageModel
                 .setChatId(chatId)
                 .setText(message.getContent())
-                .setMessageType(message.getType());
+                .setMessageType(message.getType())
+                .setCreatedTime(message.getCreatedTime())
+                .setCreatedDate(message.getCreatedDate());
 
         messageService.send(cud.getUser().getEmail(), messageModel);
 

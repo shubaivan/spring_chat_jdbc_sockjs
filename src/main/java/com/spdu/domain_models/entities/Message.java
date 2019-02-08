@@ -1,9 +1,9 @@
 package com.spdu.domain_models.entities;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.spdu.bll.models.ChatMessage;
 import com.spdu.bll.models.MessageType;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalDateTime;
 
 public class Message {
@@ -15,6 +15,10 @@ public class Message {
     private long relativeChatId;
     private long chatId;
     private MessageType messageType;
+    private String fullName;
+
+    private Date createdDate;
+    private Time createdTime;
 
     public Message() {
     }
@@ -83,7 +87,39 @@ public class Message {
         return messageType;
     }
 
-    public void setMessageType(MessageType messageType) {
+    public Message setMessageType(MessageType messageType) {
         this.messageType = messageType;
+
+        return this;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public Message setFullName(String fullName) {
+        this.fullName = fullName;
+
+        return this;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public Message setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+
+        return this;
+    }
+
+    public Time getCreatedTime() {
+        return createdTime;
+    }
+
+    public Message setCreatedTime(Time createdTime) {
+        this.createdTime = createdTime;
+
+        return this;
     }
 }
