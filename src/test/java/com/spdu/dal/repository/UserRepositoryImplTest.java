@@ -5,6 +5,8 @@ import com.spdu.bll.models.constants.UserRole;
 import com.spdu.domain_models.entities.User;
 import com.spdu.domain_models.entities.relations.UserRoles;
 import com.spdu.web.Application;
+import org.flywaydb.core.Flyway;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -30,20 +32,20 @@ public class UserRepositoryImplTest {
     @Autowired
     private UserRepositoryImpl userRepository;
 
-//    @Autowired
-//    Flyway flyway;
-//
-//    @Before
-//    public void init() {
-//        flyway.clean();
-//        flyway.migrate();
-//    }
+    @Autowired
+    Flyway flyway;
+
+    @Before
+    public void init() {
+        flyway.clean();
+        flyway.migrate();
+    }
 
     @Test
     @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
     public void testAddingUser() throws SQLException {
-        User user = new User(3, "Joe", "Franklin", "testmail@gmail.com", "JoeFranklin", "password", LocalDateTime.of(1999, 12, 10, 1, 23, 22));
-        assertEquals(3, userRepository.register(user));
+        User user = new User(2, "Joe", "Franklin", "testmail@gmail.com", "JoeFranklin", "password", LocalDateTime.of(1999, 12, 10, 1, 23, 22));
+        assertEquals(2, userRepository.register(user));
     }
 
     @Test
@@ -73,6 +75,8 @@ public class UserRepositoryImplTest {
     @Test
     @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
     public void testGetAll() throws SQLException {
+        User user = new User(2, "John", "FranklinJr", "testmail2@gmail.com", "JoeFranklin2", "password", LocalDateTime.of(1999, 12, 10, 1, 23, 22));
+        userRepository.register(user);
         assertEquals(2, userRepository.getAll().size());
         User testUser = userRepository.getAll().stream().filter(x -> 1 == x.getId()).findFirst().get();
         assertEquals(1, testUser.getId());
