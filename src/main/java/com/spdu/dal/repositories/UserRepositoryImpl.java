@@ -145,4 +145,19 @@ public class UserRepositoryImpl implements UserRepository {
             throw new UserException("Can't update user " + user.getEmail());
         }
     }
+
+    @Override
+    public User updateAvatar(long id, long fileId) throws SQLException, UserException {
+        String query = "UPDATE db_users SET avatar = ?" +
+                " WHERE id = ?";
+        jdbcTemplate.update(query,
+                fileId, id);
+
+        Optional<User> modifiedUser = getById(id);
+        if (modifiedUser.isPresent()) {
+            return modifiedUser.get();
+        } else {
+            throw new UserException("Can't update user!");
+        }
+    }
 }

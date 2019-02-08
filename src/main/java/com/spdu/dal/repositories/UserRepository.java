@@ -26,4 +26,6 @@ public interface UserRepository {
     UserRole getUserRole(long userId) throws SQLException;
 
     User update(long id, User user) throws SQLException, UserException;
+
+    User updateAvatar(long id, long fileId) throws SQLException, UserException;
 }

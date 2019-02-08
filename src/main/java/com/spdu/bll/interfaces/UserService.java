@@ -22,4 +22,6 @@ public interface UserService {
     Optional<User> getByUserName(String userName) throws EmptyResultDataAccessException;
 
     UserDto update(long id, UserDto user) throws SQLException, UserException;
+
+    UserDto updateAvatar(long id, long fileId) throws SQLException, UserException;
 }

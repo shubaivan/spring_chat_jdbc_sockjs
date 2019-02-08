@@ -1,11 +1,21 @@
 package com.spdu.bll.models;
 
+import com.spdu.domain_models.entities.FileEntity;
+
 public class FileEntityDto {
     private long id;
     private String name;
     private String path;
     private String contentType;
     private long ownerId;
+
+    public FileEntityDto(FileEntity fileEntity) {
+        this.id = fileEntity.getId();
+        this.name = fileEntity.getName();
+        this.path = fileEntity.getPath();
+        this.contentType = fileEntity.getContentType();
+        this.ownerId = fileEntity.getOwnerId();
+    }
 
     public FileEntityDto() {
     }

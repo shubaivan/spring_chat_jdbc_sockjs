@@ -11,6 +11,7 @@ public class FileEntityMapper implements RowMapper<FileEntity> {
     @Override
     public FileEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
         FileEntity fileEntity = new FileEntity();
+        fileEntity.setId(rs.getLong("id"));
         fileEntity.setName(rs.getString("name"));
         fileEntity.setPath(rs.getString("path"));
         fileEntity.setContentType(rs.getString("content_type"));

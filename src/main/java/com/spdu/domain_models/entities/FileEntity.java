@@ -56,4 +56,8 @@ public class FileEntity {
     public void setOwnerId(long ownerId) {
         this.ownerId = ownerId;
     }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 }

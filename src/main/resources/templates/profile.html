@@ -8,6 +8,14 @@
 
 <link rel='stylesheet' th:href="@{/css/mainform.css}" href="../../css/mainform.css"/>
 <link rel='stylesheet' th:href="@{/css/profile.css}" href="../../css/profile.css"/>
+<link rel='stylesheet' th:href="@{/css/avatar.css}" href="../../css/avatar.css"/>
+
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<!--<script src='//static.codepen.io/assets/common/stopExecutionOnTimeout-b2a7b3fe212eaa732349046d8416e00a9dec26eb7fd347590fbced3ab38af52e.js'></script>-->
+<!--<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>-->
+<script src="/js/avatar.js"></script>
 
 <nav class="navbar">
     <ul class="navbar-nav">
@@ -40,24 +48,37 @@
     </div>
 
     <div class="update-form">
-        <form action="#" th:action="@{/profile/update}" th:method="PUT" modelAttribute="userDto" th:object="${userDTO}">
-            <h3>First name</h3>
-            <input type="text" class="text" th:field="*{firstName}">
-            <h3>Last name</h3>
-            <input type="text" class="text" th:field="*{lastName}">
-            <h3>User name</h3>
-            <input type="text" class="text" th:field="*{userName}">
-            <h3>Linkedin</h3>
-            <input type="text" class="text" th:field="*{urlLinkedin}">
-            <h3>Facebook</h3>
-            <input type="text" class="text" th:field="*{urlFacebook}">
-            <h3>GitLab</h3>
-            <input type="text" class="text" th:field="*{urlGit}">
-            <h3>Date Of Birthday</h3>
-            <input type="date" class="text" th:value="*{dateOfBirth}" th:field="*{dateOfBirth}">
-            <button class="update">Save changes</button>
-        </form>
+        <!--<form action="#" th:action="@{/profile/avatar}" th:method="PUT" enctype="multipart/form-data">-->
+        <!--<h3>Select new avatar</h3>-->
+        <!--<input type="file" name="multipartFile" /><br/><br/>-->
+        <!--<button class="update">Upload</button>-->
+        <!--</form>-->
 
+        <form enctype="multipart/form-data" th:action="@{/profile/avatar}" th:method="PUT" th:object="${userDTO}"
+              class="avatar-upload">
+            <div class="avatar-edit">
+                <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" name="multipartFile"
+                       class="{{ $errors->has('email') ? 'alert alert-danger' : '' }}"/>
+                <label for="imageUpload"></label>
+            </div>
+            <div class="avatar-preview container2">
+                <div id="avatar" th:field="*{avatar}">
+                    <script th:inline="javascript">
+                        /*<![CDATA[*/
+
+                        // var avatar = [[*{avatar}]];
+                        rewrite();
+
+                        /*]]>*/
+                    </script>
+                    <div id="imagePreview"
+                         style="background-image: url(http://localhost:8080/api/file_entities/);">
+                        <input type="hidden" name="_token" value="{{csrf_token()}}">
+                        <input type="submit" class="btn btn-danger">
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 
