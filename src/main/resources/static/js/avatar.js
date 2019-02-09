@@ -1,22 +1,14 @@
-function readURL(input) {
+function uploadFile(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
         reader.onload = function (e) {
-            var avatarId = document.getElementById('avatar').value;
-            $('#imagePreview').css('background-image', 'url(' + e.target.result + ')');
-            $('#imagePreview').hide();
-            $('#imagePreview').fadeIn(650);
-        }
+            var image = document.getElementById("avatar");
+            image.style.backgroundImage = "url('" + e.target.result + "')";
+        };
         reader.readAsDataURL(input.files[0]);
     }
-}
+};
 
-$("#imageUpload").change(function () {
-    readURL(this);
-});
-
-function rewrite() {
-    var myDiv = document.getElementById('imagePreview');
-    var avatarId = document.getElementById('avatar').value;
-    myDiv.style.backgroundImage.concat(avatarId);
-}
+var image = document.getElementById("avatar");
+var avatarId = image.getAttribute("field");
+image.style.backgroundImage = "url('http://localhost:8080/api/file_entities/" + avatarId + "')";

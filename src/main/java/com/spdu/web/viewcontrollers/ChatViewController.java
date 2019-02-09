@@ -2,9 +2,11 @@ package com.spdu.web.viewcontrollers;
 
 import com.spdu.bll.interfaces.ChatService;
 import com.spdu.bll.interfaces.UserService;
+import com.spdu.bll.models.CustomUserDetails;
 import com.spdu.domain_models.entities.Chat;
 import com.spdu.domain_models.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +37,10 @@ public class ChatViewController {
         Optional<Chat> result = chatService.getById(id);
         Chat chat = result.get();
         modelMap.addAttribute("chat", chat);
-        modelMap.addAttribute("username", principal.getName());
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+        CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
+        String fullName = cud.getUser().getFirstName() + ' ' + cud.getUser().getLastName();
+        modelMap.addAttribute("fullName", fullName);
 
         return "chat";
     }
@@ -51,7 +56,6 @@ public class ChatViewController {
             modelMap.addAttribute("allChats", allChats);
             modelMap.addAttribute("allPublic", allPublic);
         }
-        modelMap.addAttribute("username", principal.getName());
 
         return "mainform";
     }

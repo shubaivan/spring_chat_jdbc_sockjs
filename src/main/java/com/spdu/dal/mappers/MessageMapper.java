@@ -4,8 +4,8 @@ import com.spdu.bll.models.MessageType;
 import com.spdu.domain_models.entities.Message;
 import org.springframework.jdbc.core.RowMapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDateTime;
 
 public class MessageMapper implements RowMapper<Message> {
 
@@ -22,6 +22,26 @@ public class MessageMapper implements RowMapper<Message> {
             message.setMessageType(MessageType.valueOf(rs.getString("message_type")));
         }
 
+        if (hasColumn(rs, "fullname") && rs.getString("fullname") != null) {
+            message
+                    .setFullName(rs.getString("fullname"));
+        }
+
+        message
+                .setCreatedDate(rs.getDate("created_at"))
+                .setCreatedTime(rs.getTime("created_at"));
+
         return message;
+    }
+
+    public static boolean hasColumn(ResultSet rs, String columnName) throws SQLException {
+        ResultSetMetaData rsmd = rs.getMetaData();
+        int columns = rsmd.getColumnCount();
+        for (int x = 1; x <= columns; x++) {
+            if (columnName.equals(rsmd.getColumnName(x))) {
+                return true;
+            }
+        }
+        return false;
     }
 }

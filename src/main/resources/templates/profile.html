@@ -13,13 +13,13 @@
 
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-<script src="/js/avatar.js"></script>
 
 <nav class="navbar">
     <ul class="navbar-nav">
         <li><a href="/profile" th:href="@{/profile}">Profile</a></li>
-        <li><a href="/users" th:href="@{/users}">Users</a></li>
-        <li><a href="#">Chats</a></li>
+        <li><a href="#">Users</a></li>
+        <li><a href="/chats" th:href="@{/chats}">Chats</a></li>
+        <li class="logout"><a href="/logout" th:href="@{/logout}">Logout</a></li>
     </ul>
 </nav>
 
@@ -49,30 +49,23 @@
         <form enctype="multipart/form-data" th:action="@{/profile/avatar}" th:method="PUT" th:object="${userDTO}"
               class="avatar-upload">
             <div class="avatar-edit">
-                <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" name="multipartFile"
-                       class="{{ $errors->has('email') ? 'alert alert-danger' : '' }}"/>
+                <input type='file' id="imageUpload" onchange="uploadFile(this)" accept=".png, .jpg, .jpeg"
+                       name="multipartFile"/>
                 <label for="imageUpload"></label>
             </div>
             <div class="avatar-preview container2">
                 <div id="avatar" th:field="*{avatar}">
-                    <script th:inline="javascript">
-                        /*<![CDATA[*/
-
-                        // var avatar = [[*{avatar}]];
-                        rewrite();
-
-                        /*]]>*/
-                    </script>
-                    <div id="imagePreview"
-                         style="background-image: url(http://localhost:8080/api/file_entities/);">
-                        <input type="hidden" name="_token" value="{{csrf_token()}}">
-                        <input type="submit" class="btn btn-danger">
+                    <div id="imagePreview">
+                        <!--<input type="submit" class="update">-->
                     </div>
+
                 </div>
             </div>
+            <button type="submit" class="update">Save changes</button>
         </form>
     </div>
 </div>
 
+<script src="/js/avatar.js"></script>
 </body>
 </html>

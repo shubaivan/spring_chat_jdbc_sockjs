@@ -31,7 +31,9 @@ function getChatMessages(currentChatId) {
                 var payload = {
                     type: val.messageType,
                     content: val.text,
-                    sender: val.authorID
+                    sender: val.fullName,
+                    createdDate: val.createdDate,
+                    createdTime: val.createdTime
                 };
 
                 parseMessage(payload);
@@ -149,8 +151,18 @@ function parseMessage(message) {
         messageElement.appendChild(avatarElement);
 
         var usernameElement = document.createElement('span');
-        var usernameText = document.createTextNode(message.sender);
+        var brElement = document.createElement('br');
+        var usernameText = document.createTextNode(
+            message.sender
+        );
+
+        var dateTimeText = document.createTextNode(
+            message.createdDate + ' ' + message.createdTime
+        );
         usernameElement.appendChild(usernameText);
+        usernameElement.appendChild(brElement);
+        usernameElement.appendChild(dateTimeText);
+
         messageElement.appendChild(usernameElement);
     }
 
