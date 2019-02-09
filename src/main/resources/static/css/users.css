@@ -1,0 +1,38 @@
+table {
+    font-family: "Arial", "Arial", sans-serif;
+    text-align: center;
+    border-collapse: separate;
+    border-spacing: 5px;
+    background: #ECE9E0;
+    color: #656665;
+    border: 16px solid #ECE9E0;
+    border-radius: 20px;
+}
+
+th {
+    font-size: 18px;
+    padding: 10px;
+}
+
+td {
+    background: #f1f1f1;
+    padding: 10px;
+}
+
+h2 {
+    font-size: 19px;
+    font-weight: bold;
+}
+
+h1 {
+    padding-left: 12px;
+    font-size: 22px;
+    font-weight: bold;
+    padding-bottom: 5px;
+    letter-spacing: 0;
+    display: inline-block;
+}
+
+.floatright {
+    float: right;
+}
