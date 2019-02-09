@@ -8,6 +8,7 @@ import com.spdu.bll.models.FileEntityDto;
 import com.spdu.bll.models.UserDto;
 import com.spdu.domain_models.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.Principal;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -80,4 +82,13 @@ public class UserViewController {
         }
         return "profile";
     }
+
+    @GetMapping("/users")
+    public String getAllUsers(ModelMap modelMap) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<User> user = userService.getAll(email);
+        modelMap.addAttribute("users", user);
+        return "users";
+    }
+
 }
