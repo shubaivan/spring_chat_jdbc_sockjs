@@ -13,6 +13,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -41,17 +42,17 @@ public class UserViewController {
     }
 
     @PutMapping("/profile/update")
-    public String updateUserInfoSubmit(UserDto userDTO, ModelMap modelMap, Principal principal) throws UserException, SQLException {
+    public ModelAndView updateUserInfoSubmit(UserDto userDTO, ModelMap modelMap, Principal principal) throws UserException, SQLException {
         Optional<User> user = userService.getByEmail(principal.getName());
         if (user.isPresent()) {
             UserDto result = userService.update(user.get().getId(), userDTO);
             modelMap.addAttribute("userDTO", result);
         }
-        return "profile";
+        return new ModelAndView("redirect:/profile", modelMap);
     }
 
     @PutMapping("/profile/avatar")
-    public String updateUsersAvatar(MultipartFile multipartFile, ModelMap modelMap, Principal principal) {
+    public ModelAndView updateUsersAvatar(MultipartFile multipartFile, ModelMap modelMap, Principal principal) {
         try {
             Optional<User> user = userService.getByEmail(principal.getName());
             if (user.isPresent()) {
@@ -78,6 +79,6 @@ public class UserViewController {
         } catch (IOException | SQLException | UserException | CustomFileException e) {
             throw new RuntimeException(e);
         }
-        return "profile";
+        return new ModelAndView("redirect:/profile", modelMap);
     }
 }
