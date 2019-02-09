@@ -21,15 +21,3 @@ $(document).ready(function () {
         })
     });
 });
-
-
-// <h2 class="text"> All public chats</h2>
-// <div layout:fragment="content">
-//     <div th:each="chat: ${allPublic}">
-//     <a href="#" class="chats_info_full" th:attr="data-el-id=${chat.id}">
-//     <h th:text="${chat.name}">Name</h>
-//     </a>
-//     <br>
-//     </div>
-//     </div>
-//
