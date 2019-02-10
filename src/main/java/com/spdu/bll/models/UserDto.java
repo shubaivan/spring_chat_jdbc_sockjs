@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 public class UserDto {
     private long id;
+    private long avatar;
     private String firstName;
     private String lastName;
     private String email;
@@ -31,6 +32,7 @@ public class UserDto {
         this.urlLinkedin = user.getUrlLinkedin();
         this.urlFacebook = user.getUrlFacebook();
         this.urlGit = user.getUrlGit();
+        this.avatar = user.getAvatar();
     }
 
     public void setId(long id) {
@@ -107,5 +109,13 @@ public class UserDto {
 
     public boolean isEnabled() {
         return true;
+    }
+
+    public long getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(long avatar) {
+        this.avatar = avatar;
     }
 }

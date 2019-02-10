@@ -1,14 +1,17 @@
 package com.spdu.bll.models;
 
+import java.sql.Date;
+import java.sql.Time;
+
 public class ChatMessage {
 
     private MessageType type;
     private String content;
     private String sender;
+    private Integer chatId;
 
-    public enum MessageType {
-        CHAT, JOIN, LEAVE
-    }
+    private Date createdDate;
+    private Time createdTime;
 
     public MessageType getType() {
         return type;
@@ -34,5 +37,28 @@ public class ChatMessage {
         this.sender = sender;
     }
 
+    public Integer getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(Integer chatId) {
+        this.chatId = chatId;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Time getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Time createdTime) {
+        this.createdTime = createdTime;
+    }
 }
 

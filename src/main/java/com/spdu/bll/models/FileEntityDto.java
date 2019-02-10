@@ -1,16 +1,23 @@
-package com.spdu.domain_models.entities;
+package com.spdu.bll.models;
 
-import java.time.LocalDateTime;
+import com.spdu.domain_models.entities.FileEntity;
 
-public class FileEntity {
+public class FileEntityDto {
     private long id;
     private String name;
     private String path;
     private String contentType;
-    private LocalDateTime createdAt;
     private long ownerId;
 
-    public FileEntity() {
+    public FileEntityDto(FileEntity fileEntity) {
+        this.id = fileEntity.getId();
+        this.name = fileEntity.getName();
+        this.path = fileEntity.getPath();
+        this.contentType = fileEntity.getContentType();
+        this.ownerId = fileEntity.getOwnerId();
+    }
+
+    public FileEntityDto() {
     }
 
     public long getId() {
@@ -41,23 +48,11 @@ public class FileEntity {
         this.contentType = contentType;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public long getOwnerId() {
         return ownerId;
     }
 
     public void setOwnerId(long ownerId) {
         this.ownerId = ownerId;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 }

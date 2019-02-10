@@ -1,4 +1,4 @@
-package com.spdu.dal.repository;
+package com.spdu.dal.repositories;
 
 import com.spdu.dal.mappers.ChatMapper;
 import com.spdu.bll.models.constants.ChatType;
@@ -86,7 +86,7 @@ public class ChatRepositoryImpl implements ChatRepository {
     public boolean userIsPresentInChat(long userId, long chatId) throws EmptyResultDataAccessException {
         String query = "SELECT * FROM chats_users " +
                 "WHERE chats_users.user_id=" + userId
-                + "AND chats_users.user_id=" + chatId;
+                + "AND chats_users.chat_id=" + chatId;
         return jdbcTemplate.queryForRowSet(query).next();
     }
 

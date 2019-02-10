@@ -1,25 +1,55 @@
 $(document).ready(function () {
-    var mainContainer = $('#main_container');
+    // var mainContainer = $('#main_container');
     $('.chats_info').on('click', function () {
         var current = $(this);
+        var currentChatId = current.data('elId');
 
         $.ajax({
             type: "GET",
-            url: '/chats/chat/' + current.data('elId'),
+            url: '/chats/chat/' + currentChatId,
             success: function (data) {
                 console.log(data);
                 var replaceContainer = '<div id="main_container">' + data + '</div>';
-                mainContainer.replaceWith(replaceContainer);
+                $('#main_container').replaceWith(replaceContainer);
+                getChatMessages(currentChatId);
             },
             error: function (result) {
                 console.log(result)
-            },
-            complete: function (jqXHR, textStatu) {
-                stomp();
             }
         })
     });
 });
+
+function getChatMessages(currentChatId) {
+    $.ajax({
+        type: "GET",
+        url: 'api/messages/chat/' + currentChatId,
+        success: function (data) {
+
+            $.each(data, function (key, val) {
+                console.log(val);
+                var payload = {
+                    type: val.messageType,
+                    content: val.text,
+                    sender: val.fullName,
+                    createdDate: val.createdDate,
+                    createdTime: val.createdTime
+                };
+
+                parseMessage(payload);
+            });
+            stomp()
+        },
+        error: function (result) {
+            console.log(result)
+        }
+    })
+}
+
+var colors = [
+    '#2196F3', '#32c787', '#00BCD4', '#ff5652',
+    '#ffc107', '#ff85af', '#FF9800', '#39bbb0'
+];
 
 function stomp() {
     // var usernamePage = document.querySelector('#username-page');
@@ -29,15 +59,12 @@ function stomp() {
     var messageInput = document.querySelector('#message');
     var messageArea = document.querySelector('#messageArea');
     var connectingElement = document.querySelector('#connecting');
+    var chatId = $('#chatId').data('elId');
 
     var stompClient = null;
     var username = null;
-
-    var colors = [
-        '#2196F3', '#32c787', '#00BCD4', '#ff5652',
-        '#ffc107', '#ff85af', '#FF9800', '#39bbb0'
-    ];
     connect();
+
     function connect() {
         //username = document.querySelector('#name').value.trim();
         username = $('#username').text().trim()
@@ -57,12 +84,12 @@ function stomp() {
 
     function onConnected() {
         // Subscribe to the Public Topic
-        stompClient.subscribe('/topic/public', onMessageReceived);
+        stompClient.subscribe('/topic/public/' + chatId, onMessageReceived);
 
         // Tell your username to the server
-        stompClient.send("/app/chat.addUser",
+        stompClient.send("/app/chat/" + chatId + "/addUser",
             {},
-            JSON.stringify({sender: username, type: 'JOIN'})
+            JSON.stringify({sender: username, type: 'JOIN', chatId: chatId})
         )
 
         // connectingElement.classList.add('hidden');
@@ -86,67 +113,78 @@ function stomp() {
             var chatMessage = {
                 sender: username,
                 content: messageInput.value,
-                type: 'CHAT'
+                type: 'CHAT',
+                chatId: chatId
             };
-            stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+            stompClient.send("/app/chat/" + chatId + "/sendMessage", {}, JSON.stringify(chatMessage));
             messageInput.value = '';
         }
         event.preventDefault();
     }
 
-
-    function onMessageReceived(payload) {
-        var message = JSON.parse(payload.body);
-
-        var messageElement = document.createElement('li');
-
-        if(message.type === 'JOIN') {
-            messageElement.classList.add('event-message');
-            message.content = message.sender + ' joined!';
-        } else if (message.type === 'LEAVE') {
-            messageElement.classList.add('event-message');
-            message.content = message.sender + ' left!';
-        } else {
-            messageElement.classList.add('chat-message');
-
-            var avatarElement = document.createElement('i');
-            var avatarText = document.createTextNode(message);
-            avatarElement.appendChild(avatarText);
-            avatarElement.style['background-color'] = getAvatarColor(0);
-
-            messageElement.appendChild(avatarElement);
-
-            var usernameElement = document.createElement('span');
-            var usernameText = document.createTextNode(message.sender);
-            usernameElement.appendChild(usernameText);
-            messageElement.appendChild(usernameElement);
-        }
-
-        var textElement = document.createElement('p');
-        //Change it!!
-        var messageText = document.createTextNode(message.content);
-        textElement.appendChild(messageText);
-
-        messageElement.appendChild(textElement);
-
-
-        messageArea.appendChild(messageElement);
-        messageArea.scrollTop = messageArea.scrollHeight;
-    }
-
-
-    function getAvatarColor(messageSender) {
-        var hash = 0;
-        for (var i = 0; i < messageSender.length; i++) {
-            hash = 31 * hash + messageSender.charCodeAt(i);
-        }
-        var index = Math.abs(hash % colors.length);
-        return colors[index];
-    }
-
-// usernameForm.addEventListener('submit', connect, true);
     messageForm.addEventListener('submit', sendMessage, true);
+}
 
+function onMessageReceived(payload) {
+    var message = JSON.parse(payload.body);
+
+    parseMessage(message);
+}
+
+function parseMessage(message) {
+    var messageElement = document.createElement('li');
+
+    if(message.type === 'JOIN') {
+        messageElement.classList.add('event-message');
+        message.content = message.sender + ' joined!';
+    } else if (message.type === 'LEAVE') {
+        messageElement.classList.add('event-message');
+        message.content = message.sender + ' left!';
+    } else {
+        messageElement.classList.add('chat-message');
+
+        var avatarElement = document.createElement('i');
+        var avatarText = document.createTextNode(message);
+        avatarElement.appendChild(avatarText);
+        avatarElement.style['background-color'] = getAvatarColor(0);
+
+        messageElement.appendChild(avatarElement);
+
+        var usernameElement = document.createElement('span');
+        var brElement = document.createElement('br');
+        var usernameText = document.createTextNode(
+            message.sender
+        );
+
+        var dateTimeText = document.createTextNode(
+            message.createdDate + ' ' + message.createdTime
+        );
+        usernameElement.appendChild(usernameText);
+        usernameElement.appendChild(brElement);
+        usernameElement.appendChild(dateTimeText);
+
+        messageElement.appendChild(usernameElement);
+    }
+
+    var textElement = document.createElement('p');
+    //Change it!!
+    var messageText = document.createTextNode(message.content);
+    textElement.appendChild(messageText);
+
+    messageElement.appendChild(textElement);
+
+
+    messageArea.appendChild(messageElement);
+    messageArea.scrollTop = messageArea.scrollHeight;
+}
+
+function getAvatarColor(messageSender) {
+    var hash = 0;
+    for (var i = 0; i < messageSender.length; i++) {
+        hash = 31 * hash + messageSender.charCodeAt(i);
+    }
+    var index = Math.abs(hash % colors.length);
+    return colors[index];
 }
 
 function openSideMenu() {

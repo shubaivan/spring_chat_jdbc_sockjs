@@ -1,7 +1,7 @@
 package com.spdu.bll.services;
 
 import com.spdu.bll.interfaces.ChatService;
-import com.spdu.dal.repository.ChatRepository;
+import com.spdu.dal.repositories.ChatRepository;
 import com.spdu.domain_models.entities.Chat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;

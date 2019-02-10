@@ -1,6 +1,7 @@
 package com.spdu.web.restcontrollers;
 
 import com.spdu.bll.custom_exceptions.UserException;
+import com.spdu.bll.interfaces.FileEntityService;
 import com.spdu.bll.interfaces.UserService;
 import com.spdu.bll.models.UserDto;
 import com.spdu.bll.models.UserRegisterDto;
@@ -22,11 +23,13 @@ import java.util.Optional;
 public class UserController {
     private final UserService userService;
     private final CustomUserDetailsService userDetailsService;
+    private final FileEntityService fileEntityService;
 
     @Autowired
-    public UserController(UserService userService, CustomUserDetailsService userDetailsService) {
+    public UserController(UserService userService, CustomUserDetailsService userDetailsService, FileEntityService fileEntityService) {
         this.userService = userService;
         this.userDetailsService = userDetailsService;
+        this.fileEntityService = fileEntityService;
     }
 
     @GetMapping("{id}")

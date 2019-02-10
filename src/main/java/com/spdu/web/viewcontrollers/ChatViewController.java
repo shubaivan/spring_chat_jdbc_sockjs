@@ -2,13 +2,11 @@ package com.spdu.web.viewcontrollers;
 
 import com.spdu.bll.interfaces.ChatService;
 import com.spdu.bll.interfaces.UserService;
-import com.spdu.bll.models.UserRegisterDto;
-import com.spdu.dal.repository.UserRepository;
+import com.spdu.bll.models.CustomUserDetails;
 import com.spdu.domain_models.entities.Chat;
 import com.spdu.domain_models.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,17 +22,14 @@ import java.util.Optional;
 public class ChatViewController {
     private final ChatService chatService;
     private final UserService userService;
-    private final UserRepository userRepository;
 
     @Autowired
     public ChatViewController(
             ChatService chatService,
-            UserService userService,
-            UserRepository userRepository
+            UserService userService
     ) {
         this.chatService = chatService;
         this.userService = userService;
-        this.userRepository = userRepository;
     }
 
     @RequestMapping("/chat/{id}")
@@ -42,8 +37,10 @@ public class ChatViewController {
         Optional<Chat> result = chatService.getById(id);
         Chat chat = result.get();
         modelMap.addAttribute("chat", chat);
-        modelMap.addAttribute("username", principal.getName());
-        modelMap.addAttribute("chatId", chat.getId());
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+        CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
+        String fullName = cud.getUser().getFirstName() + ' ' + cud.getUser().getLastName();
+        modelMap.addAttribute("fullName", fullName);
 
         return "chat";
     }
@@ -59,7 +56,6 @@ public class ChatViewController {
             modelMap.addAttribute("allChats", allChats);
             modelMap.addAttribute("allPublic", allPublic);
         }
-        modelMap.addAttribute("username", principal.getName());
 
         return "mainform";
     }

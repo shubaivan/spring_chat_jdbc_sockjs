@@ -27,7 +27,9 @@
 
     <ul class="navbar-nav">
         <li><a href="/profile" th:href="@{/profile}">Profile</a></li>
-        <li><a href="#">Users</a></li>
+        <li><a href="/chats" th:href="@{/chats}">Chats</a></li>
+        <li><a href="/users" th:href="@{/users}">Users</a></li>
+        <li><a href="/logout" th:href="@{/logout}" class="logout">Logout</a></li>
     </ul>
 
 </nav>
@@ -58,7 +60,7 @@
     <h2 class="text"> All public chats</h2>
     <div layout:fragment="content">
         <div th:each="chat: ${allPublic}">
-            <a href="#" class="chats_info" th:attr="data-el-id=${chat.getId()}">
+            <a href="#" class="chats_info_full" th:attr="data-el-id=${chat.id}">
                 <h th:text="${chat.name}">Name</h>
             </a>
             <br>
@@ -81,6 +83,6 @@
 </script>
 
 <script src="/js/mainform.js"></script>
-
+<script src="/js/chatinfo.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-package com.spdu.dal.repository;
+package com.spdu.dal.repositories;
 
 import com.spdu.dal.mappers.MessageMapper;
 import com.spdu.domain_models.entities.Message;
@@ -14,7 +14,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +38,10 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public List<Message> getByChatId(long id) throws EmptyResultDataAccessException {
-        String query = "SELECT * FROM messages WHERE messages.chat_id =?";
+        String query = "SELECT *, concat(u.first_name, ' ', u.last_name) as fullname\n" +
+                "FROM messages AS m \n" +
+                "LEFT JOIN db_users AS u ON u.id = m.author_id \n" +
+                "WHERE m.chat_id =?";
         List<Message> messages = jdbcTemplate.query(query,
                 new Object[]{id},
                 rs -> {
@@ -57,7 +59,7 @@ public class MessageRepositoryImpl implements MessageRepository {
         String query = "INSERT INTO messages (" +
                 "text, created_at," +
                 " author_id, relative_message_id," +
-                "relative_chat_id, chat_id) VALUES (?,?,?,?,?,?)";
+                "relative_chat_id, chat_id, message_type) VALUES (?,?,?,?,?,?,?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -70,6 +72,7 @@ public class MessageRepositoryImpl implements MessageRepository {
             ps.setLong(4, message.getRelativeMessageId());
             ps.setLong(5, message.getRelativeChatId());
             ps.setLong(6, message.getChatId());
+            ps.setString(7, message.getMessageType().name());
             return ps;
         }, keyHolder);
         return Long.valueOf(keyHolder.getKeys().get("id").toString());

@@ -1,6 +1,5 @@
 package com.spdu.web.restcontrollers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spdu.bll.interfaces.MessageService;
 import com.spdu.bll.models.MessageReturnDto;
@@ -10,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.socket.TextMessage;
 
 import java.security.Principal;
 import java.util.List;
@@ -61,7 +59,6 @@ public class MessageController {
             ObjectMapper mapper = new ObjectMapper();
             Optional<MessageReturnDto> newMessage = messageService.send(principal.getName(), message);
             if (newMessage.isPresent()) {
-                //socketHandler.sendMess(new TextMessage(mapper.writeValueAsString(newMessage.get())));
                 return new ResponseEntity(newMessage.get(), HttpStatus.CREATED);
             }
         } catch (Exception e) {

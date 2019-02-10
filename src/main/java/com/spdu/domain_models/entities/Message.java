@@ -1,5 +1,9 @@
 package com.spdu.domain_models.entities;
 
+import com.spdu.bll.models.MessageType;
+
+import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalDateTime;
 
 public class Message {
@@ -10,6 +14,11 @@ public class Message {
     private long relativeMessageId;
     private long relativeChatId;
     private long chatId;
+    private MessageType messageType;
+    private String fullName;
+
+    private Date createdDate;
+    private Time createdTime;
 
     public Message() {
     }
@@ -22,8 +31,10 @@ public class Message {
         return chatId;
     }
 
-    public void setChatId(long chatId) {
+    public Message setChatId(long chatId) {
         this.chatId = chatId;
+
+        return this;
     }
 
     public long getAuthorID() {
@@ -62,11 +73,53 @@ public class Message {
         this.createdAt = createdAt;
     }
 
-    public void setText(String text) {
+    public Message setText(String text) {
         this.text = text;
+
+        return this;
     }
 
     public long getId() {
         return id;
+    }
+
+    public MessageType getMessageType() {
+        return messageType;
+    }
+
+    public Message setMessageType(MessageType messageType) {
+        this.messageType = messageType;
+
+        return this;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public Message setFullName(String fullName) {
+        this.fullName = fullName;
+
+        return this;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public Message setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+
+        return this;
+    }
+
+    public Time getCreatedTime() {
+        return createdTime;
+    }
+
+    public Message setCreatedTime(Time createdTime) {
+        this.createdTime = createdTime;
+
+        return this;
     }
 }

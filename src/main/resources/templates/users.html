@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>SPD-Talks</title>
+</head>
+<body>
+<script src="/js/avatar.js"></script>
+<link rel='stylesheet' th:href="@{/css/mainform.css}" href="../../css/mainform.css"/>
+<link rel='stylesheet' th:href="@{/css/users.css}" href="../../css/users.css"/>
+<nav class="navbar">
+    <ul class="navbar-nav">
+        <li><a href="/profile" th:href="@{/profile}">Profile</a></li>
+        <li><a href="/chats" th:href="@{/chats}">Chats</a></li>
+        <li><a href="/users" th:href="@{/users}">Users</a></li>
+        <li><a href="/logout" th:href="@{/logout}" class="logout">Logout</a></li>
+    </ul>
+</nav>
+
+<div id="main_container">
+    <table>
+        <caption align="centre"><h1>User list</h1></caption>
+        <tr>
+            <td><h2>First name</h2></td>
+            <td><h2>Last name</h2></td>
+            <td><h2>Email</h2></td>
+            <td><h2>User name</h2></td>
+            <td><h2>Date of birth</h2></td>
+            <td><h2>URL Linkedin</h2></td>
+            <td><h2>URL Facebook</h2></td>
+            <td><h2>URL Git</h2></td>
+        </tr>
+        <th:block th:each="user : ${users}">
+            <tr>
+                <td th:text="${user.firstName}">...</td>
+                <td th:text="${user.lastName}">...</td>
+                <td th:text="${user.email}">...</td>
+                <td th:text="${user.userName}">...</td>
+                <td th:text="${user.dateOfBirth}">...</td>
+                <td th:text="${user.urlLinkedin}">...</td>
+                <td th:text="${user.urlFacebook}">...</td>
+                <td th:text="${user.urlGit}">...</td>
+            </tr>
+        </th:block>
+    </table>
+</div>
+</div>
+
+</body>
+</html>

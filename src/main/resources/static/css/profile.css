@@ -7,7 +7,7 @@ h2:hover {
 }
 
 .update-form {
-    position: absolute;
+    /*position: absolute;*/
     height: 570px;
     width: 405px;
     margin: auto;
@@ -69,6 +69,10 @@ input[type=text] {
     margin-top: 10px;
     border: none;
     text-transform: uppercase;
+}
+
+#main_container {
+    display: flex;
 }
 
 .update:hover {
