@@ -10,6 +10,7 @@ import com.spdu.bll.models.UserDto;
 import com.spdu.domain_models.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 
 @Controller
@@ -36,10 +38,12 @@ public class UserViewController {
 
     @GetMapping("/profile")
     public String profile(ModelMap modelMap, Principal principal) {
-        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
-        CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
-
-        modelMap.addAttribute("userDTO", new UserDto(cud.getUser()));
+        Optional<User> optionalUser = userService.getByEmail(principal.getName());
+        if (optionalUser.isPresent()) {
+            modelMap.addAttribute("userDTO", new UserDto(optionalUser.get()));
+        } else {
+            throw new UsernameNotFoundException(principal.getName() + " - user not found!");
+        }
 
         return "profile";
     }
@@ -67,7 +71,7 @@ public class UserViewController {
             properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("application.properties"));
 
             String sServerLocation = properties.getProperty("server.upload.docs.path");
-            String path = "\\avatar\\" + principal.getName() + "\\";
+            String path = "/avatar/" + principal.getName() + "/";
 
             multipartFile.transferTo(fileEntityService.store(multipartFile.getOriginalFilename(), sServerLocation + path));
 
@@ -79,9 +83,9 @@ public class UserViewController {
             fileEntityDto.setOwnerId(userId);
 
             FileEntityDto newFile = fileEntityService.save(fileEntityDto);
-            userService.updateAvatar(userId, newFile.getId());
+            UserDto updatedUser = userService.updateAvatar(userId, newFile.getId());
 
-            modelMap.addAttribute("userDTO", new UserDto(cud.getUser()));
+            modelMap.addAttribute("userDTO", updatedUser);
         } catch (IOException | SQLException | UserException | CustomFileException e) {
             throw new RuntimeException(e);
         }

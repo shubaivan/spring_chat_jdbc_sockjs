@@ -72,8 +72,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateAvatar(long id, long fileId) throws SQLException, UserException {
-        userRepository.updateAvatar(id, fileId);
-        return null;
+        return new UserDto(userRepository.updateAvatar(id, fileId));
     }
 
     @Override
