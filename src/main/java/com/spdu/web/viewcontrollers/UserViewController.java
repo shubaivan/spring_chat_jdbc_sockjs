@@ -8,6 +8,7 @@ import com.spdu.bll.models.CustomUserDetails;
 import com.spdu.bll.models.FileEntityDto;
 import com.spdu.bll.models.UserDto;
 import com.spdu.domain_models.entities.User;
+import com.spdu.web.helpers.FileUploader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,17 +24,16 @@ import java.security.Principal;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
 
 @Controller
 public class UserViewController {
     private final UserService userService;
-    private final FileEntityService fileEntityService;
+    private final FileUploader fileUploader;
 
     @Autowired
-    public UserViewController(UserService userService, FileEntityService fileEntityService) {
+    public UserViewController(UserService userService, FileUploader fileUploader) {
         this.userService = userService;
-        this.fileEntityService = fileEntityService;
+        this.fileUploader = fileUploader;
     }
 
     @GetMapping("/profile")
@@ -66,23 +66,9 @@ public class UserViewController {
             UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
             CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
             long userId = cud.getId();
-
-            Properties properties = new Properties();
-            properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("application.properties"));
-
-            String sServerLocation = properties.getProperty("server.upload.docs.path");
             String path = "/avatar/" + principal.getName() + "/";
 
-            multipartFile.transferTo(fileEntityService.store(multipartFile.getOriginalFilename(), sServerLocation + path));
-
-            FileEntityDto fileEntityDto = new FileEntityDto();
-
-            fileEntityDto.setContentType(multipartFile.getContentType());
-            fileEntityDto.setName(multipartFile.getOriginalFilename());
-            fileEntityDto.setPath(path + multipartFile.getOriginalFilename());
-            fileEntityDto.setOwnerId(userId);
-
-            FileEntityDto newFile = fileEntityService.save(fileEntityDto);
+            FileEntityDto newFile = fileUploader.uploadFile(multipartFile, path, userId);
             UserDto updatedUser = userService.updateAvatar(userId, newFile.getId());
 
             modelMap.addAttribute("userDTO", updatedUser);
@@ -98,5 +84,4 @@ public class UserViewController {
         modelMap.addAttribute("users", users);
         return "users";
     }
-
 }
