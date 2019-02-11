@@ -34,12 +34,14 @@ public class ChatViewController {
 
     @RequestMapping("/chat/{id}")
     public String getInfoChat(@PathVariable long id, ModelMap modelMap, Principal principal) {
-        Optional<Chat> result = chatService.getById(id);
-        Chat chat = result.get();
-        modelMap.addAttribute("chat", chat);
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
         CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
+
+        Optional<Chat> result = chatService.getById(id);
+        Chat chat = result.get();
         String fullName = cud.getUser().getFirstName() + ' ' + cud.getUser().getLastName();
+
+        modelMap.addAttribute("chat", chat);
         modelMap.addAttribute("fullName", fullName);
 
         return "chat";
@@ -47,15 +49,17 @@ public class ChatViewController {
 
     @GetMapping
     public String setChatsContent(ModelMap modelMap, Principal principal) {
-        Optional<User> user = userService.getByEmail(principal.getName());
-        if (user.isPresent()) {
-            List<Chat> ownChats = chatService.getAllOwn(user.get().getId());
-            List<Chat> allChats = chatService.getAll(user.get().getId());
-            List<Chat> allPublic = chatService.getPublic(user.get().getId());
-            modelMap.addAttribute("ownChats", ownChats);
-            modelMap.addAttribute("allChats", allChats);
-            modelMap.addAttribute("allPublic", allPublic);
-        }
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+        CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
+        long userId = cud.getId();
+
+        List<Chat> ownChats = chatService.getAllOwn(userId);
+        List<Chat> allChats = chatService.getAll(userId);
+        List<Chat> allPublic = chatService.getPublic(userId);
+
+        modelMap.addAttribute("ownChats", ownChats);
+        modelMap.addAttribute("allChats", allChats);
+        modelMap.addAttribute("allPublic", allPublic);
 
         return "mainform";
     }

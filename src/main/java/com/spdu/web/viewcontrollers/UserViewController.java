@@ -4,11 +4,12 @@ import com.spdu.bll.custom_exceptions.CustomFileException;
 import com.spdu.bll.custom_exceptions.UserException;
 import com.spdu.bll.interfaces.FileEntityService;
 import com.spdu.bll.interfaces.UserService;
+import com.spdu.bll.models.CustomUserDetails;
 import com.spdu.bll.models.FileEntityDto;
 import com.spdu.bll.models.UserDto;
 import com.spdu.domain_models.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +21,6 @@ import java.io.IOException;
 import java.security.Principal;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 import java.util.Properties;
 
 @Controller
@@ -36,48 +36,52 @@ public class UserViewController {
 
     @GetMapping("/profile")
     public String profile(ModelMap modelMap, Principal principal) {
-        Optional<User> user = userService.getByEmail(principal.getName());
-        if (user.isPresent()) {
-            modelMap.addAttribute("userDTO", new UserDto(user.get()));
-        }
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+        CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
+
+        modelMap.addAttribute("userDTO", new UserDto(cud.getUser()));
+
         return "profile";
     }
 
     @PutMapping("/profile/update")
     public ModelAndView updateUserInfoSubmit(UserDto userDTO, ModelMap modelMap, Principal principal) throws UserException, SQLException {
-        Optional<User> user = userService.getByEmail(principal.getName());
-        if (user.isPresent()) {
-            UserDto result = userService.update(user.get().getId(), userDTO);
-            modelMap.addAttribute("userDTO", result);
-        }
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+        CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
+        long userId = cud.getId();
+
+        UserDto result = userService.update(userId, userDTO);
+        modelMap.addAttribute("userDTO", result);
+
         return new ModelAndView("redirect:/profile", modelMap);
     }
 
     @PutMapping("/profile/avatar")
     public ModelAndView updateUsersAvatar(MultipartFile multipartFile, ModelMap modelMap, Principal principal) {
         try {
-            Optional<User> user = userService.getByEmail(principal.getName());
-            if (user.isPresent()) {
-                Properties properties = new Properties();
-                properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("application.properties"));
+            UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+            CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
+            long userId = cud.getId();
 
-                String sServerLocation = properties.getProperty("server.upload.docs.path");
-                String path = "\\avatar\\" + principal.getName() + "\\";
+            Properties properties = new Properties();
+            properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("application.properties"));
 
-                multipartFile.transferTo(fileEntityService.store(multipartFile.getOriginalFilename(), sServerLocation + path));
+            String sServerLocation = properties.getProperty("server.upload.docs.path");
+            String path = "\\avatar\\" + principal.getName() + "\\";
 
-                FileEntityDto fileEntityDto = new FileEntityDto();
+            multipartFile.transferTo(fileEntityService.store(multipartFile.getOriginalFilename(), sServerLocation + path));
 
-                fileEntityDto.setContentType(multipartFile.getContentType());
-                fileEntityDto.setName(multipartFile.getOriginalFilename());
-                fileEntityDto.setPath(path + multipartFile.getOriginalFilename());
-                fileEntityDto.setOwnerId(user.get().getId());
+            FileEntityDto fileEntityDto = new FileEntityDto();
 
-                FileEntityDto newFile = fileEntityService.save(fileEntityDto);
-                userService.updateAvatar(user.get().getId(), newFile.getId());
+            fileEntityDto.setContentType(multipartFile.getContentType());
+            fileEntityDto.setName(multipartFile.getOriginalFilename());
+            fileEntityDto.setPath(path + multipartFile.getOriginalFilename());
+            fileEntityDto.setOwnerId(userId);
 
-                modelMap.addAttribute("userDTO", new UserDto(user.get()));
-            }
+            FileEntityDto newFile = fileEntityService.save(fileEntityDto);
+            userService.updateAvatar(userId, newFile.getId());
+
+            modelMap.addAttribute("userDTO", new UserDto(cud.getUser()));
         } catch (IOException | SQLException | UserException | CustomFileException e) {
             throw new RuntimeException(e);
         }
@@ -85,10 +89,9 @@ public class UserViewController {
     }
 
     @GetMapping("/users")
-    public String getAllUsers(ModelMap modelMap) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<User> user = userService.getAll(email);
-        modelMap.addAttribute("users", user);
+    public String getAllUsers(ModelMap modelMap, Principal principal) {
+        List<User> users = userService.getAll(principal.getName());
+        modelMap.addAttribute("users", users);
         return "users";
     }
 

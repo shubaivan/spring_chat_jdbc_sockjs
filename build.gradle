@@ -17,7 +17,7 @@ plugins {
 flyway {
     url = 'jdbc:postgresql://localhost:5432/spd_talks'
     user = 'postgres'
-    password = '12345'
+    password = 'root'
 }
 
 apply plugin: 'java'
@@ -46,7 +46,7 @@ dependencies {
     testCompile group: 'com.h2database', name: 'h2', version: '1.4.197'
     testCompile group: 'org.flywaydb.flyway-test-extensions', name: 'flyway-spring-test', version: '5.2.1'
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.1.2.RELEASE'
-    
+
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-websocket', version: '2.1.1.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '2.1.2.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.1.RELEASE'

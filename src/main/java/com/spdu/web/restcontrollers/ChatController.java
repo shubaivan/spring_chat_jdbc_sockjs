@@ -2,12 +2,14 @@ package com.spdu.web.restcontrollers;
 
 import com.spdu.bll.interfaces.ChatService;
 import com.spdu.bll.interfaces.UserService;
+import com.spdu.bll.models.CustomUserDetails;
 import com.spdu.domain_models.entities.Chat;
 import com.spdu.domain_models.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -42,48 +44,42 @@ public class ChatController {
     @GetMapping("/public")
     @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
     public ResponseEntity getPublicChats(Principal principal) {
-        Optional<User> user = userService.getByEmail(principal.getName());
-        if (user.isPresent()) {
-            List<Chat> chats = chatService.getPublic(user.get().getId());
-            return new ResponseEntity(chats, HttpStatus.OK);
-        } else {
-            return new ResponseEntity("User not found!", HttpStatus.BAD_REQUEST);
-        }
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+        CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
+
+        List<Chat> chats = chatService.getPublic(cud.getId());
+        return new ResponseEntity(chats, HttpStatus.OK);
     }
 
     @GetMapping("/own")
     @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
     public ResponseEntity getOwnChats(Principal principal) {
-        Optional<User> user = userService.getByEmail(principal.getName());
-        if (user.isPresent()) {
-            List<Chat> chats = chatService.getAllOwn(user.get().getId());
-            return new ResponseEntity(chats, HttpStatus.OK);
-        } else {
-            return new ResponseEntity("User not found!", HttpStatus.BAD_REQUEST);
-        }
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+        CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
+
+        List<Chat> chats = chatService.getAllOwn(cud.getId());
+        return new ResponseEntity(chats, HttpStatus.OK);
     }
 
     @GetMapping
     @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
     public ResponseEntity getAllChats(Principal principal) {
-        Optional<User> user = userService.getByEmail(principal.getName());
-        if (user.isPresent()) {
-            List<Chat> chats = chatService.getAll(user.get().getId());
-            return new ResponseEntity(chats, HttpStatus.OK);
-        } else {
-            return new ResponseEntity("User not found!", HttpStatus.BAD_REQUEST);
-        }
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+        CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
+
+        List<Chat> chats = chatService.getAll(cud.getId());
+        return new ResponseEntity(chats, HttpStatus.OK);
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
     public ResponseEntity create(@RequestBody Chat chat, Principal principal) {
-        Optional<User> user = userService.getByEmail(principal.getName());
-        if (user.isPresent()) {
-            chat.setOwnerId(user.get().getId());
-        }
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+        CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
 
-        Optional<Chat> result = null;
+        chat.setOwnerId(cud.getId());
+
+        Optional<Chat> result;
         try {
             result = chatService.create(chat);
         } catch (SQLException e) {
@@ -100,13 +96,10 @@ public class ChatController {
     @GetMapping("join/{chatId}")
     @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
     public ResponseEntity joinToChat(@PathVariable long chatId, Principal principal) {
-        Optional<User> user = userService.getByEmail(principal.getName());
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+        CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
 
-        if (user.isPresent()) {
-            boolean result = chatService.joinToChat(user.get().getId(), chatId);
-            return new ResponseEntity(ResponseEntity.accepted(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        }
+        boolean result = chatService.joinToChat(cud.getId(), chatId);
+        return new ResponseEntity(result, HttpStatus.OK);
     }
 }
