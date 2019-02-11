@@ -18,6 +18,7 @@ import java.util.Optional;
 @RequestMapping("api/messages")
 public class MessageController {
     private final MessageService messageService;
+
     @Autowired
     public MessageController(MessageService messageService) {
         this.messageService = messageService;
@@ -55,15 +56,11 @@ public class MessageController {
     @PostMapping("/default-chat")
     @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
     public ResponseEntity sendMessage(@RequestBody Message message, Principal principal) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            Optional<MessageReturnDto> newMessage = messageService.send(principal.getName(), message);
-            if (newMessage.isPresent()) {
-                return new ResponseEntity(newMessage.get(), HttpStatus.CREATED);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        Optional<MessageReturnDto> newMessage = messageService.send(principal.getName(), message);
+        if (newMessage.isPresent()) {
+            return new ResponseEntity(newMessage.get(), HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 }

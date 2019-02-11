@@ -32,7 +32,7 @@ public class MessageViewController {
             @Payload ChatMessage message,
             Principal principal
     ) {
-        Integer chatId = message.getChatId();
+        long chatId = message.getChatId();
 
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
         CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
