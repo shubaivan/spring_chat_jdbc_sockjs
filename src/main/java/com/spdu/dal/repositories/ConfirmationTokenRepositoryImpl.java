@@ -22,7 +22,7 @@ public class ConfirmationTokenRepositoryImpl implements ConfirmationTokenReposit
     }
 
     @Override
-    public long setConfirmationToken(ConfirmationToken confirmationToken) {
+    public String setConfirmationToken(ConfirmationToken confirmationToken) {
         String query = "INSERT INTO confirmation_token (" +
                 "confirmation_token, created_at," +
                 "user_id) VALUES (?,?,?)";
@@ -37,6 +37,6 @@ public class ConfirmationTokenRepositoryImpl implements ConfirmationTokenReposit
             ps.setLong(3, confirmationToken.getUserId());
             return ps;
         }, keyHolder);
-        return Long.valueOf(keyHolder.getKeys().get("id").toString());
+        return String.valueOf(keyHolder.getKeys().get("confirmation_token").toString());
     }
 }

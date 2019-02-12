@@ -5,6 +5,7 @@ import com.spdu.bll.interfaces.UserService;
 import com.spdu.bll.models.UserDto;
 import com.spdu.bll.models.UserRegisterDto;
 import com.spdu.dal.repositories.ChatRepository;
+import com.spdu.dal.repositories.ConfirmationTokenRepository;
 import com.spdu.dal.repositories.FileEntityRepository;
 import com.spdu.dal.repositories.UserRepository;
 import com.spdu.bll.models.constants.UserRole;
@@ -26,14 +27,14 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ChatRepository chatRepository;
-    private final FileEntityRepository fileEntityRepository;
+    private final ConfirmationTokenRepository confirmationTokenRepository;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, ChatRepository chatRepository,
-                           FileEntityRepository fileEntityRepository) {
+                           ConfirmationTokenRepository confirmationTokenRepository) {
         this.userRepository = userRepository;
         this.chatRepository = chatRepository;
-        this.fileEntityRepository = fileEntityRepository;
+        this.confirmationTokenRepository = confirmationTokenRepository;
     }
 
     @Override
@@ -112,14 +113,14 @@ public class UserServiceImpl implements UserService {
         userRepository.setUserRole(userRole);
     }
 
-    public void setConfirmationToken(long userId) throws SQLException {
+    public String setConfirmationToken(long userId) throws SQLException {
         ConfirmationToken confirmationToken = new ConfirmationToken();
 
         confirmationToken.setCreatedAt(LocalDateTime.now());
         confirmationToken.setConfirmationToken(UUID.randomUUID().toString());
         confirmationToken.setUserId(userId);
 
-        userRepository.setConfirmationToken(confirmationToken);
+        return confirmationTokenRepository.setConfirmationToken(confirmationToken);
     }
 
     private boolean emailExist(String email) throws EmptyResultDataAccessException {
