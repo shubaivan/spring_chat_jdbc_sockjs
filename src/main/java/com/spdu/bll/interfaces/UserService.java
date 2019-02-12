@@ -26,4 +26,6 @@ public interface UserService {
     UserDto updateAvatar(long id, long fileId) throws SQLException, UserException;
 
     String setConfirmationToken(long userId) throws SQLException;
+
+    boolean confirmAccount(String token) throws SQLException, UserException;
 }

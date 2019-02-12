@@ -131,4 +131,17 @@ public class UserServiceImpl implements UserService {
             return user.isPresent();
         }
     }
+
+    public boolean confirmAccount(String token) throws SQLException, UserException {
+        ConfirmationToken confirmationToken = confirmationTokenRepository.getConfirmationToken(token);
+        Optional<User> userOptional = userRepository.getById(confirmationToken.getUserId());
+
+        if(userOptional.isPresent()){
+            User user = userRepository.confirmEmail(userOptional.get().getId());
+            confirmationTokenRepository.removeToken(confirmationToken.getId());
+            return user.isEnabled();
+        }else{
+            return false;
+        }
+    }
 }

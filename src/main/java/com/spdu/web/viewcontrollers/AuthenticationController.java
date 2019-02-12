@@ -12,6 +12,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.sql.SQLException;
 import java.util.Optional;
@@ -49,25 +50,53 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public String registerSubmit(UserRegisterDto userRegisterDTO) throws UserException, SQLException {
+    public ModelAndView registerSubmit(HttpServletRequest request, ModelMap modelMap, UserRegisterDto userRegisterDTO) throws UserException, SQLException {
         Optional<User> newUser = userService.register(userRegisterDTO);
 
         if (newUser.isPresent()) {
-            sendToken(newUser.get());
+            sendToken(getUrl(request), newUser.get());
         }
-        return "login";
+        modelMap.put("email", userRegisterDTO.getEmail());
+        return new ModelAndView("registerSuccess", modelMap);
     }
 
-    private void sendToken(User user) throws SQLException {
+    @GetMapping("/confirm-account")
+    public ModelAndView confirmAccount(String token) {
+        try {
+            if (userService.confirmAccount(token)) {
+                return new ModelAndView("confirmEmail");
+            }
+        } catch (SQLException | UserException e) {
+            throw new RuntimeException(e);
+        }
+        return new ModelAndView("redirect:/register");
+    }
+
+    private void sendToken(String requestUrl, User user) throws SQLException {
         String confirmationToken = userService.setConfirmationToken(user.getUserId());
         SimpleMailMessage mailMessage = new SimpleMailMessage();
 
         mailMessage.setTo(user.getEmail());
         mailMessage.setSubject("Complete Registration!");
         mailMessage.setText("To confirm your account, please click here : "
-                + "http://localhost:8080/confirm-account?token=" + confirmationToken);
+                + requestUrl + "/confirm-account?token=" + confirmationToken);
 
         emailSender.sendEmail(mailMessage);
+    }
+
+    private String getUrl(HttpServletRequest request) {
+        String scheme = request.getScheme();
+        String serverName = request.getServerName();
+        int serverPort = request.getServerPort();
+
+        StringBuilder url = new StringBuilder();
+        url.append(scheme).append("://").append(serverName);
+
+        if (serverPort != 80 && serverPort != 443) {
+            url.append(":").append(serverPort);
+        }
+
+        return url.toString();
     }
 
     @RequestMapping("/mainform")

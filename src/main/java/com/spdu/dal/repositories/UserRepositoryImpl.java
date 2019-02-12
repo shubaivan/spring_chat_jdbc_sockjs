@@ -100,9 +100,8 @@ public class UserRepositoryImpl implements UserRepository {
                     new Object[]{email, email},
                     new UserMapper());
             return Optional.of(user);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Optional.empty();
+        } catch (EmptyResultDataAccessException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -152,6 +151,21 @@ public class UserRepositoryImpl implements UserRepository {
                 " WHERE id = ?";
         jdbcTemplate.update(query,
                 fileId, id);
+
+        Optional<User> modifiedUser = getById(id);
+        if (modifiedUser.isPresent()) {
+            return modifiedUser.get();
+        } else {
+            throw new UserException("Can't update user!");
+        }
+    }
+
+    @Override
+    public User confirmEmail(long id) throws SQLException, UserException {
+        String query = "UPDATE db_users SET is_enabled = ?" +
+                " WHERE id = ?";
+        jdbcTemplate.update(query,
+                true, id);
 
         Optional<User> modifiedUser = getById(id);
         if (modifiedUser.isPresent()) {

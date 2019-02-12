@@ -1,13 +1,16 @@
 package com.spdu.dal.repositories;
 
+import com.spdu.dal.mappers.ConfirmationTokenMapper;
 import com.spdu.domain_models.entities.ConfirmationToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -22,7 +25,7 @@ public class ConfirmationTokenRepositoryImpl implements ConfirmationTokenReposit
     }
 
     @Override
-    public String setConfirmationToken(ConfirmationToken confirmationToken) {
+    public String setConfirmationToken(ConfirmationToken confirmationToken) throws SQLException {
         String query = "INSERT INTO confirmation_token (" +
                 "confirmation_token, created_at," +
                 "user_id) VALUES (?,?,?)";
@@ -38,5 +41,26 @@ public class ConfirmationTokenRepositoryImpl implements ConfirmationTokenReposit
             return ps;
         }, keyHolder);
         return String.valueOf(keyHolder.getKeys().get("confirmation_token").toString());
+    }
+
+    @Override
+    public ConfirmationToken getConfirmationToken(String token) {
+        try {
+            String query = "SELECT * FROM confirmation_token WHERE confirmation_token =?";
+
+            ConfirmationToken confirmationToken = jdbcTemplate.queryForObject(query,
+                    new Object[]{token},
+                    new ConfirmationTokenMapper());
+            return confirmationToken;
+        } catch (EmptyResultDataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean removeToken(long id) throws SQLException {
+        String query = "DELETE FROM confirmation_token WHERE id =?";
+        jdbcTemplate.update(query, id);
+        return true;
     }
 }

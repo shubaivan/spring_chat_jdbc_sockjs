@@ -75,6 +75,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/register*").anonymous()
+                .antMatchers("/confirm-account*").anonymous()
                 .anyRequest().hasAnyRole("ADMIN", "USER")
                 .antMatchers("/chats").access("hasRole('USER')")
 
