@@ -8,6 +8,7 @@ import com.spdu.dal.repositories.ChatRepository;
 import com.spdu.dal.repositories.FileEntityRepository;
 import com.spdu.dal.repositories.UserRepository;
 import com.spdu.bll.models.constants.UserRole;
+import com.spdu.domain_models.entities.ConfirmationToken;
 import com.spdu.domain_models.entities.User;
 import com.spdu.domain_models.entities.relations.UserRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -108,6 +110,16 @@ public class UserServiceImpl implements UserService {
         userRole.setUserId(userId);
         userRole.setRoleId(role.ordinal() + 1);
         userRepository.setUserRole(userRole);
+    }
+
+    public void setConfirmationToken(long userId) throws SQLException {
+        ConfirmationToken confirmationToken = new ConfirmationToken();
+
+        confirmationToken.setCreatedAt(LocalDateTime.now());
+        confirmationToken.setConfirmationToken(UUID.randomUUID().toString());
+        confirmationToken.setUserId(userId);
+
+        userRepository.setConfirmationToken(confirmationToken);
     }
 
     private boolean emailExist(String email) throws EmptyResultDataAccessException {
