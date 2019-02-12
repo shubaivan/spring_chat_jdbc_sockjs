@@ -17,9 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
@@ -69,12 +67,12 @@ public class ChatRepositoryImplTest {
         assertEquals(1, testChat.getOwnerId());
     }
 
-//    @Test
-//    @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-//    public void testJoinToChat() throws SQLException {
-//        createChats();
-//        assertEquals(3, chatRepository.joinToChat(1, 2));
-//    }
+    @Test
+    @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+    public void testJoinToChat() throws SQLException {
+        createChats();
+        assertEquals(3, chatRepository.joinToChat(1, 2));
+    }
 
     @Test
     @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)

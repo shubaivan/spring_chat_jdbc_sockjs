@@ -14,7 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
