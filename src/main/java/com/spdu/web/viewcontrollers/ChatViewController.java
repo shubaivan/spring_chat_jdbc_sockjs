@@ -2,6 +2,7 @@ package com.spdu.web.viewcontrollers;
 
 import com.spdu.bll.interfaces.ChatService;
 import com.spdu.bll.interfaces.UserService;
+import com.spdu.bll.models.ChatDto;
 import com.spdu.bll.models.CustomUserDetails;
 import com.spdu.domain_models.entities.Chat;
 import com.spdu.domain_models.entities.User;
@@ -12,8 +13,11 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,3 +68,4 @@ public class ChatViewController {
         return "mainform";
     }
 }
+

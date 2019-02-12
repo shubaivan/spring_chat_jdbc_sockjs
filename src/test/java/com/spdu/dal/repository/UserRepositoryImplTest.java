@@ -2,6 +2,7 @@ package com.spdu.dal.repository;
 
 import com.spdu.bll.custom_exceptions.UserException;
 import com.spdu.bll.models.constants.UserRole;
+import com.spdu.dal.repositories.UserRepositoryImpl;
 import com.spdu.domain_models.entities.User;
 import com.spdu.domain_models.entities.relations.UserRoles;
 import com.spdu.web.Application;

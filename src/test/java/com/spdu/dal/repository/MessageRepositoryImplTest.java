@@ -1,5 +1,6 @@
 package com.spdu.dal.repository;
 
+import com.spdu.dal.repositories.MessageRepositoryImpl;
 import com.spdu.domain_models.entities.Message;
 import com.spdu.web.Application;
 import org.flywaydb.core.Flyway;

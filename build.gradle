@@ -17,7 +17,7 @@ plugins {
 flyway {
     url = 'jdbc:postgresql://localhost:5432/spd_talks'
     user = 'postgres'
-    password = 'root'
+    password = '12345'
 }
 
 apply plugin: 'java'
