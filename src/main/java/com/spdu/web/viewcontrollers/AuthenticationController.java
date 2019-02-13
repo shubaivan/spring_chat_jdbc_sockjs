@@ -103,4 +103,14 @@ public class AuthenticationController {
     public String mainForm() {
         return "mainform";
     }
+
+    @RequestMapping("/reset-password")
+    public String resetPasswordForm() {
+        return "resetPassword";
+    }
+
+    @PostMapping("/reset-password")
+    public ModelAndView resetPassword(HttpServletRequest request, String email) throws UserException, SQLException {
+        return new ModelAndView("login");
+    }
 }

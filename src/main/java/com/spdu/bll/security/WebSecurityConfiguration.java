@@ -76,6 +76,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/register*").anonymous()
                 .antMatchers("/confirm-account*").anonymous()
+                .antMatchers("/reset-password*").anonymous()
+
                 .anyRequest().hasAnyRole("ADMIN", "USER")
                 .antMatchers("/chats").access("hasRole('USER')")
 

@@ -19,6 +19,22 @@ body,
 
 }
 
+.reset-password {
+    position: relative;
+    height: 200px;
+    width: 405px;
+    margin: auto;
+    padding: 60px 60px;
+    background: url(http://mikeyoungweb.com/img/bg4.jpg) no-repeat center center #505050;
+    background-size: cover;
+    box-shadow: 0px 30px 60px -5px #000;
+
+}
+
+.reset-password form {
+    padding-top: 20px;
+}
+
 h2:hover {
     cursor: pointer;
 }
