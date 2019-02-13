@@ -1,0 +1,15 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Congratulations!</title>
+</head>
+<link rel="stylesheet" th:href="@{/css/button.css}" href="../../css/button.css"/>
+<body>
+<div style="text-align: center;">
+    <h3>Congratulations! Your account has been activated and email is verified!</h3>
+
+    <form href="/login" th:action="@{/login}">
+        <button class="action-button">Sign In</button>
+    </form>
+</div>
+</body>
+</html>

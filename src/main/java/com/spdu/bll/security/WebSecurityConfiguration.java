@@ -59,7 +59,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authenticationProvider(authenticationProvider())
                 .jdbcAuthentication()
                 .dataSource(dataSource)
-                .usersByUsernameQuery("select user_name, password, true from db_users where email=? or where user_name=?")
+                .usersByUsernameQuery("select user_name, password, is_enabled from db_users where email=? or where user_name=?")
                 .authoritiesByUsernameQuery("select email, name from roles " +
                         "join user_roles on " +
                         "user_roles.id = roles.id " +
@@ -75,6 +75,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/register*").anonymous()
+                .antMatchers("/confirm-account*").anonymous()
                 .anyRequest().hasAnyRole("ADMIN", "USER")
                 .antMatchers("/chats").access("hasRole('USER')")
 

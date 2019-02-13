@@ -5,9 +5,11 @@ import com.spdu.bll.interfaces.UserService;
 import com.spdu.bll.models.UserDto;
 import com.spdu.bll.models.UserRegisterDto;
 import com.spdu.dal.repositories.ChatRepository;
+import com.spdu.dal.repositories.ConfirmationTokenRepository;
 import com.spdu.dal.repositories.FileEntityRepository;
 import com.spdu.dal.repositories.UserRepository;
 import com.spdu.bll.models.constants.UserRole;
+import com.spdu.domain_models.entities.ConfirmationToken;
 import com.spdu.domain_models.entities.User;
 import com.spdu.domain_models.entities.relations.UserRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,19 +21,20 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ChatRepository chatRepository;
-    private final FileEntityRepository fileEntityRepository;
+    private final ConfirmationTokenRepository confirmationTokenRepository;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, ChatRepository chatRepository,
-                           FileEntityRepository fileEntityRepository) {
+                           ConfirmationTokenRepository confirmationTokenRepository) {
         this.userRepository = userRepository;
         this.chatRepository = chatRepository;
-        this.fileEntityRepository = fileEntityRepository;
+        this.confirmationTokenRepository = confirmationTokenRepository;
     }
 
     @Override
@@ -110,12 +113,35 @@ public class UserServiceImpl implements UserService {
         userRepository.setUserRole(userRole);
     }
 
+    public String setConfirmationToken(long userId) throws SQLException {
+        ConfirmationToken confirmationToken = new ConfirmationToken();
+
+        confirmationToken.setCreatedAt(LocalDateTime.now());
+        confirmationToken.setConfirmationToken(UUID.randomUUID().toString());
+        confirmationToken.setUserId(userId);
+
+        return confirmationTokenRepository.setConfirmationToken(confirmationToken);
+    }
+
     private boolean emailExist(String email) throws EmptyResultDataAccessException {
         Optional<User> user = Optional.empty();
         try {
             user = userRepository.getByEmail(email);
         } finally {
             return user.isPresent();
+        }
+    }
+
+    public boolean confirmAccount(String token) throws SQLException, UserException {
+        ConfirmationToken confirmationToken = confirmationTokenRepository.getConfirmationToken(token);
+        Optional<User> userOptional = userRepository.getById(confirmationToken.getUserId());
+
+        if(userOptional.isPresent()){
+            User user = userRepository.confirmEmail(userOptional.get().getId());
+            confirmationTokenRepository.removeToken(confirmationToken.getId());
+            return user.isEnabled();
+        }else{
+            return false;
         }
     }
 }

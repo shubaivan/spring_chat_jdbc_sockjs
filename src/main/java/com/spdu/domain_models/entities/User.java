@@ -18,6 +18,7 @@ public class User {
     private String urlFacebook;
     private String urlGit;
     private LocalDate dateOfBirth;
+    private boolean isEnabled;
 
     public User() {
     }
@@ -159,5 +160,13 @@ public class User {
 
     public long getId() {
         return id;
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
     }
 }
