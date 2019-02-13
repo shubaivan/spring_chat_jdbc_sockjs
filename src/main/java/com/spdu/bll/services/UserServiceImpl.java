@@ -1,7 +1,9 @@
 package com.spdu.bll.services;
 
+import com.spdu.bll.custom_exceptions.PasswordException;
 import com.spdu.bll.custom_exceptions.UserException;
 import com.spdu.bll.interfaces.UserService;
+import com.spdu.bll.models.ResetPasswordDto;
 import com.spdu.bll.models.UserDto;
 import com.spdu.bll.models.UserRegisterDto;
 import com.spdu.dal.repositories.ChatRepository;
@@ -79,13 +81,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> register(UserRegisterDto userRegisterDto) throws UserException, SQLException {
+    public Optional<User> register(UserRegisterDto userRegisterDto) throws UserException, PasswordException, SQLException {
         if (emailExist(userRegisterDto.getEmail())) {
-            throw new RuntimeException("Account with this email is exist!");
+            throw new UserException("Account with this email is exist!");
         }
+
         if (!userRegisterDto.getPassword().equals(userRegisterDto.getMatchingPassword())) {
-            throw new RuntimeException("Password doesn't match!");
+            throw new PasswordException("Password doesn't match!");
         }
+
         User user = new User();
         String encoded = new BCryptPasswordEncoder().
                 encode(userRegisterDto.getPassword());
@@ -132,16 +136,46 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
     public boolean confirmAccount(String token) throws SQLException, UserException {
         ConfirmationToken confirmationToken = confirmationTokenRepository.getConfirmationToken(token);
         Optional<User> userOptional = userRepository.getById(confirmationToken.getUserId());
 
-        if(userOptional.isPresent()){
+        if (userOptional.isPresent()) {
             User user = userRepository.confirmEmail(userOptional.get().getId());
             confirmationTokenRepository.removeToken(confirmationToken.getId());
             return user.isEnabled();
-        }else{
+        } else {
             return false;
+        }
+    }
+
+    @Override
+    public boolean checkTokenForResetPassword(String email, String token) throws SQLException {
+        ConfirmationToken confirmationToken = confirmationTokenRepository.getConfirmationToken(token);
+        Optional<User> userOptional = userRepository.getById(confirmationToken.getUserId());
+
+        if (userOptional.isPresent() &&
+                email.equals(userOptional.get().getEmail())) {
+            confirmationTokenRepository.removeToken(confirmationToken.getId());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public void resetPassword(ResetPasswordDto resetPasswordDto) throws PasswordException {
+        Optional<User> userOptional = getByEmail(resetPasswordDto.getEmail());
+
+        if (userOptional.isPresent()) {
+            if (!resetPasswordDto.getPassword().equals(resetPasswordDto.getMatchingPassword())) {
+                throw new PasswordException("Password doesn't match!");
+            }
+            String encoded = new BCryptPasswordEncoder().
+                    encode(resetPasswordDto.getPassword());
+
+            userRepository.changePassword(userOptional.get().getId(), encoded);
         }
     }
 }

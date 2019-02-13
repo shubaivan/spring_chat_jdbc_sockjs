@@ -1,6 +1,8 @@
 package com.spdu.bll.interfaces;
 
+import com.spdu.bll.custom_exceptions.PasswordException;
 import com.spdu.bll.custom_exceptions.UserException;
+import com.spdu.bll.models.ResetPasswordDto;
 import com.spdu.bll.models.UserDto;
 import com.spdu.bll.models.UserRegisterDto;
 import com.spdu.domain_models.entities.User;
@@ -13,7 +15,7 @@ import java.util.Optional;
 public interface UserService {
     Optional<User> getById(long id) throws EmptyResultDataAccessException;
 
-    Optional<User> register(UserRegisterDto userRegisterDTO) throws UserException, SQLException;
+    Optional<User> register(UserRegisterDto userRegisterDTO) throws UserException, SQLException, PasswordException;
 
     List<User> getAll(String currentUserEmail) throws EmptyResultDataAccessException;
 
@@ -28,4 +30,8 @@ public interface UserService {
     String setConfirmationToken(long userId) throws SQLException;
 
     boolean confirmAccount(String token) throws SQLException, UserException;
+
+    boolean checkTokenForResetPassword(String email, String token) throws SQLException;
+
+    void resetPassword(ResetPasswordDto resetPasswordDto) throws UserException, PasswordException;
 }

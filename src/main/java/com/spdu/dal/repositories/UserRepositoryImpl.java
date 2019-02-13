@@ -174,4 +174,11 @@ public class UserRepositoryImpl implements UserRepository {
             throw new UserException("Can't update user!");
         }
     }
+
+    public void changePassword(long id, String password) {
+        String query = "UPDATE db_users SET password = ?" +
+                " WHERE id = ?";
+        jdbcTemplate.update(query,
+                password, id);
+    }
 }

@@ -1,5 +1,6 @@
 package com.spdu.web.restcontrollers;
 
+import com.spdu.bll.custom_exceptions.PasswordException;
 import com.spdu.bll.custom_exceptions.UserException;
 import com.spdu.bll.interfaces.UserService;
 import com.spdu.bll.models.CustomUserDetails;
@@ -74,7 +75,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody UserRegisterDto userRegisterDTO) throws SQLException, UserException {
+    public ResponseEntity register(@RequestBody UserRegisterDto userRegisterDTO) throws SQLException, UserException, PasswordException {
         Optional<User> result = userService.register(userRegisterDTO);
 
         if (result.isPresent()) {
