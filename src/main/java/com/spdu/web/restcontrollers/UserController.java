@@ -76,7 +76,6 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody UserRegisterDto userRegisterDTO) throws SQLException, UserException {
         Optional<User> result = userService.register(userRegisterDTO);
-
         if (result.isPresent()) {
             return new ResponseEntity(result.get(), HttpStatus.CREATED);
         } else {

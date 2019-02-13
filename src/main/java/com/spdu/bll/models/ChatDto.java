@@ -2,27 +2,24 @@ package com.spdu.bll.models;
 
 import com.spdu.bll.models.constants.ChatType;
 
-import java.time.LocalDateTime;
-
 public class ChatDto {
-    private long id;
     private String name;
-    private LocalDateTime createdAt;
     private ChatType chatType;
     private String tags;
     private String description;
     private long ownerId;
-
     public ChatDto() {
     }
 
-    public long getId() {
-        return id;
+    public void setOwnerId(long ownerId) {
+        this.ownerId = ownerId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public long getOwnerId() {
+        return ownerId;
     }
+
+
 
     public String getName() {
         return name;
@@ -30,14 +27,6 @@ public class ChatDto {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 
     public ChatType getChatType() {
@@ -64,11 +53,4 @@ public class ChatDto {
         this.description = description;
     }
 
-    public long getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(long ownerId) {
-        this.ownerId = ownerId;
-    }
 }
