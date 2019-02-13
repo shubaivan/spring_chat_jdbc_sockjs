@@ -27,14 +27,12 @@ public class CustomUserDetailsService implements UserDetailsService {
         Optional<User> userOptional = userRepository.getByEmail(email);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-
             try {
                 UserRole role = userRepository.getUserRole(user.getId());
                 return new CustomUserDetails(user, role);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-
         } else {
             throw new UsernameNotFoundException(email);
         }

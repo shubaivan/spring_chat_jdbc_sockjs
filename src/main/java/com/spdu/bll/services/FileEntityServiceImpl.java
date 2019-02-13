@@ -30,7 +30,6 @@ public class FileEntityServiceImpl implements FileEntityService {
     @Override
     public FileEntityDto save(FileEntityDto fileEntityDto) throws SQLException, CustomFileException {
         FileEntity fileEntity = new FileEntity();
-
         fileEntity.setOwnerId(fileEntityDto.getOwnerId());
         fileEntity.setCreatedAt(LocalDateTime.now());
         fileEntity.setContentType(fileEntityDto.getContentType());
