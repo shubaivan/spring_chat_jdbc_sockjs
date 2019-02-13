@@ -1,5 +1,6 @@
-package com.spdu.dal.repository;
+package com.spdu.dal.repositories;
 
+import com.spdu.bll.models.MessageType;
 import com.spdu.domain_models.entities.Message;
 import com.spdu.web.Application;
 import org.flywaydb.core.Flyway;
@@ -36,31 +37,20 @@ public class MessageRepositoryImplTest {
     @Test
     @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
     public void testCreate() throws SQLException {
+        createMessages();
         Message message = new Message();
-        message.setId(1);
+        message.setId(3);
         message.setAuthorID(1);
         message.setChatId(1);
+        message.setMessageType(MessageType.CHAT);
         message.setCreatedAt(LocalDateTime.of(2019, 12, 10, 1, 23, 22));
-        assertEquals(5, messageRepository.create(message));
+        assertEquals(3, messageRepository.create(message));
     }
 
     @Test
     @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
     public void testGetById() throws SQLException {
-        Message message = new Message();
-        message.setId(1);
-        message.setAuthorID(1);
-        message.setChatId(1);
-        message.setText("Text from message");
-        message.setCreatedAt(LocalDateTime.of(2019, 12, 10, 1, 23, 22));
-        messageRepository.create(message);
-        Message message2 = new Message();
-        message2.setId(2);
-        message2.setAuthorID(1);
-        message2.setChatId(1);
-        message2.setText("Text message");
-        message2.setCreatedAt(LocalDateTime.of(2019, 12, 10, 1, 23, 22));
-        messageRepository.create(message2);
+        createMessages();
         Message testMessage = messageRepository.getById(1).get();
         assertEquals(1, testMessage.getId());
         assertEquals(1, testMessage.getAuthorID());
@@ -71,11 +61,22 @@ public class MessageRepositoryImplTest {
     @Test
     @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
     public void testGetByChatId() throws SQLException {
+        createMessages();
+        Message testMessage = messageRepository.getByChatId(1).stream().filter(x -> 1 == x.getId()).findFirst().get();
+        assertEquals(1, testMessage.getId());
+        assertEquals(1, testMessage.getAuthorID());
+        assertEquals(1, testMessage.getChatId());
+        assertEquals("Text from message", testMessage.getText());
+        assertEquals(2, messageRepository.getByChatId(1).size());
+    }
+
+    private void createMessages() throws SQLException {
         Message message = new Message();
         message.setId(1);
         message.setAuthorID(1);
         message.setChatId(1);
         message.setText("Text from message");
+        message.setMessageType(MessageType.CHAT);
         message.setCreatedAt(LocalDateTime.of(2019, 12, 10, 1, 23, 22));
         messageRepository.create(message);
         Message message2 = new Message();
@@ -83,13 +84,9 @@ public class MessageRepositoryImplTest {
         message2.setAuthorID(1);
         message2.setChatId(1);
         message2.setText("Text message");
+        message2.setMessageType(MessageType.CHAT);
         message2.setCreatedAt(LocalDateTime.of(2019, 12, 10, 1, 23, 22));
         messageRepository.create(message2);
-        Message testMessage = messageRepository.getByChatId(1).stream().filter(x -> 1 == x.getId()).findFirst().get();
-        assertEquals(1, testMessage.getId());
-        assertEquals(1, testMessage.getAuthorID());
-        assertEquals(1, testMessage.getChatId());
-        assertEquals("Text from message", testMessage.getText());
-        assertEquals(2, messageRepository.getByChatId(1).size());
+
     }
 }
