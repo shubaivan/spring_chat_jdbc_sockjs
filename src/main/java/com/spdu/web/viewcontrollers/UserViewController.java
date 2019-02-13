@@ -2,7 +2,6 @@ package com.spdu.web.viewcontrollers;
 
 import com.spdu.bll.custom_exceptions.CustomFileException;
 import com.spdu.bll.custom_exceptions.UserException;
-import com.spdu.bll.interfaces.FileEntityService;
 import com.spdu.bll.interfaces.UserService;
 import com.spdu.bll.models.CustomUserDetails;
 import com.spdu.bll.models.FileEntityDto;
@@ -75,6 +74,7 @@ public class UserViewController {
         } catch (IOException | SQLException | UserException | CustomFileException e) {
             throw new RuntimeException(e);
         }
+
         return new ModelAndView("redirect:/profile", modelMap);
     }
 
@@ -82,6 +82,7 @@ public class UserViewController {
     public String getAllUsers(ModelMap modelMap, Principal principal) {
         List<User> users = userService.getAll(principal.getName());
         modelMap.addAttribute("users", users);
+
         return "users";
     }
 }
