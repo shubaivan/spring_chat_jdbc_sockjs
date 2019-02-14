@@ -7,7 +7,7 @@
 <body>
 
 <link rel='stylesheet' th:href="@{/css/mainform.css}" href="../../css/mainform.css"/>
-
+<link rel='stylesheet' th:href="@{/css/profile.css}" href="../../css/login.css"/>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
 
@@ -21,24 +21,24 @@
 </nav>
 
 <div id="main_container">
-    <div class="create-form">
-        <form action="#" th:action="@{/createchat}" th:object="${chatDto}" method="post">
+    <div class="register">
+        <form action="#" th:action="@{/chats/createchat}" th:object="${chatDto}" method="POST">
             <input type="text" class="text" th:field="*{name}">
-            <span>Chat name</span>
+            <span><h2>Chat name</h2></span>
             <br>
-            <select>
-            <option th:each="type : ${T(com.spdu.bll.models.constants.ChatType.values()}"
+            <select th:field="*{chatType}">
+            <option th:each="type : ${T(com.spdu.bll.models.constants.ChatType).values()}"
             th:value="${type}"
             th:text="${type}">
             </option>
             </select>
-            <span>Chat type</span>
+            <span><h2>Chat type</h2></span>
             <br>
             <input type="text" class="text" th:field="*{tags}">
-            <span>Tags</span>
+            <span><h2>Tags</h2></span>
             <br>
             <input type="text" class="text" th:field="*{description}">
-            <span>Description</span>
+            <span><h2>Description</h2></span>
             <br>
             <button class="submit">Create</button>
         </form>

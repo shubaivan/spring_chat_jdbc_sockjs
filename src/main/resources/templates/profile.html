@@ -7,8 +7,13 @@
 <body>
 
 <link rel='stylesheet' th:href="@{/css/mainform.css}" href="../../css/mainform.css"/>
-<link rel='stylesheet' th:href="@{/css/users.css}" href="../../css/users.css"/>
+<link rel='stylesheet' th:href="@{/css/profile.css}" href="../../css/profile.css"/>
+<link rel='stylesheet' th:href="@{/css/avatar.css}" href="../../css/avatar.css"/>
+
+
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
 <nav class="navbar">
     <ul class="navbar-nav">
         <li><a href="/profile" th:href="@{/profile}">Profile</a></li>
@@ -20,7 +25,7 @@
 
 <div id="main_container">
     <div class="update-form">
-        <form action="#" th:action="@{/chat/update}" th:method="PUT" modelAttribute="userDto" th:object="${userDTO}">
+        <form action="#" th:action="@{/profile/update}" th:method="PUT" modelAttribute="userDto" th:object="${userDTO}">
             <h3>First name</h3>
             <input type="text" class="text" th:field="*{firstName}">
             <h3>Last name</h3>
@@ -37,6 +42,7 @@
             <input type="date" class="text" th:value="*{dateOfBirth}" th:field="*{dateOfBirth}">
             <button class="update">Save changes</button>
         </form>
+
     </div>
 
     <div class="update-form">

@@ -8,6 +8,7 @@ public class ChatDto {
     private String tags;
     private String description;
     private long ownerId;
+
     public ChatDto() {
     }
 
@@ -18,8 +19,6 @@ public class ChatDto {
     public long getOwnerId() {
         return ownerId;
     }
-
-
 
     public String getName() {
         return name;
@@ -52,5 +51,4 @@ public class ChatDto {
     public void setDescription(String description) {
         this.description = description;
     }
-
 }
