@@ -7,7 +7,8 @@
 <body>
 
 <link rel='stylesheet' th:href="@{/css/mainform.css}" href="../../css/mainform.css"/>
-<link rel='stylesheet' th:href="@{/css/profile.css}" href="../../css/login.css"/>
+<link rel='stylesheet' th:href="@{/css/createchat.css}" href="../../css/createchat.css"/>
+
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
 
@@ -19,30 +20,34 @@
         <li><a href="/logout" th:href="@{/logout}" class="logout">Logout</a></li>
     </ul>
 </nav>
+<div class="create">
 
-<div id="main_container">
-    <div class="register">
-        <form action="#" th:action="@{/chats/createchat}" th:object="${chatDto}" method="POST">
-            <input type="text" class="text" th:field="*{name}">
+    <form action="#" th:action="@{/chats/createchat}" th:object="${chatDto}" method="POST">
+        <div class="formtext">
             <span><h2>Chat name</h2></span>
+
+            <input type="text" class="text" th:field="*{name}">
             <br>
-            <select th:field="*{chatType}">
-            <option th:each="type : ${T(com.spdu.bll.models.constants.ChatType).values()}"
-            th:value="${type}"
-            th:text="${type}">
-            </option>
-            </select>
             <span><h2>Chat type</h2></span>
+
+            <select th:field="*{chatType}">
+                <option th:each="type : ${T(com.spdu.bll.models.constants.ChatType).values()}"
+                        th:value="${type}"
+                        th:text="${type}">
+                </option>
+            </select>
             <br>
-            <input type="text" class="text" th:field="*{tags}">
             <span><h2>Tags</h2></span>
+
+            <input type="text" class="text" th:field="*{tags}">
             <br>
-            <input type="text" class="text" th:field="*{description}">
             <span><h2>Description</h2></span>
+
+            <input type="text" class="text" th:field="*{description}">
             <br>
-            <button class="submit">Create</button>
-        </form>
-    </div>
+        </div>
+        <button class="submit">Create</button>
+    </form>
 </div>
 </body>
 </html>
