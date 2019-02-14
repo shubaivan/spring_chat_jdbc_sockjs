@@ -78,14 +78,11 @@ public class AuthenticationController {
     private void sendToken(String requestUrl, User user) throws SQLException {
         String confirmationToken = userService.setConfirmationToken(user.getUserId());
 
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        String titleMessage = "Complete Registration!";
+        String bodyMessage = "To confirm your account, please click here : "
+                + requestUrl + "/confirm-account?token=" + confirmationToken;
 
-        mailMessage.setTo(user.getEmail());
-        mailMessage.setSubject("Complete Registration!");
-        mailMessage.setText("To confirm your account, please click here : "
-                + requestUrl + "/confirm-account?token=" + confirmationToken);
-
-        emailSender.sendEmail(mailMessage);
+        emailSender.sendEmail(user.getEmail(), titleMessage, bodyMessage);
     }
 
     private String getUrl(HttpServletRequest request) {
@@ -120,14 +117,11 @@ public class AuthenticationController {
         if (optionalUser.isPresent()) {
             String confirmationToken = userService.setConfirmationToken(optionalUser.get().getUserId());
 
-            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            String titleMessage = "Reset password!";
+            String bodyMessage = "To reset your password, please click here : "
+                    + getUrl(request) + "/check-token?email=" + email + "&token=" + confirmationToken;
 
-            mailMessage.setTo(email);
-            mailMessage.setSubject("Reset password!");
-            mailMessage.setText("To reset your password, please click here : "
-                    + getUrl(request) + "/check-token?email=" + email + "&token=" + confirmationToken);
-
-            emailSender.sendEmail(mailMessage);
+            emailSender.sendEmail(email, titleMessage, bodyMessage);
 
             modelMap.put("email", email);
             return new ModelAndView("rsPasswordLinkSent", modelMap);
