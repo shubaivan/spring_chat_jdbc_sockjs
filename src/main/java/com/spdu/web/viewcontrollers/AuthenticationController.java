@@ -77,6 +77,7 @@ public class AuthenticationController {
 
     private void sendToken(String requestUrl, User user) throws SQLException {
         String confirmationToken = userService.setConfirmationToken(user.getUserId());
+
         SimpleMailMessage mailMessage = new SimpleMailMessage();
 
         mailMessage.setTo(user.getEmail());
@@ -107,13 +108,13 @@ public class AuthenticationController {
         return "mainform";
     }
 
-    @RequestMapping("/reset-password")
+    @GetMapping("/reset-password")
     public String resetPasswordForm() {
         return "resetPassword";
     }
 
     @PostMapping("/reset-password")
-    public ModelAndView resetPassword(HttpServletRequest request, String email) throws SQLException {
+    public ModelAndView resetPassword(HttpServletRequest request, String email, ModelMap modelMap) throws SQLException {
         Optional<User> optionalUser = userService.getByEmail(email);
 
         if (optionalUser.isPresent()) {
@@ -127,9 +128,11 @@ public class AuthenticationController {
                     + getUrl(request) + "/check-token?email=" + email + "&token=" + confirmationToken);
 
             emailSender.sendEmail(mailMessage);
-        }
 
-        return new ModelAndView("login");
+            modelMap.put("email", email);
+            return new ModelAndView("rsPasswordLinkSent", modelMap);
+        }
+        return new ModelAndView("redirect:/register");
     }
 
     @GetMapping("/check-token")

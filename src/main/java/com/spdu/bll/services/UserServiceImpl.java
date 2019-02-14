@@ -8,7 +8,6 @@ import com.spdu.bll.models.UserDto;
 import com.spdu.bll.models.UserRegisterDto;
 import com.spdu.dal.repositories.ChatRepository;
 import com.spdu.dal.repositories.ConfirmationTokenRepository;
-import com.spdu.dal.repositories.FileEntityRepository;
 import com.spdu.dal.repositories.UserRepository;
 import com.spdu.bll.models.constants.UserRole;
 import com.spdu.domain_models.entities.ConfirmationToken;
@@ -81,7 +80,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> register(UserRegisterDto userRegisterDto) throws UserException, PasswordException, SQLException {
+    public Optional<User> register(UserRegisterDto userRegisterDto) throws UserException,
+            PasswordException, SQLException {
         if (emailExist(userRegisterDto.getEmail())) {
             throw new UserException("Account with this email is exist!");
         }
