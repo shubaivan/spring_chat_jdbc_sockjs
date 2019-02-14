@@ -1,16 +1,15 @@
 .action-button {
-    align-items: center;
     background-color: #3b5998;
     color: #FFF;
     width: 40%;
     padding: 10px 20px;
-    display: block;
     height: 39px;
     border-radius: 20px;
     margin-top: 10px;
     border: none;
     text-transform: uppercase;
 }
+
 
 .action-button:hover {
     background: #3b5998;
@@ -20,4 +19,9 @@
 
 .action-button:focus {
     outline: none;
+}
+
+.main-form {
+    display: flex;
+    justify-content: center;
 }

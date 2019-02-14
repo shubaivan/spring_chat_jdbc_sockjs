@@ -1,7 +1,9 @@
 package com.spdu.web.viewcontrollers;
 
+import com.spdu.bll.custom_exceptions.PasswordException;
 import com.spdu.bll.custom_exceptions.UserException;
 import com.spdu.bll.interfaces.UserService;
+import com.spdu.bll.models.ResetPasswordDto;
 import com.spdu.bll.models.UserRegisterDto;
 import com.spdu.domain_models.entities.User;
 import com.spdu.web.helpers.EmailSender;
@@ -50,7 +52,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ModelAndView registerSubmit(HttpServletRequest request, ModelMap modelMap, UserRegisterDto userRegisterDTO) throws UserException, SQLException {
+    public ModelAndView registerSubmit(HttpServletRequest request, ModelMap modelMap,
+                                       UserRegisterDto userRegisterDTO) throws UserException, SQLException, PasswordException {
         Optional<User> newUser = userService.register(userRegisterDTO);
 
         if (newUser.isPresent()) {
@@ -74,14 +77,12 @@ public class AuthenticationController {
 
     private void sendToken(String requestUrl, User user) throws SQLException {
         String confirmationToken = userService.setConfirmationToken(user.getUserId());
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
 
-        mailMessage.setTo(user.getEmail());
-        mailMessage.setSubject("Complete Registration!");
-        mailMessage.setText("To confirm your account, please click here : "
-                + requestUrl + "/confirm-account?token=" + confirmationToken);
+        String titleMessage = "Complete Registration!";
+        String bodyMessage = "To confirm your account, please click here : "
+                + requestUrl + "/confirm-account?token=" + confirmationToken;
 
-        emailSender.sendEmail(mailMessage);
+        emailSender.sendEmail(user.getEmail(), titleMessage, bodyMessage);
     }
 
     private String getUrl(HttpServletRequest request) {
@@ -102,5 +103,55 @@ public class AuthenticationController {
     @RequestMapping("/mainform")
     public String mainForm() {
         return "mainform";
+    }
+
+    @GetMapping("/reset-password")
+    public String resetPasswordForm() {
+        return "resetPassword";
+    }
+
+    @PostMapping("/reset-password")
+    public ModelAndView resetPassword(HttpServletRequest request, String email, ModelMap modelMap) throws SQLException {
+        Optional<User> optionalUser = userService.getByEmail(email);
+
+        if (optionalUser.isPresent()) {
+            String confirmationToken = userService.setConfirmationToken(optionalUser.get().getUserId());
+
+            String titleMessage = "Reset password!";
+            String bodyMessage = "To reset your password, please click here : "
+                    + getUrl(request) + "/check-token?email=" + email + "&token=" + confirmationToken;
+
+            emailSender.sendEmail(email, titleMessage, bodyMessage);
+
+            modelMap.put("email", email);
+            return new ModelAndView("rsPasswordLinkSent", modelMap);
+        }
+        return new ModelAndView("redirect:/register");
+    }
+
+    @GetMapping("/check-token")
+    public ModelAndView resetPassword(ModelMap modelMap, String email, String token) {
+        try {
+            if (userService.checkTokenForResetPassword(email, token)) {
+                ResetPasswordDto resetPasswordDto = new ResetPasswordDto();
+                resetPasswordDto.setEmail(email);
+                modelMap.put("resetPasswordDto", resetPasswordDto);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return new ModelAndView("newPassword", modelMap);
+    }
+
+    @PutMapping("/new-password")
+    public ModelAndView newPassword(ResetPasswordDto passwordDTO) {
+        try {
+            userService.resetPassword(passwordDTO);
+        } catch (UserException | PasswordException e) {
+            throw new RuntimeException(e);
+        }
+
+        return new ModelAndView("redirect:/login");
     }
 }

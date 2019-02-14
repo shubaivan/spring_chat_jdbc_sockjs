@@ -1,6 +1,7 @@
 package com.spdu.web.exceptions;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.spdu.bll.custom_exceptions.PasswordException;
 import com.spdu.bll.custom_exceptions.UserException;
 import org.apache.log4j.Logger;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -56,6 +57,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "DataNotFoundException")
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public void handleEmptyResultDataAccessException(HttpServletRequest req, EmptyResultDataAccessException e) {
+        setExceptionDetails(req, e);
+    }
+
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "PasswordException")
+    @ExceptionHandler(PasswordException.class)
+    public void handleEmptyResultPasswordException(HttpServletRequest req, PasswordException e) {
         setExceptionDetails(req, e);
     }
 }

@@ -58,7 +58,7 @@ public class MessageServiceImpl implements MessageService {
             if (chatService.userIsPresentInChat(user.getId(), message.getChatId())) {
                 message.setAuthorID(user.getId());
 
-                Optional<Message> optionalMessage = Optional.empty();
+                Optional<Message> optionalMessage;
                 try {
                     long messageId = messageRepository.create(message);
                     optionalMessage = getById(messageId);

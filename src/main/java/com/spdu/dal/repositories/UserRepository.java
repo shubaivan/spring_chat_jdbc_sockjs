@@ -30,4 +30,6 @@ public interface UserRepository {
     User updateAvatar(long id, long fileId) throws SQLException, UserException;
 
     User confirmEmail(long id) throws SQLException, UserException;
+
+    void changePassword(long id, String password);
 }
