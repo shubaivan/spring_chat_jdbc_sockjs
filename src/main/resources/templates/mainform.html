@@ -37,6 +37,11 @@
 <div id='side-menu' class='side-nav'>
     <a href="#" class='btn-close' onclick='closeSideMenu()'>&times;</a>
 
+    <h2 class="text"> Create chat</h2>
+    <div layout:fragment="content">
+        <a href="/chats/new">Chat create</a>
+    </div>
+
     <h2 class="text"> Own chats</h2>
     <div layout:fragment="content">
         <div th:each="chat: ${ownChats}">
