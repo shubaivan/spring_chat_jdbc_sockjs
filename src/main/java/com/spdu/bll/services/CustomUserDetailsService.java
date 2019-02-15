@@ -27,6 +27,11 @@ public class CustomUserDetailsService implements UserDetailsService {
         Optional<User> userOptional = userRepository.getByEmail(email);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
+
+            if (!user.isEnabled()) {
+                throw new UsernameNotFoundException(" Email address not confirmed yet!");
+            }
+
             try {
                 UserRole role = userRepository.getUserRole(user.getId());
                 return new CustomUserDetails(user, role);

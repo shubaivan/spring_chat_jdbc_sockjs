@@ -95,7 +95,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Optional<User> getByEmail(String email) throws EmptyResultDataAccessException {
         try {
-            String query = "SELECT * FROM db_users WHERE email=? OR user_name=?";
+            String query = "SELECT * FROM db_users WHERE email=? OR user_name=? AND is_enabled = TRUE";
             User user = jdbcTemplate.queryForObject(query,
                     new Object[]{email, email},
                     new UserMapper());
@@ -107,7 +107,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional<User> getByUserName(String userName) throws EmptyResultDataAccessException {
-        String query = "SELECT * FROM db_users WHERE user_name=?";
+        String query = "SELECT * FROM db_users WHERE user_name=? AND is_enabled = TRUE";
         User user = jdbcTemplate.queryForObject(query,
                 new Object[]{userName},
                 new UserMapper());
@@ -162,10 +162,9 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User confirmEmail(long id) throws SQLException, UserException {
-        String query = "UPDATE db_users SET is_enabled = ?" +
+        String query = "UPDATE db_users SET is_enabled = TRUE" +
                 " WHERE id = ?";
-        jdbcTemplate.update(query,
-                true, id);
+        jdbcTemplate.update(query, id);
 
         Optional<User> modifiedUser = getById(id);
         if (modifiedUser.isPresent()) {
