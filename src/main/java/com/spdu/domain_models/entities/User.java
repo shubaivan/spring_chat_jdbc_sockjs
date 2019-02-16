@@ -1,13 +1,23 @@
 package com.spdu.domain_models.entities;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@JsonFilter("listUserSideBarFilter")
 public class User {
+    @JsonProperty("id")
     private long id;
+
+    @JsonProperty("firstName")
     private String firstName;
+
+    @JsonProperty("lastName")
     private String lastName;
+
     private String email;
     private String userName;
     private String password;

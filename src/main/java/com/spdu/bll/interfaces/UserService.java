@@ -13,6 +13,8 @@ import java.util.Optional;
 public interface UserService {
     Optional<User> getById(long id) throws EmptyResultDataAccessException;
 
+    List<User> getByChatId(long id) throws EmptyResultDataAccessException;
+
     Optional<User> register(UserRegisterDto userRegisterDTO) throws UserException, SQLException;
 
     List<User> getAll(String currentUserEmail) throws EmptyResultDataAccessException;

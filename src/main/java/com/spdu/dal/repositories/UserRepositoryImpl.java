@@ -1,8 +1,10 @@
 package com.spdu.dal.repositories;
 
 import com.spdu.bll.custom_exceptions.UserException;
+import com.spdu.dal.mappers.MessageMapper;
 import com.spdu.dal.mappers.UserMapper;
 import com.spdu.bll.models.constants.UserRole;
+import com.spdu.domain_models.entities.Message;
 import com.spdu.domain_models.entities.User;
 import com.spdu.domain_models.entities.relations.UserRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,6 +79,23 @@ public class UserRepositoryImpl implements UserRepository {
                 new Object[]{id},
                 new UserMapper());
         return Optional.of(user);
+    }
+
+    public List<User> getByChatId(long id) throws EmptyResultDataAccessException {
+        String query = "SELECT * \n" +
+                "FROM db_users AS u \n" +
+                "INNER JOIN chats_users AS cu ON cu.user_id = u.id \n" +
+                "WHERE cu.chat_id =?";
+
+        return jdbcTemplate.query(query,
+                new Object[]{id},
+                rs -> {
+                    List<User> list = new LinkedList<>();
+                    while (rs.next()) {
+                        list.add(new UserMapper().mapRow(rs, rs.getRow()));
+                    }
+                    return list;
+                });
     }
 
     @Override

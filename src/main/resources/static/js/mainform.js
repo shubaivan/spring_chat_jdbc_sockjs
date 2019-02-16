@@ -12,13 +12,43 @@ $(document).ready(function () {
                 var replaceContainer = '<div id="main_container">' + data + '</div>';
                 $('#main_container').replaceWith(replaceContainer);
                 getChatMessages(currentChatId);
+                getUsersFromChat(currentChatId);
             },
             error: function (result) {
                 console.log(result)
             }
         })
     });
+
+    $('body').on('click', '.rightBottom', function () {
+        var el = $(this)
+        alert("joinChat" + el.data('elId'));
+    });
+
+    $('body').on('click', '.leftBottom', function () {
+        var el = $(this)
+        alert("leftChat" + el.data('elId'));
+    })
 });
+
+function getUsersFromChat(currentChatId) {
+    $.ajax({
+        type: "GET",
+        url: 'api/users/chat/' + currentChatId,
+        success: function (data) {
+            console.log(data);
+            var users = JSON.parse(data);
+
+            $.each(users, function (key, val) {
+                parseUser(val);
+            });
+
+        },
+        error: function (result) {
+            console.log(result)
+        }
+    })
+}
 
 function getChatMessages(currentChatId) {
     $.ajax({
@@ -58,6 +88,7 @@ function stomp() {
     var messageForm = document.querySelector('#messageForm');
     var messageInput = document.querySelector('#message');
     var messageArea = document.querySelector('#messageArea');
+    var userArea = document.querySelector('#userArea');
     var connectingElement = document.querySelector('#connecting');
     var chatId = $('#chatId').data('elId');
 
@@ -131,15 +162,24 @@ function onMessageReceived(payload) {
     parseMessage(message);
 }
 
+function parseUser(user) {
+    var para = document.createElement("p"); // create a <p> element
+    para.setAttribute('userId', user.id); // add attribute
+    var t = document.createTextNode(user.firstName + user.lastName); // create a text node
+    para.appendChild(t);
+    userArea.appendChild(para);
+}
+
 function parseMessage(message) {
     var messageElement = document.createElement('li');
+    var dateTime = message.createdDate + ' ' + message.createdTime;
 
     if(message.type === 'JOIN') {
         messageElement.classList.add('event-message');
-        message.content = message.sender + ' joined!';
+        message.content = message.sender + ' joined! at ' + dateTime;
     } else if (message.type === 'LEAVE') {
         messageElement.classList.add('event-message');
-        message.content = message.sender + ' left!';
+        message.content = message.sender + ' left! at ' + dateTime;
     } else {
         messageElement.classList.add('chat-message');
 
@@ -157,7 +197,7 @@ function parseMessage(message) {
         );
 
         var dateTimeText = document.createTextNode(
-            message.createdDate + ' ' + message.createdTime
+            dateTime
         );
         usernameElement.appendChild(usernameText);
         usernameElement.appendChild(brElement);

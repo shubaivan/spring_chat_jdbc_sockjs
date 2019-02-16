@@ -4,6 +4,7 @@
 <div id="chat-page">
     <div class="chat-header">
         <h2 >SPD-Talks</h2>
+        <div class="leftBottom" th:attr="data-el-id=${chat.getId()}">Left Chat</div>
     </div>
     <div class="main-container" id="container">
 
@@ -11,9 +12,7 @@
 
         </ul>
         <div id="userArea" class="inner-container">
-            ffffff<br>
-            ffffff<br>
-            ffffff<br>
+
         </div>
         <form id="messageForm" name="messageForm">
             <div class="form-group">
@@ -36,7 +35,7 @@
         min-height: 400px;
         display: inline-block;
         overflow-y: auto;
-        border: 1px solid black;
+            border: 1px solid black;
     }
 
     #messageArea {

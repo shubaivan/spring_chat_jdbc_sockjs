@@ -32,6 +32,23 @@ public class MessageViewController {
             @Payload ChatMessage message,
             Principal principal
     ) {
+        return convertMessage(message, principal);
+    }
+
+    @MessageMapping("/chat/{id}/addUser")
+    @SendTo("/topic/public/{id}")
+    public ChatMessage addUser(
+            @Payload ChatMessage message,
+            Principal principal,
+            SimpMessageHeaderAccessor headerAccessor
+    ) {
+        headerAccessor.getSessionAttributes().put("username", message.getSender());
+
+        return convertMessage(message, principal);
+    }
+
+    private ChatMessage convertMessage(ChatMessage message, Principal principal)
+    {
         Integer chatId = message.getChatId();
 
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
@@ -53,17 +70,6 @@ public class MessageViewController {
                 .setCreatedDate(message.getCreatedDate());
 
         messageService.send(cud.getUser().getEmail(), messageModel);
-
-        return message;
-    }
-
-    @MessageMapping("/chat/{id}/addUser")
-    @SendTo("/topic/public/{id}")
-    public ChatMessage addUser(
-            @Payload ChatMessage message,
-            SimpMessageHeaderAccessor headerAccessor
-    ) {
-        headerAccessor.getSessionAttributes().put("username", message.getSender());
 
         return message;
     }

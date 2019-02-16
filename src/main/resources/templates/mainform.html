@@ -60,6 +60,7 @@
         <div th:each="chat: ${allPublic}">
             <a href="#" class="chats_info" th:attr="data-el-id=${chat.getId()}">
                 <h th:text="${chat.name}">Name</h>
+                <span class="rightBottom" th:attr="data-el-id=${chat.getId()}">Join Chat</span>
             </a>
             <br>
         </div>
