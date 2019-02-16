@@ -57,6 +57,7 @@ public class ChatViewController {
         modelMap.addAttribute("allChats", allChats);
         modelMap.addAttribute("allPublic", allPublic);
 
+        modelMap.addAttribute("chatDto", new ChatDto());
         return "mainform";
     }
 
@@ -73,7 +74,7 @@ public class ChatViewController {
         CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
         chatDto.setOwnerId(cud.getId());
         chatServiceImp.create(chatDto);
-        return "redirect:/mainform";
+        return "redirect:/chats";
     }
 
 }
