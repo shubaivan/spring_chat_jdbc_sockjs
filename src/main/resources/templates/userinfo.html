@@ -19,34 +19,44 @@
 
 <div id="main_container">
     <table>
-        <caption align="centre"><h1>User list</h1></caption>
+        <caption align="centre"><h1>User Info</h1></caption>
         <tr>
-            <td><h2>User id</h2></td>
             <td><h2>First name</h2></td>
-            <td><h2>Last name</h2></td>
-            <td><h2>Email</h2></td>
-            <td><h2>User name</h2></td>
-            <td><h2>Date of birth</h2></td>
-            <td><h2>URL Linkedin</h2></td>
-            <td><h2>URL Facebook</h2></td>
-            <td><h2>URL Git</h2></td>
+            <td th:text="${user.firstName}">...</td>
         </tr>
-        <th:block th:each="user : ${users}">
-            <tr>
-                <td><a th:href="@{'/users/' + ${user.id}}" th:text="${user.id}"></a></td>
-                <td th:text="${user.firstName}">...</td>
-                <td th:text="${user.lastName}">...</td>
-                <td th:text="${user.email}">...</td>
-                <td th:text="${user.userName}">...</td>
-                <td th:text="${user.dateOfBirth}">...</td>
-                <td th:text="${user.urlLinkedin}">...</td>
-                <td th:text="${user.urlFacebook}">...</td>
-                <td th:text="${user.urlGit}">...</td>
-            </tr>
-        </th:block>
+        <tr>
+            <td><h2>Last name</h2></td>
+            <td th:text="${user.lastName}">...</td>
+        </tr>
+        <tr>
+            <td><h2>Email</h2></td>
+            <td th:text="${user.email}">...</td>
+        </tr>
+        <tr>
+            <td><h2>User name</h2></td>
+            <td th:text="${user.userName}">...</td>
+        </tr>
+        <tr>
+            <td><h2>Date of birth</h2></td>
+            <td th:text="${user.dateOfBirth}">...</td>
+        </tr>
+        <tr>
+            <td><h2>URL Linkedin</h2></td>
+            <td th:text="${user.urlLinkedin}">...</td>
+        </tr>
+        <tr>
+            <td><h2>URL Facebook</h2></td>
+            <td th:text="${user.urlFacebook}">...</td>
+        </tr>
+        <td><h2>URL Git</h2></td>
+        <td th:text="${user.urlGit}">...</td>
+        </tr>
     </table>
 </div>
-</div>
+
+</body>
+</html>
+<body>
 
 </body>
 </html>

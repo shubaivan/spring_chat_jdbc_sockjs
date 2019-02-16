@@ -1,6 +1,8 @@
 package com.spdu.dal.repositories;
 
 import com.spdu.bll.models.constants.ChatType;
+import com.spdu.dal.repositories.ChatRepositoryImpl;
+import com.spdu.dal.repositories.UserRepositoryImpl;
 import com.spdu.domain_models.entities.Chat;
 import com.spdu.domain_models.entities.User;
 import com.spdu.web.Application;

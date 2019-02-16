@@ -1,8 +1,11 @@
 package com.spdu.web.restcontrollers;
 
+import com.spdu.bll.custom_exceptions.UserException;
 import com.spdu.bll.interfaces.ChatService;
 import com.spdu.bll.interfaces.UserService;
+import com.spdu.bll.models.ChatDto;
 import com.spdu.bll.models.CustomUserDetails;
+import com.spdu.bll.models.UserRegisterDto;
 import com.spdu.domain_models.entities.Chat;
 import com.spdu.domain_models.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,17 +74,15 @@ public class ChatController {
         return new ResponseEntity(chats, HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/createchat")
     @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
-    public ResponseEntity create(@RequestBody Chat chat, Principal principal) {
+    public ResponseEntity create(@RequestBody ChatDto chatDto, Principal principal) {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
         CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
-
-        chat.setOwnerId(cud.getId());
-
+        chatDto.setOwnerId(cud.getId());
         Optional<Chat> result;
         try {
-            result = chatService.create(chat);
+            result = chatService.create(chatDto);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
