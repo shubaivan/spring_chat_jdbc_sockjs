@@ -5,6 +5,7 @@ import com.spdu.bll.custom_exceptions.UserException;
 import com.spdu.bll.models.ResetPasswordDto;
 import com.spdu.bll.models.UserDto;
 import com.spdu.bll.models.UserRegisterDto;
+import com.spdu.bll.models.constants.UserRole;
 import com.spdu.domain_models.entities.User;
 import org.springframework.dao.EmptyResultDataAccessException;
 
@@ -25,7 +26,7 @@ public interface UserService {
 
     Optional<User> getByUserName(String userName) throws EmptyResultDataAccessException;
 
-    UserDto update(long id, UserDto user) throws SQLException, UserException;
+    User update(long id, UserDto user) throws SQLException, UserException;
 
     UserDto updateAvatar(long id, long fileId) throws SQLException, UserException;
 
@@ -36,4 +37,6 @@ public interface UserService {
     boolean checkTokenForResetPassword(String email, String token) throws SQLException;
 
     void resetPassword(ResetPasswordDto resetPasswordDto) throws UserException, PasswordException;
+
+    UserRole getUserRole(long userId) throws SQLException;
 }

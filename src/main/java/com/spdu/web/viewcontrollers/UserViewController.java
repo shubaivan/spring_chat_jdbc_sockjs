@@ -10,6 +10,9 @@ import com.spdu.domain_models.entities.User;
 import com.spdu.web.helpers.FileUploader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -22,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.io.IOException;
 import java.security.Principal;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,8 +58,16 @@ public class UserViewController {
         CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
         long userId = cud.getId();
 
-        UserDto result = userService.update(userId, userDTO);
-        modelMap.addAttribute("userDTO", result);
+        User result = userService.update(userId, userDTO);
+
+        //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        List<GrantedAuthority> updatedAuthorities = new ArrayList<>(token.getAuthorities());
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(
+                new CustomUserDetails(result, userService.getUserRole(result.getId())),
+                token.getCredentials(), updatedAuthorities);
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+        modelMap.addAttribute("userDTO", new UserDto(result));
 
         return new ModelAndView("redirect:/profile", modelMap);
     }
