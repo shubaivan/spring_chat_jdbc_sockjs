@@ -1,28 +1,38 @@
+var stompClient = null;
 $(document).ready(function () {
     // var mainContainer = $('#main_container');
-    $('.chats_info').on('click', function () {
+    $("#side-menu").on('click', '.chats_info', function () {
         var current = $(this);
         var currentChatId = current.data('elId');
 
-        $.ajax({
-            type: "GET",
-            url: '/chats/chat/' + currentChatId,
-            success: function (data) {
-                console.log(data);
-                var replaceContainer = '<div id="main_container">' + data + '</div>';
-                $('#main_container').replaceWith(replaceContainer);
-                getChatMessages(currentChatId);
-                getUsersFromChat(currentChatId);
-            },
-            error: function (result) {
-                console.log(result)
-            }
-        })
+        extracted(currentChatId);
     });
 
     $('body').on('click', '.rightBottom', function () {
-        var el = $(this)
-        alert("joinChat" + el.data('elId'));
+        var el = $(this);
+
+        var chatId = el.data('elId');
+        var chatName = el.data('elName');
+        $.ajax({
+            type: "POST",
+            url: '/api/users/chat',
+            contentType: "application/json",
+            data: JSON.stringify({
+                chatId: chatId
+            }),
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                extracted(chatId);
+            },
+            error: function (result) {
+                console.log(result)
+            },
+            complete:function(jqXHR, textStatus ){
+                $("a[data-el-id="+chatId+"]").parent(".parentDivChat").remove();
+                createAllChatEl(chatId, chatName);
+            }
+        });
     });
 
     $('body').on('click', '.leftBottom', function () {
@@ -30,6 +40,32 @@ $(document).ready(function () {
         alert("leftChat" + el.data('elId'));
     })
 });
+
+function createAllChatEl(chatId, chatName) {
+    $("#allChats").append('<div>\n' +
+        '<a href="#" class="chats_info" data-el-id="' + chatId + '">\n' +
+        '<h>' + chatName + '</h>\n' +
+        '</a>\n' +
+        '<br>\n' +
+        '</div>');
+}
+
+function extracted(currentChatId) {
+    $.ajax({
+        type: "GET",
+        url: '/chats/chat/' + currentChatId,
+        success: function (data) {
+            console.log(data);
+            var replaceContainer = '<div id="main_container">' + data + '</div>';
+            $('#main_container').replaceWith(replaceContainer);
+            getChatMessages(currentChatId);
+            getUsersFromChat(currentChatId);
+        },
+        error: function (result) {
+            console.log(result)
+        }
+    })
+}
 
 function getUsersFromChat(currentChatId) {
     $.ajax({
@@ -92,13 +128,18 @@ function stomp() {
     var connectingElement = document.querySelector('#connecting');
     var chatId = $('#chatId').data('elId');
 
-    var stompClient = null;
-    var username = null;
-    connect();
+    // var stompClient = null;
+    // var username = null;
+    username = $('#username').text().trim();
+    if (stompClient) {
+        onConnected();
+    } else {
+        connect();
+    }
 
     function connect() {
         //username = document.querySelector('#name').value.trim();
-        username = $('#username').text().trim()
+
 
         //if(username) {
         //usernamePage.classList.add('hidden');
@@ -114,8 +155,14 @@ function stomp() {
 
 
     function onConnected() {
-        // Subscribe to the Public Topic
-        stompClient.subscribe('/topic/public/' + chatId, onMessageReceived);
+        var propertyNames = Object.keys(stompClient.subscriptions)
+            .filter(function (propertyName) {
+                return propertyName.indexOf("chatId"+chatId) === 0;
+            });
+        if (!propertyNames.length) {
+            // Subscribe to the Public Topic
+            stompClient.subscribe('/topic/public/' + chatId, onMessageReceived, { id: "chatId"+chatId });
+        }
 
         // Tell your username to the server
         stompClient.send("/app/chat/" + chatId + "/addUser",
