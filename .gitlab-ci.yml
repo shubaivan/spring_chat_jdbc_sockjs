@@ -1,0 +1,31 @@
+stages:
+  - test
+  - build
+  - deploy
+
+junit:
+  stage: test
+  script:
+    - ./gradlew test
+
+build:
+  stage: build
+  only:
+    - dev
+    - master
+  script:
+    - ./gradlew bootJar
+  artifacts:
+    paths:
+      - ./web/build/libs/spd_talks.jar
+
+deploy develop:
+  stage: deploy
+  only:
+    - dev
+  dependencies:
+    - build
+  script:
+    - mv ./web/build/libs/spd_talks.jar /opt/app/
+    - cd /opt/app
+    - ./restart.sh &
