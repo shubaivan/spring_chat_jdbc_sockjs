@@ -19,6 +19,8 @@ build:
   artifacts:
     paths:
       - ./web/build/libs/spd_talks.jar
+      - cd /web/build/libs/
+      - ls -l
 
 deploy develop:
   stage: deploy
@@ -27,7 +29,6 @@ deploy develop:
   dependencies:
     - build
   script:
-    - ls -l
     - mv ./web/build/libs/spd_talks.jar /opt/app/
     - cd /opt/app
     - ./restart.sh &
