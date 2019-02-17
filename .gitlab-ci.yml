@@ -14,10 +14,11 @@ build:
     - dev
     - master
   script:
+    - chmod +x gradlew
     - ./gradlew bootJar
   artifacts:
     paths:
-      - ./web/build/libs/spd_talks.jar
+      - .spd_talks.jar
 
 deploy develop:
   stage: deploy
@@ -26,6 +27,6 @@ deploy develop:
   dependencies:
     - build
   script:
-    - sudo mv ./web/build/libs/spd_talks.jar /opt/app/
+    - sudo mv .spd_talks.jar /opt/app/
     - cd /opt/app
     - sudo ./restart.sh &
