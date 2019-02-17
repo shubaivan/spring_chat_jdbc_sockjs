@@ -10,6 +10,8 @@ buildscript {
     }
 }
 
+
+
 plugins {
     id "org.flywaydb.flyway" version "5.2.4"
 }
@@ -35,7 +37,6 @@ repositories {
 configurations.all {
     exclude group: "commons-logging", module: "commons-logging"
 }
-
 
 bootJar{
     archiveName = "spd_talks.jar"
