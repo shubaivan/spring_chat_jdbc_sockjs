@@ -32,12 +32,12 @@ public class AuthenticationController {
     @GetMapping("/")
     public ModelAndView index(Model model, Principal principal) {
         model.addAttribute("message", "You are logged in as " + principal.getName());
-        return new ModelAndView("redirect:" + "chats");
+        return new ModelAndView("redirect:/chats");
     }
 
     @GetMapping("/loginAction")
     public ModelAndView loginAction() {
-        return new ModelAndView("redirect:" + "chats");
+        return new ModelAndView("redirect:/chats");
     }
 
     @RequestMapping("/login")
