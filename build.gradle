@@ -36,7 +36,6 @@ configurations.all {
     exclude group: "commons-logging", module: "commons-logging"
 }
 
-
 bootJar{
     archiveName = "spd_talks.jar"
 }
