@@ -2,7 +2,7 @@ body {
     font-family: "Arial", Serif;
     background-color: #f4f4f4;
     margin: 0;
-    overflow: auto;
+    overflow: hidden;
 }
 
 .navbar {
@@ -35,7 +35,7 @@ body {
     padding: 0;
     margin-top: 8px;
     list-style: none;
-    overflow: auto;
+    overflow: hidden;
 }
 
 .navbar a:hover {
@@ -57,7 +57,7 @@ body {
 }
 
 .main-container {
-    overflow: auto;
+    overflow: hidden;
 }
 
 .side-nav a {

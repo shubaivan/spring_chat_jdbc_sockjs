@@ -4,6 +4,7 @@ import com.spdu.bll.custom_exceptions.CustomFileException;
 import com.spdu.bll.interfaces.FileEntityService;
 import com.spdu.bll.interfaces.UserService;
 import com.spdu.bll.models.FileEntityDto;
+import com.spdu.bll.models.constants.PathToFiles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -31,11 +32,9 @@ public class FileEntitiesController {
         try {
             FileEntityDto fileEntityDto = fileEntityService.getById(id);
 
-            Properties properties = new Properties();
-            properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("application.properties"));
-            String sServerLocation = properties.getProperty("server.upload.docs.path");
+            String pathToFile = PathToFiles.get();
 
-            URL path = new URL("file:///" + sServerLocation + fileEntityDto.getPath().trim());
+            URL path = new URL("file:///" + pathToFile + fileEntityDto.getPath().trim());
             Resource resource = new UrlResource(path);
 
             return ResponseEntity.ok()
