@@ -1,13 +1,10 @@
 package com.spdu.web.restcontrollers;
 
-import com.spdu.bll.custom_exceptions.UserException;
 import com.spdu.bll.interfaces.ChatService;
 import com.spdu.bll.interfaces.UserService;
 import com.spdu.bll.models.ChatDto;
 import com.spdu.bll.models.CustomUserDetails;
-import com.spdu.bll.models.UserRegisterDto;
 import com.spdu.domain_models.entities.Chat;
-import com.spdu.domain_models.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -102,5 +99,15 @@ public class ChatController {
 
         boolean result = chatService.joinToChat(cud.getId(), chatId);
         return new ResponseEntity(result, HttpStatus.OK);
+    }
+
+    @PutMapping
+    public ResponseEntity update(@RequestBody ChatDto chatDto, long chatId) {
+        try {
+            ChatDto result = chatService.update(chatId, chatDto);
+            return new ResponseEntity(result, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
