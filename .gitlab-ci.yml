@@ -1,12 +1,12 @@
 stages:
-  - test
+#  - test
   - build
   - deploy
 
-junit:
-  stage: test
-  script:
-    - ./gradlew test
+#junit:
+#  stage: test
+#  script:
+#    - ./gradlew test
 
 build:
   stage: build
