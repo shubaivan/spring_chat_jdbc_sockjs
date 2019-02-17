@@ -9,6 +9,7 @@ public class ChatMessage {
     private String content;
     private String sender;
     private Integer chatId;
+    private Integer userId;
 
     private Date createdDate;
     private Time createdTime;
@@ -43,6 +44,14 @@ public class ChatMessage {
 
     public void setChatId(Integer chatId) {
         this.chatId = chatId;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public Date getCreatedDate() {

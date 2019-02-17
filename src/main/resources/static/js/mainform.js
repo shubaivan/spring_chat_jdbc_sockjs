@@ -40,10 +40,11 @@ $(document).ready(function () {
 
         var chatId = el.data('elId');
         var chatName = el.data('elName');
+        var userId = $('#username').data('elId');
 
         stompClient.send("/app/chat/" + chatId + "/leftUser",
             {},
-            JSON.stringify({sender: username, type: 'LEAVE', chatId: chatId})
+            JSON.stringify({userId: userId, sender: username, type: 'LEAVE', chatId: chatId})
         );
         $("#allChats").find("[data-el-id="+chatId+"]").closest('div').remove();
 
@@ -199,7 +200,7 @@ function stomp() {
         // Tell your username to the server
         stompClient.send("/app/chat/" + chatId + "/addUser",
             {},
-            JSON.stringify({sender: username, type: 'JOIN', chatId: chatId})
+            JSON.stringify({userId: userId, sender: username, type: 'JOIN', chatId: chatId})
         )
 
         // connectingElement.classList.add('hidden');
@@ -224,7 +225,8 @@ function stomp() {
                 sender: username,
                 content: messageInput.value,
                 type: 'CHAT',
-                chatId: chatId
+                chatId: chatId,
+                userId: userId
             };
             stompClient.send("/app/chat/" + chatId + "/sendMessage", {}, JSON.stringify(chatMessage));
             messageInput.value = '';
@@ -254,7 +256,7 @@ function onTypingReceived(payload) {
 function onMessageReceived(payload) {
     var message = JSON.parse(payload.body);
 
-    parseMessage(message);
+    parseMessage(message, true);
 }
 
 function parseUser(user) {
@@ -265,14 +267,24 @@ function parseUser(user) {
     userArea.appendChild(para);
 }
 
-function parseMessage(message) {
+function parseMessage(message, socket) {
     var messageElement = document.createElement('li');
     var dateTime = message.createdDate + ' ' + message.createdTime;
-
+    var checkExistUsername = $("#userArea").find("[data-user-id="+message.userId+"]");
     if(message.type === 'JOIN') {
         messageElement.classList.add('event-message');
         message.content = message.sender + ' joined! at ' + dateTime;
+        if (socket) {
+            if (!checkExistUsername.length) {
+                $("#userArea").append('<p data-user-id="'+message.userId+'">'+message.sender+'</p>');
+            }
+        }
     } else if (message.type === 'LEAVE') {
+        if (socket) {
+            if (checkExistUsername.length) {
+                checkExistUsername.remove();
+            }
+        }
         messageElement.classList.add('event-message');
         message.content = message.sender + ' left! at ' + dateTime;
     } else {
