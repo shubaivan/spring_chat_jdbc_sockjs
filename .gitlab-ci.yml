@@ -18,6 +18,7 @@ build:
     - ./gradlew bootJar
   artifacts:
     paths:
+      - -ls -l
       - .spd_talks.jar
 
 deploy develop:
