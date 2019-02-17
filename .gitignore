@@ -100,7 +100,6 @@ fabric.properties
 # Editor-based Rest Client
 .idea/httpRequests
 
-/gradle/
 /gradlew.bat
 /talks-websocket.iml
 /.idea/
