@@ -1,17 +1,21 @@
 package com.spdu.dal.mappers;
 
-import com.spdu.model.constants.UserRole;
-import com.spdu.model.entities.User;
+import com.spdu.domain_models.entities.User;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserMapper implements RowMapper<User> {
+
     @Override
     public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+        if (rs.isClosed()) {
+            return null;
+        }
         User user = new User();
         user.setId(rs.getLong("id"));
+        user.setEnabled(rs.getBoolean("is_enabled"));
         user.setAvatar(rs.getLong("avatar"));
         user.setDateOfBirth(rs.getDate("date_of_birth").toLocalDate());
         user.setDateOfRegistration(rs.getTimestamp("date_of_registration").toLocalDateTime());
@@ -23,7 +27,6 @@ public class UserMapper implements RowMapper<User> {
         user.setUrlFacebook(rs.getString("url_facebook"));
         user.setUrlGit(rs.getString("url_git"));
         user.setUrlLinkedin(rs.getString("url_linkedin"));
-        user.setUserRole(UserRole.values()[rs.getInt("user_role")]);
         return user;
     }
 }

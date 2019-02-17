@@ -21,7 +21,6 @@ flyway {
 }
 
 apply plugin: 'java'
-apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
@@ -37,21 +36,45 @@ configurations.all {
     exclude group: "commons-logging", module: "commons-logging"
 }
 
+
+bootJar {
+    archiveName = "spd_talks.jar"
+}
+
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+
+    compile group: 'org.flywaydb', name: 'flyway-core', version: '3.0'
+    testCompile group: 'org.flywaydb.flyway-test-extensions', name: 'flyway-spring-test', version: '5.2.1'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.1.2.RELEASE'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.24.0'
 
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-websocket', version: '2.1.1.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '2.1.2.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.1.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.1.2.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.1.2.RELEASE'
 
     compile group: 'org.springframework', name: 'spring-orm', version: '5.1.2.RELEASE'
 
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.4'
+    compile group: 'postgresql', name: 'postgresql', version: '9.1-901-1.jdbc4'
 
     compile group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.25'
+    compile group: 'log4j', name: 'log4j', version: '1.2.17'
 
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 
     compile "org.flywaydb:flyway-core:5.2.4"
+
+    compile group: 'org.springframework', name: 'spring-context', version: '5.1.4.RELEASE'
+    compile group: 'org.springframework', name: 'spring-context-support', version: '5.1.5.RELEASE'
+
+    compile group: 'com.zaxxer', name: 'HikariCP', version: '3.3.0'
+
+    compile group: 'org.thymeleaf', name: 'thymeleaf', version: '3.0.11.RELEASE'
+    compile group: 'org.thymeleaf', name: 'thymeleaf-spring5', version: '3.0.11.RELEASE'
 }

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head xmlns:th="http://www.w3.org/1999/xhtml">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Register page</title>
+</head>
+<link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" th:href="@{/css/login.css}" href="../../css/login.css"/>
+
+<div class="register">
+    <a href="/login" th:href="@{/login}"><h2 class="nonactive"> sign in</h2></a>
+    <a href="/register" th:href="@{/register}"><h2 class="active">sign up</h2></a>
+
+    <!--/*@thymesVar id="userRegisterDTO" type="com.spdu.bll.models.UserRegisterDto"*/-->
+    <form action="#" th:action="@{/register}" th:object="${userRegisterDTO}" method="post">
+        <input type="text" class="text" th:field="*{email}">
+        <span>email</span>
+        <br>
+        <input type="text" class="text" th:field="*{userName}">
+        <span>username</span>
+        <br>
+        <input type="password" class="text" th:field="*{password}">
+        <span>password</span>
+        <br>
+        <input type="password" class="text" th:field="*{matchingPassword}">
+        <span>matchingPassword</span>
+        <br>
+        <input type="date" class="text" th:value="*{dateOfBirth}" th:field="*{dateOfBirth}">
+        <span>dateOfBirth</span>
+        <button class="signin">Register</button>
+    </form>
+</div>
+</html>

@@ -1,0 +1,1 @@
+ALTER TABLE db_users DROP COLUMN user_role;

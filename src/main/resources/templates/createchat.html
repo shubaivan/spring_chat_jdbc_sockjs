@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>SPD-Talks</title>
+</head>
+<body>
+
+<link rel='stylesheet' th:href="@{/css/mainform.css}" href="../../css/mainform.css"/>
+<link rel='stylesheet' th:href="@{/css/createchat.css}" href="../../css/createchat.css"/>
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+<nav class="navbar">
+    <ul class="navbar-nav">
+        <li><a href="/profile" th:href="@{/profile}">Profile</a></li>
+        <li><a href="/chats" th:href="@{/chats}">Chats</a></li>
+        <li><a href="/users" th:href="@{/users}">Users</a></li>
+        <li><a href="/logout" th:href="@{/logout}" class="logout">Logout</a></li>
+    </ul>
+</nav>
+<div class="create">
+
+    <form action="#" th:action="@{/chats/createchat}" th:object="${chatDto}" method="POST">
+        <div class="formtext">
+            <span><h2>Chat name</h2></span>
+
+            <input type="text" class="text" th:field="*{name}">
+            <br>
+            <span><h2>Chat type</h2></span>
+
+            <select th:field="*{chatType}">
+                <option th:each="type : ${T(com.spdu.bll.models.constants.ChatType).values()}"
+                        th:value="${type}"
+                        th:text="${type}">
+                </option>
+            </select>
+            <br>
+            <span><h2>Tags</h2></span>
+
+            <input type="text" class="text" th:field="*{tags}">
+            <br>
+            <span><h2>Description</h2></span>
+
+            <input type="text" class="text" th:field="*{description}">
+            <br>
+        </div>
+        <button class="submit">Create</button>
+    </form>
+</div>
+</body>
+</html>
