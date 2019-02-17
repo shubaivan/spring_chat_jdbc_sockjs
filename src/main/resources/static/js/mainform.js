@@ -39,14 +39,29 @@ $(document).ready(function () {
         var el = $(this);
 
         var chatId = el.data('elId');
+        var chatName = el.data('elName');
 
         stompClient.send("/app/chat/" + chatId + "/leftUser",
             {},
             JSON.stringify({sender: username, type: 'LEAVE', chatId: chatId})
-        )
+        );
+        $("#allChats").find("[data-el-id="+chatId+"]").closest('div').remove();
 
+        createAllPublicChatEl(chatId, chatName);
+
+        var replaceContainer = '<div id="main_container">SPD-Talks. Let\'s start conversation</div>';
+        $('#main_container').replaceWith(replaceContainer);
     })
 });
+
+function createAllPublicChatEl(chatId, chatName) {
+    $("#publicChats").append('<div class="parentDivChat">\n' +
+        '<a href="#" data-el-id="'+ chatId +'">\n' +
+        ' <h>'+chatName+'</h>\n' +
+        '<span class="rightBottom" data-el-id="'+chatId+'" data-el-name="'+chatName+'">Join Chat</span>\n' +
+        '</a>\n' +
+        '</div>');
+}
 
 function createAllChatEl(chatId, chatName) {
     $("#allChats").append('<div>\n' +
@@ -134,6 +149,7 @@ function stomp() {
     var userArea = document.querySelector('#userArea');
     var connectingElement = document.querySelector('#connecting');
     var chatId = $('#chatId').data('elId');
+    var userId = $('#username').data('elId');
 
     // var stompClient = null;
     // var username = null;
@@ -162,13 +178,22 @@ function stomp() {
 
 
     function onConnected() {
-        var propertyNames = Object.keys(stompClient.subscriptions)
+        var propertyNamesTopicPublic = Object.keys(stompClient.subscriptions)
             .filter(function (propertyName) {
                 return propertyName.indexOf("chatId"+chatId) === 0;
             });
-        if (!propertyNames.length) {
+        if (!propertyNamesTopicPublic.length) {
             // Subscribe to the Public Topic
             stompClient.subscribe('/topic/public/' + chatId, onMessageReceived, { id: "chatId"+chatId });
+        }
+
+        var propertyNamesChatTyping = Object.keys(stompClient.subscriptions)
+            .filter(function (propertyName) {
+                return propertyName.indexOf("typing"+chatId) === 0;
+            });
+
+        if (!propertyNamesChatTyping.length) {
+            stompClient.subscribe('/topic/chat/' + chatId + '/typing', onTypingReceived, { id: "typing"+chatId });
         }
 
         // Tell your username to the server
@@ -208,6 +233,22 @@ function stomp() {
     }
 
     messageForm.addEventListener('submit', sendMessage, true);
+    
+    $(messageInput).on('keyup', function(eventObject) {
+        stompClient.send("/app/chat/" + chatId + "/typing",
+            {},
+            JSON.stringify({userId: userId, chatId: chatId})
+        )
+    })
+}
+
+function onTypingReceived(payload) {
+    var chatTyping = JSON.parse(payload.body);
+    var userTyping = $("#userArea").find("[data-user-id="+chatTyping.userId+"]");
+    userTyping.append('<span id="typing'+chatTyping.userId+'" style="color: red">typing...</span>');
+    setTimeout(function () {
+        $("#typing"+chatTyping.userId).remove();
+    }, 2000);
 }
 
 function onMessageReceived(payload) {
@@ -218,7 +259,7 @@ function onMessageReceived(payload) {
 
 function parseUser(user) {
     var para = document.createElement("p"); // create a <p> element
-    para.setAttribute('userId', user.id); // add attribute
+    para.setAttribute('data-user-id', user.id); // add attribute
     var t = document.createTextNode(user.firstName + user.lastName); // create a text node
     para.appendChild(t);
     userArea.appendChild(para);
@@ -261,15 +302,16 @@ function parseMessage(message) {
     }
 
     var textElement = document.createElement('p');
-    //Change it!!
+
     var messageText = document.createTextNode(message.content);
     textElement.appendChild(messageText);
 
     messageElement.appendChild(textElement);
 
-
-    messageArea.appendChild(messageElement);
-    messageArea.scrollTop = messageArea.scrollHeight;
+    if (typeof messageArea !== 'undefined') {
+        messageArea.appendChild(messageElement);
+        messageArea.scrollTop = messageArea.scrollHeight;
+    }
 }
 
 function getAvatarColor(messageSender) {

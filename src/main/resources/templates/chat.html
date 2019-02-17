@@ -1,10 +1,10 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
-<span id="username" th:utext="${fullName}"></span>
+<span id="username" th:attr="data-el-id=${auth.getId()}" th:utext="${fullName}"></span>
 <p>chat name: <span id="chatId" th:attr="data-el-id=${chat.getId()}" th:utext="${chat.getName()}"></span></p>
 <div id="chat-page">
     <div class="chat-header">
         <h2 >SPD-Talks</h2>
-        <div class="leftBottom" th:attr="data-el-id=${chat.getId()}">Left Chat</div>
+        <div class="leftBottom" th:attr="data-el-id=${chat.getId()}" th:attrappend="data-el-Name=${chat.getName()}">Left Chat</div>
     </div>
     <div class="main-container" id="container">
 

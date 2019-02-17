@@ -41,6 +41,7 @@ public class ChatViewController {
         CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
         String fullName = cud.getUser().getFirstName() + ' ' + cud.getUser().getLastName();
         modelMap.addAttribute("fullName", fullName);
+        modelMap.addAttribute("auth", cud.getUser());
 
         return "chat";
     }

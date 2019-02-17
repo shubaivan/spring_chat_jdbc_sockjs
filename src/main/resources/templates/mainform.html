@@ -56,7 +56,7 @@
     </div>
 
     <h2 class="text"> All public chats</h2>
-    <div layout:fragment="content">
+    <div id="publicChats" layout:fragment="content">
         <div th:each="chat: ${allPublic}" class="parentDivChat">
             <a href="#" th:attr="data-el-id=${chat.getId()}">
                 <h th:text="${chat.name}">Name</h>
