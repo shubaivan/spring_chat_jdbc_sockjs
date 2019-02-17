@@ -1,9 +1,12 @@
 package com.spdu.web.restcontrollers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spdu.bll.interfaces.FileEntityService;
 import com.spdu.bll.interfaces.MessageService;
 import com.spdu.bll.models.CustomUserDetails;
+import com.spdu.bll.models.FileEntityDto;
 import com.spdu.bll.models.MessageReturnDto;
+import com.spdu.domain_models.entities.FileEntity;
 import com.spdu.domain_models.entities.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,15 +20,22 @@ import java.security.Principal;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("api/messages")
 public class MessageController {
     private final MessageService messageService;
+    private final FileEntityService fileEntityService;
 
     @Autowired
-    public MessageController(MessageService messageService) {
+    public MessageController(
+            MessageService messageService,
+            FileEntityService fileEntityService
+    ) {
         this.messageService = messageService;
+        this.fileEntityService = fileEntityService;
     }
 
     @PostMapping
@@ -52,9 +62,21 @@ public class MessageController {
 
     @GetMapping("/chat/{id}")
     @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
-    public ResponseEntity getByChatId(@PathVariable long id) {
+    public ResponseEntity getByChatId(@PathVariable long id, Principal principal) {
         List<Message> listMessages = messageService.getByChatId(id);
+
+        listMessages.forEach(this::accept);
+
         return new ResponseEntity(listMessages, HttpStatus.OK);
+    }
+
+    private void accept(Message s) {
+        Optional<FileEntity> fileOptional = Optional.ofNullable(fileEntityService.getFileEntity(s.getAuthorID()));
+
+        if (fileOptional.isPresent()) {
+            FileEntityDto fileEntityDto = new FileEntityDto(fileOptional.get());
+            s.setAvatarId(fileEntityDto.getId());
+        }
     }
 
     @PostMapping("/default-chat")
