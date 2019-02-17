@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -85,4 +86,12 @@ public class UserViewController {
 
         return "users";
     }
+
+    @GetMapping("/users/{id}")
+    public String getById(ModelMap modelMap, @PathVariable String id) {
+        UserDto user = new UserDto(userService.getById(Long.valueOf(id)).get());
+        modelMap.addAttribute("user", user);
+        return "userinfo";
+    }
+
 }

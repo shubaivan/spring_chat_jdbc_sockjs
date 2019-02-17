@@ -8,6 +8,8 @@
 <body>
 
 <link rel='stylesheet' th:href="@{/css/mainform.css}" href="../../css/mainform.css"/>
+<link rel='stylesheet' th:href="@{/css/popup.css}" href="../../css/popup.css"/>
+<link rel="stylesheet" th:href="@{/css/button.css}" href="../../css/button.css"/>
 <link rel="stylesheet" href="/css/messagearea.css"/>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
@@ -37,6 +39,11 @@
 <div id='side-menu' class='side-nav'>
     <a href="#" class='btn-close' onclick='closeSideMenu()'>&times;</a>
 
+    <h2 class="text"> Create chat</h2>
+    <div layout:fragment="content">
+        <a href="#" onclick='showElement("popup")'>Chat create</a>
+    </div>
+
     <h2 class="text"> Own chats</h2>
     <div layout:fragment="content">
         <div th:each="chat: ${ownChats}">
@@ -48,7 +55,7 @@
     </div>
 
     <h2 class="text"> All chats</h2>
-    <div layout:fragment="content">
+    <div id="allChats" layout:fragment="content">
         <div th:each="chat: ${allChats}">
             <a href="#" class="chats_info" th:attr="data-el-id=${chat.getId()}">
                 <h th:text="${chat.name}">Name</h>
@@ -58,12 +65,12 @@
     </div>
 
     <h2 class="text"> All public chats</h2>
-    <div layout:fragment="content">
-        <div th:each="chat: ${allPublic}">
-            <a href="#" class="chats_info_full" th:attr="data-el-id=${chat.id}">
+    <div id="publicChats" layout:fragment="content">
+        <div th:each="chat: ${allPublic}" class="parentDivChat">
+            <a href="#" th:attr="data-el-id=${chat.getId()}">
                 <h th:text="${chat.name}">Name</h>
+                <span class="rightBottom" th:attr="data-el-id=${chat.getId()}" th:attrappend="data-el-Name=${chat.getName()}">Join Chat</span>
             </a>
-            <br>
         </div>
     </div>
 </div>
@@ -74,6 +81,34 @@
     </div>
 </div>
 
+<div class="b-popup" id=popup>
+    <div class="b-popup-content">
+        <form action="#" th:action="@{/chats/createchat}" th:object="${chatDto}" method="POST">
+            <a href="#" onclick='hideElement("popup")' class='btn-close'>&times;</a>
+            <div>
+                <span><h3>Chat name</h3></span>
+                <input type="text" class="text" th:field="*{name}">
+                <span><h3>Chat type</h3></span>
+                <select th:field="*{chatType}">
+                    <option th:each="type : ${T(com.spdu.bll.models.constants.ChatType).values()}"
+                            th:value="${type}"
+                            th:text="${type}">
+                    </option>
+                </select>
+                <span><h3>Tags</h3></span>
+                <input type="text" class="text" th:field="*{tags}">
+                <span><h3>Description</h3></span>
+                <input type="text" class="text" th:field="*{description}">
+                <br>
+                <!--<div class="flex-button">-->
+                <button class="action-button">Create</button>
+                <!--<button class="action-button" onclick="" >Cancel</button>-->
+                <!--</div>-->
+            </div>
+
+        </form>
+    </div>
+</div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
@@ -83,6 +118,8 @@
 </script>
 
 <script src="/js/mainform.js"></script>
-<script src="/js/chatinfo.js"></script>
+
+<script src="/js/changeVisibility.js"></script>
+
 </body>
 </html>

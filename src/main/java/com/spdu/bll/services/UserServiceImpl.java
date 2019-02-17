@@ -44,6 +44,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> getByChatId(long id) throws EmptyResultDataAccessException {
+        return userRepository.getByChatId(id);
+    }
+
+    @Override
     public Optional<User> getByEmail(String email) throws EmptyResultDataAccessException {
         return userRepository.getByEmail(email);
     }
