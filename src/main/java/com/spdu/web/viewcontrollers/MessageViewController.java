@@ -47,6 +47,16 @@ public class MessageViewController {
         return convertMessage(message, principal);
     }
 
+    @MessageMapping("/chat/{id}/leftUser")
+    @SendTo("/topic/public/{id}")
+    public ChatMessage leftUser(
+            @Payload ChatMessage message,
+            Principal principal,
+            SimpMessageHeaderAccessor headerAccessor
+    ) {
+        return convertMessage(message, principal);
+    }
+
     private ChatMessage convertMessage(ChatMessage message, Principal principal)
     {
         Integer chatId = message.getChatId();

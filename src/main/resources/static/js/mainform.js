@@ -36,8 +36,15 @@ $(document).ready(function () {
     });
 
     $('body').on('click', '.leftBottom', function () {
-        var el = $(this)
-        alert("leftChat" + el.data('elId'));
+        var el = $(this);
+
+        var chatId = el.data('elId');
+
+        stompClient.send("/app/chat/" + chatId + "/leftUser",
+            {},
+            JSON.stringify({sender: username, type: 'LEAVE', chatId: chatId})
+        )
+
     })
 });
 
