@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -55,5 +57,31 @@ public class FileEntityRepositoryImpl implements FileEntityRepository {
                 new Object[]{id},
                 new FileEntityMapper());
         return Optional.of(fileEntity);
+    }
+
+    @Override
+    public FileEntity getByUserId(long id) throws EmptyResultDataAccessException {
+        String query = "SELECT * FROM file_entities AS f\n" +
+                "WHERE f.owner_id ="+id+" \n" +
+                "ORDER BY f.id DESC \n" +
+                "LIMIT 1";
+
+        List<FileEntity> result = getByQuery(query);
+        if (result.size() > 0) {
+           return result.get(0);
+        }
+
+        return null;
+    }
+
+    private List<FileEntity> getByQuery(String query) throws EmptyResultDataAccessException {
+        return jdbcTemplate.query(query,
+                rs -> {
+                    List<FileEntity> list = new LinkedList<>();
+                    while (rs.next()) {
+                        list.add(new FileEntityMapper().mapRow(rs, rs.getRow()));
+                    }
+                    return list;
+                });
     }
 }

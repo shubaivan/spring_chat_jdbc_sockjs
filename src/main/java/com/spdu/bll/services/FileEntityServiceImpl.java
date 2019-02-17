@@ -70,4 +70,8 @@ public class FileEntityServiceImpl implements FileEntityService {
             throw new CustomFileException("File not found");
         }
     }
+
+    public FileEntity getFileEntity(long id) {
+        return fileEntityRepository.getByUserId(id);
+    }
 }

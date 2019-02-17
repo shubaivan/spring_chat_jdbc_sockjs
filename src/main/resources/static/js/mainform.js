@@ -125,6 +125,10 @@ function getChatMessages(currentChatId) {
                     createdTime: val.createdTime
                 };
 
+                if (val.avatarId) {
+                    payload.avatarId = val.avatarId;
+                }
+
                 parseMessage(payload);
             });
             stomp()
@@ -291,9 +295,14 @@ function parseMessage(message, socket) {
         messageElement.classList.add('chat-message');
 
         var avatarElement = document.createElement('i');
-        var avatarText = document.createTextNode(message);
-        avatarElement.appendChild(avatarText);
-        avatarElement.style['background-color'] = getAvatarColor(0);
+
+        if (message.avatarId) {
+            avatarElement.style.backgroundImage = "url('http://localhost:8080/api/file_entities/" + message.avatarId + "')";
+        } else {
+            var avatarText = document.createTextNode(message.sender);
+            avatarElement.appendChild(avatarText);
+            avatarElement.style['background-color'] = getAvatarColor(message.sender);
+        }
 
         messageElement.appendChild(avatarElement);
 
