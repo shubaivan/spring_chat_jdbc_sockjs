@@ -55,7 +55,7 @@
     </div>
 
     <h2 class="text"> All chats</h2>
-    <div layout:fragment="content">
+    <div id="allChats" layout:fragment="content">
         <div th:each="chat: ${allChats}">
             <a href="#" class="chats_info" th:attr="data-el-id=${chat.getId()}">
                 <h th:text="${chat.name}">Name</h>
@@ -65,12 +65,12 @@
     </div>
 
     <h2 class="text"> All public chats</h2>
-    <div layout:fragment="content">
-        <div th:each="chat: ${allPublic}">
-            <a href="#" class="chats_info_full" th:attr="data-el-id=${chat.id}">
+    <div id="publicChats" layout:fragment="content">
+        <div th:each="chat: ${allPublic}" class="parentDivChat">
+            <a href="#" th:attr="data-el-id=${chat.getId()}">
                 <h th:text="${chat.name}">Name</h>
+                <span class="rightBottom" th:attr="data-el-id=${chat.getId()}" th:attrappend="data-el-Name=${chat.getName()}">Join Chat</span>
             </a>
-            <br>
         </div>
     </div>
 </div>
@@ -118,7 +118,8 @@
 </script>
 
 <script src="/js/mainform.js"></script>
-<script src="/js/chatinfo.js"></script>
+
 <script src="/js/changeVisibility.js"></script>
+
 </body>
 </html>

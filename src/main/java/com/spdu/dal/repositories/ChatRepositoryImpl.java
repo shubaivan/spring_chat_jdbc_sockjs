@@ -10,10 +10,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -90,6 +87,27 @@ public class ChatRepositoryImpl implements ChatRepository {
         return jdbcTemplate.queryForRowSet(query).next();
     }
 
+    public int removeChatUser(long userId, long chatId)
+    {
+        String query = "DELETE FROM chats_users \n" +
+                "WHERE chat_id = ?\n" +
+                "AND user_id = ?\n";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        int t = jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection
+                    .prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setLong(1, chatId);
+            ps.setLong(2, userId);
+
+            return ps;
+        }, keyHolder);
+
+        Long y = Long.valueOf(keyHolder.getKeys().get("id").toString());
+
+        return t;
+    }
+
     @Override
     public List<Chat> getAll(long userId) throws EmptyResultDataAccessException {
         String query = "SELECT * FROM chats JOIN chats_users u on chats.id = u.chat_id" +
@@ -110,8 +128,14 @@ public class ChatRepositoryImpl implements ChatRepository {
 
     @Override
     public List<Chat> getPublic(long userId) throws EmptyResultDataAccessException {
-        String query = "SELECT * FROM chats JOIN chats_users u on chats.id = u.chat_id  WHERE u.user_id <> " + userId +
-                " AND chats.chat_type=" + ChatType.PUBLIC.ordinal();
+        String query = "SELECT * FROM chats AS rc\n" +
+                "WHERE rc.chat_type="+ChatType.PUBLIC.ordinal()+"\n" +
+                "AND rc.id NOT IN (SELECT cu.chat_id FROM db_users as u\n" +
+                "INNER JOIN chats_users AS cu ON cu.user_id = u.id\n" +
+                "LEFT JOIN chats AS ch ON ch.id = cu.chat_id\n" +
+                "WHERE cu.user_id ="+userId+"\n" +
+                "GROUP BY cu.chat_id)";
+
         return getByQuery(query);
     }
 }

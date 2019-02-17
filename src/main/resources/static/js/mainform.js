@@ -1,24 +1,112 @@
+var stompClient = null;
 $(document).ready(function () {
     // var mainContainer = $('#main_container');
-    $('.chats_info').on('click', function () {
+    $("#side-menu").on('click', '.chats_info', function () {
         var current = $(this);
         var currentChatId = current.data('elId');
 
+        extracted(currentChatId);
+    });
+
+    $('body').on('click', '.rightBottom', function () {
+        var el = $(this);
+
+        var chatId = el.data('elId');
+        var chatName = el.data('elName');
         $.ajax({
-            type: "GET",
-            url: '/chats/chat/' + currentChatId,
+            type: "POST",
+            url: '/api/users/chat',
+            contentType: "application/json",
+            data: JSON.stringify({
+                chatId: chatId
+            }),
+            dataType: "json",
             success: function (data) {
                 console.log(data);
-                var replaceContainer = '<div id="main_container">' + data + '</div>';
-                $('#main_container').replaceWith(replaceContainer);
-                getChatMessages(currentChatId);
+                extracted(chatId);
             },
             error: function (result) {
                 console.log(result)
+            },
+            complete:function(jqXHR, textStatus ){
+                $("a[data-el-id="+chatId+"]").parent(".parentDivChat").remove();
+                createAllChatEl(chatId, chatName);
             }
-        })
+        });
     });
+
+    $('body').on('click', '.leftBottom', function () {
+        var el = $(this);
+
+        var chatId = el.data('elId');
+        var chatName = el.data('elName');
+
+        stompClient.send("/app/chat/" + chatId + "/leftUser",
+            {},
+            JSON.stringify({sender: username, type: 'LEAVE', chatId: chatId})
+        );
+        $("#allChats").find("[data-el-id="+chatId+"]").closest('div').remove();
+
+        createAllPublicChatEl(chatId, chatName);
+
+        var replaceContainer = '<div id="main_container">SPD-Talks. Let\'s start conversation</div>';
+        $('#main_container').replaceWith(replaceContainer);
+    })
 });
+
+function createAllPublicChatEl(chatId, chatName) {
+    $("#publicChats").append('<div class="parentDivChat">\n' +
+        '<a href="#" data-el-id="'+ chatId +'">\n' +
+        ' <h>'+chatName+'</h>\n' +
+        '<span class="rightBottom" data-el-id="'+chatId+'" data-el-name="'+chatName+'">Join Chat</span>\n' +
+        '</a>\n' +
+        '</div>');
+}
+
+function createAllChatEl(chatId, chatName) {
+    $("#allChats").append('<div>\n' +
+        '<a href="#" class="chats_info" data-el-id="' + chatId + '">\n' +
+        '<h>' + chatName + '</h>\n' +
+        '</a>\n' +
+        '<br>\n' +
+        '</div>');
+}
+
+function extracted(currentChatId) {
+    $.ajax({
+        type: "GET",
+        url: '/chats/chat/' + currentChatId,
+        success: function (data) {
+            console.log(data);
+            var replaceContainer = '<div id="main_container">' + data + '</div>';
+            $('#main_container').replaceWith(replaceContainer);
+            getChatMessages(currentChatId);
+            getUsersFromChat(currentChatId);
+        },
+        error: function (result) {
+            console.log(result)
+        }
+    })
+}
+
+function getUsersFromChat(currentChatId) {
+    $.ajax({
+        type: "GET",
+        url: 'api/users/chat/' + currentChatId,
+        success: function (data) {
+            console.log(data);
+            var users = JSON.parse(data);
+
+            $.each(users, function (key, val) {
+                parseUser(val);
+            });
+
+        },
+        error: function (result) {
+            console.log(result)
+        }
+    })
+}
 
 function getChatMessages(currentChatId) {
     $.ajax({
@@ -58,16 +146,23 @@ function stomp() {
     var messageForm = document.querySelector('#messageForm');
     var messageInput = document.querySelector('#message');
     var messageArea = document.querySelector('#messageArea');
+    var userArea = document.querySelector('#userArea');
     var connectingElement = document.querySelector('#connecting');
     var chatId = $('#chatId').data('elId');
+    var userId = $('#username').data('elId');
 
-    var stompClient = null;
-    var username = null;
-    connect();
+    // var stompClient = null;
+    // var username = null;
+    username = $('#username').text().trim();
+    if (stompClient) {
+        onConnected();
+    } else {
+        connect();
+    }
 
     function connect() {
         //username = document.querySelector('#name').value.trim();
-        username = $('#username').text().trim()
+
 
         //if(username) {
         //usernamePage.classList.add('hidden');
@@ -83,8 +178,23 @@ function stomp() {
 
 
     function onConnected() {
-        // Subscribe to the Public Topic
-        stompClient.subscribe('/topic/public/' + chatId, onMessageReceived);
+        var propertyNamesTopicPublic = Object.keys(stompClient.subscriptions)
+            .filter(function (propertyName) {
+                return propertyName.indexOf("chatId"+chatId) === 0;
+            });
+        if (!propertyNamesTopicPublic.length) {
+            // Subscribe to the Public Topic
+            stompClient.subscribe('/topic/public/' + chatId, onMessageReceived, { id: "chatId"+chatId });
+        }
+
+        var propertyNamesChatTyping = Object.keys(stompClient.subscriptions)
+            .filter(function (propertyName) {
+                return propertyName.indexOf("typing"+chatId) === 0;
+            });
+
+        if (!propertyNamesChatTyping.length) {
+            stompClient.subscribe('/topic/chat/' + chatId + '/typing', onTypingReceived, { id: "typing"+chatId });
+        }
 
         // Tell your username to the server
         stompClient.send("/app/chat/" + chatId + "/addUser",
@@ -123,6 +233,22 @@ function stomp() {
     }
 
     messageForm.addEventListener('submit', sendMessage, true);
+    
+    $(messageInput).on('keyup', function(eventObject) {
+        stompClient.send("/app/chat/" + chatId + "/typing",
+            {},
+            JSON.stringify({userId: userId, chatId: chatId})
+        )
+    })
+}
+
+function onTypingReceived(payload) {
+    var chatTyping = JSON.parse(payload.body);
+    var userTyping = $("#userArea").find("[data-user-id="+chatTyping.userId+"]");
+    userTyping.append('<span id="typing'+chatTyping.userId+'" style="color: red">typing...</span>');
+    setTimeout(function () {
+        $("#typing"+chatTyping.userId).remove();
+    }, 2000);
 }
 
 function onMessageReceived(payload) {
@@ -131,15 +257,24 @@ function onMessageReceived(payload) {
     parseMessage(message);
 }
 
+function parseUser(user) {
+    var para = document.createElement("p"); // create a <p> element
+    para.setAttribute('data-user-id', user.id); // add attribute
+    var t = document.createTextNode(user.firstName + user.lastName); // create a text node
+    para.appendChild(t);
+    userArea.appendChild(para);
+}
+
 function parseMessage(message) {
     var messageElement = document.createElement('li');
+    var dateTime = message.createdDate + ' ' + message.createdTime;
 
     if(message.type === 'JOIN') {
         messageElement.classList.add('event-message');
-        message.content = message.sender + ' joined!';
+        message.content = message.sender + ' joined! at ' + dateTime;
     } else if (message.type === 'LEAVE') {
         messageElement.classList.add('event-message');
-        message.content = message.sender + ' left!';
+        message.content = message.sender + ' left! at ' + dateTime;
     } else {
         messageElement.classList.add('chat-message');
 
@@ -157,7 +292,7 @@ function parseMessage(message) {
         );
 
         var dateTimeText = document.createTextNode(
-            message.createdDate + ' ' + message.createdTime
+            dateTime
         );
         usernameElement.appendChild(usernameText);
         usernameElement.appendChild(brElement);
@@ -167,15 +302,16 @@ function parseMessage(message) {
     }
 
     var textElement = document.createElement('p');
-    //Change it!!
+
     var messageText = document.createTextNode(message.content);
     textElement.appendChild(messageText);
 
     messageElement.appendChild(textElement);
 
-
-    messageArea.appendChild(messageElement);
-    messageArea.scrollTop = messageArea.scrollHeight;
+    if (typeof messageArea !== 'undefined') {
+        messageArea.appendChild(messageElement);
+        messageArea.scrollTop = messageArea.scrollHeight;
+    }
 }
 
 function getAvatarColor(messageSender) {

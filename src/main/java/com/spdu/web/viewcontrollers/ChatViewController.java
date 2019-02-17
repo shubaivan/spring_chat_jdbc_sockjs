@@ -37,6 +37,7 @@ public class ChatViewController {
 
         modelMap.addAttribute("chat", chat);
         modelMap.addAttribute("fullName", fullName);
+        modelMap.addAttribute("auth", cud.getUser());
 
         return "chat";
     }
