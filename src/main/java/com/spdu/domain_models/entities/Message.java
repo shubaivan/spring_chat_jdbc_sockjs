@@ -17,6 +17,8 @@ public class Message {
     private MessageType messageType;
     private String fullName;
 
+    private long avatarId;
+
     private Date createdDate;
     private Time createdTime;
 
@@ -101,6 +103,14 @@ public class Message {
         this.fullName = fullName;
 
         return this;
+    }
+
+    public long getAvatarId() {
+        return avatarId;
+    }
+
+    public void setAvatarId(long avatarId) {
+        this.avatarId = avatarId;
     }
 
     public Date getCreatedDate() {

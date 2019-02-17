@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +46,7 @@ public class MessageRepositoryImpl implements MessageRepository {
         List<Message> messages = jdbcTemplate.query(query,
                 new Object[]{id},
                 rs -> {
-                    List<Message> list = new LinkedList<>();
+                    List<Message> list = new ArrayList<>();
                     while (rs.next()) {
                         list.add(new MessageMapper().mapRow(rs, rs.getRow()));
                     }
