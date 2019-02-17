@@ -101,7 +101,6 @@ fabric.properties
 .idea/httpRequests
 
 /gradle/
-/gradlew
 /gradlew.bat
 /talks-websocket.iml
 /.idea/
