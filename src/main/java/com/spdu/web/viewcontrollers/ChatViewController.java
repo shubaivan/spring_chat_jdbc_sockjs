@@ -1,10 +1,8 @@
 package com.spdu.web.viewcontrollers;
 
 import com.spdu.bll.interfaces.ChatService;
-import com.spdu.bll.interfaces.UserService;
 import com.spdu.bll.models.ChatDto;
 import com.spdu.bll.models.CustomUserDetails;
-import com.spdu.bll.services.ChatServiceImpl;
 import com.spdu.domain_models.entities.Chat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -61,12 +59,6 @@ public class ChatViewController {
         return "mainform";
     }
 
-    @GetMapping("/new")
-    public String createForm(ModelMap modelMap) {
-        modelMap.addAttribute("chatDto", new ChatDto());
-        return "/createchat";
-    }
-
     @PostMapping("/createchat")
     @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
     public String createChat(ChatDto chatDto, Principal principal) throws SQLException {
@@ -76,6 +68,5 @@ public class ChatViewController {
         chatServiceImp.create(chatDto);
         return "redirect:/chats";
     }
-
 }
 
