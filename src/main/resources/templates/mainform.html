@@ -27,13 +27,20 @@
 
     <ul class="navbar-nav">
         <li><a href="/profile" th:href="@{/profile}">Profile</a></li>
-        <li><a href="#">Users</a></li>
+        <li><a href="/chats" th:href="@{/chats}">Chats</a></li>
+        <li><a href="/users" th:href="@{/users}">Users</a></li>
+        <li><a href="/logout" th:href="@{/logout}" class="logout">Logout</a></li>
     </ul>
 
 </nav>
 
 <div id='side-menu' class='side-nav'>
     <a href="#" class='btn-close' onclick='closeSideMenu()'>&times;</a>
+
+    <h2 class="text"> Create chat</h2>
+    <div layout:fragment="content">
+        <a href="/chats/new">Chat create</a>
+    </div>
 
     <h2 class="text"> Own chats</h2>
     <div layout:fragment="content">

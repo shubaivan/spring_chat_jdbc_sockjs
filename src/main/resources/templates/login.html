@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <head>
     <title>Login page</title>
 </head>
@@ -10,10 +10,10 @@
 <div class="login">
 
     <a href="/login" th:href="@{/login}">
-    <h2 class="active"> sign in</h2></a>
+        <h2 class="active"> sign in</h2></a>
 
     <a href="/register" th:href="@{/register}">
-    <h2 class="nonactive">sign up</h2></a>
+        <h2 class="nonactive">sign up</h2></a>
 
     <form th:action="@{/loginAction}" method="post">
         <input type="text" class="text" id="username" name="username">
@@ -24,6 +24,11 @@
         <span>password</span>
         <br>
         <button class="signin">Sign In</button>
+        <br>
+        <div class="hr"></div>
+        <div class="foot-lnk">
+            <a href="/reset-password">Forgot Password?</a>
+        </div>
     </form>
 </div>
 </html>

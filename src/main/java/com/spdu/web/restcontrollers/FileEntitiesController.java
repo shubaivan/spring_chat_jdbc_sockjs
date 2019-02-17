@@ -41,7 +41,7 @@ public class FileEntitiesController {
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType(fileEntityDto.getContentType()))
                     .header(HttpHeaders.CONTENT_DISPOSITION,
-                            "attachment; filename=\"" + fileEntityDto.getName() + "\"")
+                            "attachment; filename=/" + fileEntityDto.getName() + "/")
                     .body(resource);
         } catch (IOException | CustomFileException e) {
             throw new RuntimeException(e);

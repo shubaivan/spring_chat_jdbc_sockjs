@@ -17,8 +17,9 @@
 <nav class="navbar">
     <ul class="navbar-nav">
         <li><a href="/profile" th:href="@{/profile}">Profile</a></li>
-        <li><a href="#">Users</a></li>
-        <li><a href="#">Chats</a></li>
+        <li><a href="/chats" th:href="@{/chats}">Chats</a></li>
+        <li><a href="/users" th:href="@{/users}">Users</a></li>
+        <li><a href="/logout" th:href="@{/logout}" class="logout">Logout</a></li>
     </ul>
 </nav>
 
@@ -49,19 +50,17 @@
               class="avatar-upload">
             <div class="avatar-edit">
                 <input type='file' id="imageUpload" onchange="uploadFile(this)" accept=".png, .jpg, .jpeg"
-                       name="multipartFile"
-                       class="{{ $errors->has('email') ? 'alert alert-danger' : '' }}"/>
+                       name="multipartFile"/>
                 <label for="imageUpload"></label>
             </div>
             <div class="avatar-preview container2">
                 <div id="avatar" th:field="*{avatar}">
                     <div id="imagePreview">
-                        <input type="hidden" name="_token" value="{{csrf_token()}}">
-                        <input type="submit" class="btn btn-danger">
                     </div>
 
                 </div>
             </div>
+            <button type="submit" class="update">Save changes</button>
         </form>
     </div>
 </div>

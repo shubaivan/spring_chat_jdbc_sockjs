@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import com.spdu.bll.custom_exceptions.PasswordException;
 import com.spdu.bll.custom_exceptions.UserException;
-import com.spdu.bll.interfaces.FileEntityService;
 import com.spdu.bll.interfaces.UserService;
 import com.spdu.bll.models.CustomUserDetails;
 import com.spdu.bll.models.UserDto;
@@ -34,19 +34,16 @@ import java.util.stream.Collectors;
 public class UserController {
     private final UserService userService;
     private final CustomUserDetailsService userDetailsService;
-    private final FileEntityService fileEntityService;
     private ChatServiceImpl chatService;
 
     @Autowired
     public UserController(
             UserService userService,
             CustomUserDetailsService userDetailsService,
-            FileEntityService fileEntityService,
             ChatServiceImpl chatService
     ) {
         this.userService = userService;
         this.userDetailsService = userDetailsService;
-        this.fileEntityService = fileEntityService;
         this.chatService = chatService;
     }
 
@@ -72,8 +69,9 @@ public class UserController {
 
     @GetMapping("{id}")
     @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
-    public ResponseEntity getById(@PathVariable long id) throws SQLException {
+    public ResponseEntity getById(@PathVariable long id) {
         Optional<User> result = userService.getById(id);
+
         if (result.isPresent()) {
             return new ResponseEntity(result.get(), HttpStatus.OK);
         } else {
@@ -92,6 +90,7 @@ public class UserController {
     @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
     public ResponseEntity getDetails(Principal principal) {
         Optional<User> user = userService.getByEmail(principal.getName());
+
         if (user.isPresent()) {
             return new ResponseEntity(user, HttpStatus.OK);
         } else {
@@ -102,16 +101,14 @@ public class UserController {
     @PutMapping
     @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
     public ResponseEntity update(@RequestBody UserDto userDTO, Principal principal) {
-        Optional<User> user = userService.getByEmail(principal.getName());
-        if (user.isPresent()) {
-            try {
-                UserDto result = userService.update(user.get().getId(), userDTO);
-                return new ResponseEntity(result, HttpStatus.OK);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            return new ResponseEntity("User not found!", HttpStatus.BAD_REQUEST);
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+        CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
+
+        try {
+            UserDto result = userService.update(cud.getId(), userDTO);
+            return new ResponseEntity(result, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -139,7 +136,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody UserRegisterDto userRegisterDTO) throws SQLException, UserException {
+    public ResponseEntity register(@RequestBody UserRegisterDto userRegisterDTO) throws SQLException, UserException, PasswordException {
         Optional<User> result = userService.register(userRegisterDTO);
         if (result.isPresent()) {
             return new ResponseEntity(result.get(), HttpStatus.CREATED);

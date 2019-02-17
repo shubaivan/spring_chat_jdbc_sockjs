@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @JsonFilter("listUserSideBarFilter")
 public class User {
@@ -27,6 +28,7 @@ public class User {
     private String urlFacebook;
     private String urlGit;
     private LocalDate dateOfBirth;
+    private boolean isEnabled;
 
     public User() {
     }
@@ -142,7 +144,39 @@ public class User {
         return this;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id &&
+                avatar == user.avatar &&
+                Objects.equals(firstName, user.firstName) &&
+                Objects.equals(lastName, user.lastName) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(userName, user.userName) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(dateOfRegistration, user.dateOfRegistration) &&
+                Objects.equals(urlLinkedin, user.urlLinkedin) &&
+                Objects.equals(urlFacebook, user.urlFacebook) &&
+                Objects.equals(urlGit, user.urlGit) &&
+                Objects.equals(dateOfBirth, user.dateOfBirth);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, email, userName, password, dateOfRegistration, avatar, urlLinkedin, urlFacebook, urlGit, dateOfBirth);
+    }
+
     public long getId() {
         return id;
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
     }
 }

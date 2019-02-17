@@ -115,20 +115,19 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Optional<User> getByEmail(String email) throws EmptyResultDataAccessException {
         try {
-            String query = "SELECT * FROM db_users WHERE email=? OR user_name=?";
+            String query = "SELECT * FROM db_users WHERE email=? OR user_name=? AND is_enabled = TRUE";
             User user = jdbcTemplate.queryForObject(query,
                     new Object[]{email, email},
                     new UserMapper());
             return Optional.of(user);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Optional.empty();
+        } catch (EmptyResultDataAccessException e) {
+            throw new RuntimeException(e);
         }
     }
 
     @Override
     public Optional<User> getByUserName(String userName) throws EmptyResultDataAccessException {
-        String query = "SELECT * FROM db_users WHERE user_name=?";
+        String query = "SELECT * FROM db_users WHERE user_name=? AND is_enabled = TRUE";
         User user = jdbcTemplate.queryForObject(query,
                 new Object[]{userName},
                 new UserMapper());
@@ -179,5 +178,26 @@ public class UserRepositoryImpl implements UserRepository {
         } else {
             throw new UserException("Can't update user!");
         }
+    }
+
+    @Override
+    public User confirmEmail(long id) throws SQLException, UserException {
+        String query = "UPDATE db_users SET is_enabled = TRUE" +
+                " WHERE id = ?";
+        jdbcTemplate.update(query, id);
+
+        Optional<User> modifiedUser = getById(id);
+        if (modifiedUser.isPresent()) {
+            return modifiedUser.get();
+        } else {
+            throw new UserException("Can't update user!");
+        }
+    }
+
+    public void changePassword(long id, String password) {
+        String query = "UPDATE db_users SET password = ?" +
+                " WHERE id = ?";
+        jdbcTemplate.update(query,
+                password, id);
     }
 }

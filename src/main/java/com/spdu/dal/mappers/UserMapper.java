@@ -15,6 +15,7 @@ public class UserMapper implements RowMapper<User> {
         }
         User user = new User();
         user.setId(rs.getLong("id"));
+        user.setEnabled(rs.getBoolean("is_enabled"));
         user.setAvatar(rs.getLong("avatar"));
         user.setDateOfBirth(rs.getDate("date_of_birth").toLocalDate());
         user.setDateOfRegistration(rs.getTimestamp("date_of_registration").toLocalDateTime());
