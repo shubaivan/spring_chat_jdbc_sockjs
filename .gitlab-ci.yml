@@ -27,6 +27,6 @@ deploy develop:
   dependencies:
     - build
   script:
-    - mv ./web/build/libs/spd_talks.jar /opt/app/
+    - sudo mv ./web/build/libs/spd_talks.jar /opt/app/
     - cd /opt/app
-    - ./restart.sh &
+    - sudo ./restart.sh &
