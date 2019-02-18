@@ -105,8 +105,8 @@ public class UserController {
         CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
 
         try {
-            UserDto result = userService.update(cud.getId(), userDTO);
-            return new ResponseEntity(result, HttpStatus.OK);
+            User result = userService.update(cud.getId(), userDTO);
+            return new ResponseEntity(new UserDto(result), HttpStatus.OK);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -150,7 +150,7 @@ public class UserController {
     }
 
     private Map<String, Integer> deserializerToMap(String json) throws IOException {
-        ObjectMapper mapper=new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
         @SuppressWarnings("unchecked")
@@ -160,7 +160,7 @@ public class UserController {
     }
 
     private joinChatRequestContentDTO deserializerToObj(String json) throws IOException {
-        ObjectMapper mapper=new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
 
         return mapper.readValue(json, joinChatRequestContentDTO.class);
     }

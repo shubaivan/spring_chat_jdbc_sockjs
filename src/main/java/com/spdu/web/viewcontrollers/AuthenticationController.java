@@ -7,6 +7,7 @@ import com.spdu.bll.models.ResetPasswordDto;
 import com.spdu.bll.models.UserRegisterDto;
 import com.spdu.domain_models.entities.User;
 import com.spdu.web.helpers.EmailSender;
+import com.spdu.web.helpers.URLHelper;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,10 +24,13 @@ import java.util.Optional;
 public class AuthenticationController {
     private final UserService userService;
     private final EmailSender emailSender;
+    private final URLHelper urlHelper;
 
-    public AuthenticationController(UserService userService, EmailSender emailSender) {
+    public AuthenticationController(UserService userService, EmailSender emailSender,
+                                    URLHelper urlHelper) {
         this.userService = userService;
         this.emailSender = emailSender;
+        this.urlHelper = urlHelper;
     }
 
     @GetMapping("/")
@@ -57,7 +61,7 @@ public class AuthenticationController {
         Optional<User> newUser = userService.register(userRegisterDTO);
 
         if (newUser.isPresent()) {
-            sendToken(getUrl(request), newUser.get());
+            sendToken(urlHelper.getUrl(request), newUser.get());
         }
         modelMap.put("email", userRegisterDTO.getEmail());
         return new ModelAndView("registerSuccess", modelMap);
@@ -85,21 +89,6 @@ public class AuthenticationController {
         emailSender.sendEmail(user.getEmail(), titleMessage, bodyMessage);
     }
 
-    private String getUrl(HttpServletRequest request) {
-        String scheme = request.getScheme();
-        String serverName = request.getServerName();
-        int serverPort = request.getServerPort();
-
-        StringBuilder url = new StringBuilder();
-        url.append(scheme).append("://").append(serverName);
-
-        if (serverPort != 80 && serverPort != 443) {
-            url.append(":").append(serverPort);
-        }
-
-        return url.toString();
-    }
-
     @RequestMapping("/mainform")
     public String mainForm() {
         return "mainform";
@@ -119,7 +108,7 @@ public class AuthenticationController {
 
             String titleMessage = "Reset password!";
             String bodyMessage = "To reset your password, please click here : "
-                    + getUrl(request) + "/check-token?email=" + email + "&token=" + confirmationToken;
+                    + urlHelper.getUrl(request) + "/check-token?email=" + email + "&token=" + confirmationToken;
 
             emailSender.sendEmail(email, titleMessage, bodyMessage);
 

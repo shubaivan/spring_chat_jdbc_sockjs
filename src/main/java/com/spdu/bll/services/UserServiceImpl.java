@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto update(long id, UserDto user) throws SQLException, UserException {
+    public User update(long id, UserDto user) throws SQLException, UserException {
         Optional<User> optionalUser = getById(id);
         if (optionalUser.isPresent()) {
             User oldUser = optionalUser.get();
@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
             oldUser.setUrlLinkedin(user.getUrlLinkedin());
 
             User modifiedUser = userRepository.update(id, oldUser);
-            return new UserDto(modifiedUser);
+            return modifiedUser;
         } else {
             throw new UserException("User not found");
         }
@@ -122,6 +122,10 @@ public class UserServiceImpl implements UserService {
         userRepository.setUserRole(userRole);
     }
 
+    public UserRole getUserRole(long userId) throws SQLException {
+        return userRepository.getUserRole(userId);
+    }
+
     public String setConfirmationToken(long userId) throws SQLException {
         ConfirmationToken confirmationToken = new ConfirmationToken();
 
@@ -132,7 +136,7 @@ public class UserServiceImpl implements UserService {
         return confirmationTokenRepository.setConfirmationToken(confirmationToken);
     }
 
-    private boolean emailExist(String email) throws EmptyResultDataAccessException {
+    public boolean emailExist(String email) throws EmptyResultDataAccessException {
         Optional<User> user = Optional.empty();
         try {
             user = userRepository.getByEmail(email);
