@@ -7,7 +7,9 @@ import com.spdu.bll.models.CustomUserDetails;
 import com.spdu.bll.models.FileEntityDto;
 import com.spdu.bll.models.UserDto;
 import com.spdu.domain_models.entities.User;
+import com.spdu.web.helpers.EmailSender;
 import com.spdu.web.helpers.FileUploader;
+import com.spdu.web.helpers.URLHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,10 +20,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.security.Principal;
 import java.sql.SQLException;
@@ -33,11 +38,16 @@ import java.util.Optional;
 public class UserViewController {
     private final UserService userService;
     private final FileUploader fileUploader;
+    private final URLHelper urlHelper;
+    private final EmailSender emailSender;
 
     @Autowired
-    public UserViewController(UserService userService, FileUploader fileUploader) {
+    public UserViewController(UserService userService, FileUploader fileUploader,
+                              URLHelper urlHelper, EmailSender emailSender) {
         this.userService = userService;
         this.fileUploader = fileUploader;
+        this.urlHelper = urlHelper;
+        this.emailSender = emailSender;
     }
 
     @GetMapping("/profile")
@@ -105,5 +115,21 @@ public class UserViewController {
         UserDto user = new UserDto(userService.getById(Long.valueOf(id)).get());
         modelMap.addAttribute("user", user);
         return "userinfo";
+    }
+
+    @PostMapping("/users/invite")
+    public String sendInvite(ModelMap modelMap, Principal principal, String email, HttpServletRequest request) {
+        List<User> users = userService.getAll(principal.getName());
+        modelMap.addAttribute("users", users);
+
+        if (!userService.emailExist(email)) {
+            String titleMessage = "Complete your registration!";
+            String bodyMessage = "Your friend " + principal.getName()
+                    + "sent an invitation to SPD-Talks!\n"
+                    + "Click a link to complete your registration!\n"
+                    + urlHelper.getUrl(request) + "/register";
+            emailSender.sendEmail(email, titleMessage, bodyMessage);
+        }
+        return "users";
     }
 }

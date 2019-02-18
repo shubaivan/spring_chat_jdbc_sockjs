@@ -136,7 +136,7 @@ public class UserServiceImpl implements UserService {
         return confirmationTokenRepository.setConfirmationToken(confirmationToken);
     }
 
-    private boolean emailExist(String email) throws EmptyResultDataAccessException {
+    public boolean emailExist(String email) throws EmptyResultDataAccessException {
         Optional<User> user = Optional.empty();
         try {
             user = userRepository.getByEmail(email);

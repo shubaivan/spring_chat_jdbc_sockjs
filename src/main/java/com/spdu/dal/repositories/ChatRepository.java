@@ -22,4 +22,6 @@ public interface ChatRepository {
     List<Chat> getAllOwn(long userId) throws EmptyResultDataAccessException;
 
     boolean userIsPresentInChat(long userId, long chatId) throws EmptyResultDataAccessException;
+
+    int removeChatUser(long userId, long chatId);
 }

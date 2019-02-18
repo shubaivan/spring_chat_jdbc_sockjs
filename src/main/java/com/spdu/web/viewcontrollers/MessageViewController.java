@@ -4,6 +4,7 @@ import com.spdu.bll.interfaces.MessageService;
 import com.spdu.bll.models.ChatMessage;
 import com.spdu.bll.models.ChatTyping;
 import com.spdu.bll.models.CustomUserDetails;
+import com.spdu.dal.repositories.ChatRepository;
 import com.spdu.dal.repositories.ChatRepositoryImpl;
 import com.spdu.domain_models.entities.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +24,13 @@ import java.util.stream.Collectors;
 
 @Controller
 public class MessageViewController {
-
     private final MessageService messageService;
-
-    private final ChatRepositoryImpl chatRepository;
+    private final ChatRepository chatRepository;
 
     @Autowired
     public MessageViewController(
             MessageService messageService,
-            ChatRepositoryImpl chatRepository
+            ChatRepository chatRepository
     ) {
         this.messageService = messageService;
         this.chatRepository = chatRepository;

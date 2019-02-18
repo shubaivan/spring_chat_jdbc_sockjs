@@ -39,4 +39,6 @@ public interface UserService {
     void resetPassword(ResetPasswordDto resetPasswordDto) throws UserException, PasswordException;
 
     UserRole getUserRole(long userId) throws SQLException;
+
+    boolean emailExist(String email) throws EmptyResultDataAccessException;
 }
