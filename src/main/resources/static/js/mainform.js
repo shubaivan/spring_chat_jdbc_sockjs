@@ -1,11 +1,16 @@
 var stompClient = null;
+var chatId = null;
 $(document).ready(function () {
     // var mainContainer = $('#main_container');
     $("#side-menu").on('click', '.chats_info', function () {
         var current = $(this);
         var currentChatId = current.data('elId');
-
-        extracted(currentChatId);
+        if (currentChatId === chatId) {
+            splash({element: $('.chat-header'), addedClass: 'splash'});
+        } else {
+            chatId = currentChatId;
+            extracted(currentChatId);
+        }
     });
 
     $('body').on('click', '.rightBottom', function () {
@@ -153,7 +158,7 @@ function stomp() {
     var messageArea = document.querySelector('#messageArea');
     var userArea = document.querySelector('#userArea');
     var connectingElement = document.querySelector('#connecting');
-    var chatId = $('#chatId').data('elId');
+    chatId = $('#chatId').data('elId');
     var userId = $('#username').data('elId');
 
     // var stompClient = null;
@@ -266,7 +271,7 @@ function onMessageReceived(payload) {
 function parseUser(user) {
     var para = document.createElement("p"); // create a <p> element
     para.setAttribute('data-user-id', user.id); // add attribute
-    var t = document.createTextNode(user.firstName + user.lastName); // create a text node
+    var t = document.createTextNode(user.fullName); // create a text node
     para.appendChild(t);
     userArea.appendChild(para);
 }
@@ -353,4 +358,13 @@ function openSideMenu() {
 function closeSideMenu() {
     document.getElementById('side-menu').style.width = '0px';
     document.getElementById('main').style.marginLeft = '0px';
+}
+
+function splash(parameters) {
+    var element = parameters.element;
+    var addedClass = parameters.addedClass;
+    element.addClass(addedClass);
+    setTimeout(function () {
+        element.removeClass(parameters.addedClass);
+    }, 1000);
 }
