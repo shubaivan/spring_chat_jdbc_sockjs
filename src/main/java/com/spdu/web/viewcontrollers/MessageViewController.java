@@ -14,12 +14,10 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.security.Principal;
 import java.sql.Date;
 import java.sql.Time;
-import java.util.stream.Collectors;
 
 @Controller
 public class MessageViewController {
@@ -62,9 +60,8 @@ public class MessageViewController {
     @SendTo("/topic/chat/{id}/typing")
     public ChatTyping typingUser(
             @Payload ChatTyping chatTyping
-            ) throws IOException {
+    ) throws IOException {
         String g = "";
-
         return chatTyping;
     }
 
@@ -83,8 +80,7 @@ public class MessageViewController {
         return convertMessage(message, principal);
     }
 
-    private ChatMessage convertMessage(ChatMessage message, Principal principal)
-    {
+    private ChatMessage convertMessage(ChatMessage message, Principal principal) {
         Integer chatId = message.getChatId();
 
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
@@ -110,9 +106,8 @@ public class MessageViewController {
         return message;
     }
 
-    private CustomUserDetails getCustomUserDetails(Principal principal)
-    {
+    private CustomUserDetails getCustomUserDetails(Principal principal) {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
-        return  (CustomUserDetails) token.getPrincipal();
+        return (CustomUserDetails) token.getPrincipal();
     }
 }
