@@ -19,9 +19,9 @@ build:
     - ls -l
   artifacts:
     paths:
-      - ./spd_talks.jar
+      - ./build/libs/spd_talks.jar
 
-deploy develop:
+deploy dev:
   stage: deploy
   only:
     - dev
