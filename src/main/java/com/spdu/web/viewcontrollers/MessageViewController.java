@@ -6,9 +6,8 @@ import com.spdu.bll.interfaces.MessageService;
 import com.spdu.bll.models.ChatMessage;
 import com.spdu.bll.models.ChatTyping;
 import com.spdu.bll.models.CustomUserDetails;
+import com.spdu.bll.models.FileEntityDto;
 import com.spdu.dal.repositories.ChatRepository;
-import com.spdu.dal.repositories.ChatRepositoryImpl;
-import com.spdu.dal.repositories.FileEntityRepository;
 import com.spdu.domain_models.entities.FileEntity;
 import com.spdu.domain_models.entities.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +18,11 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.security.Principal;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Controller
 public class MessageViewController {
@@ -37,7 +34,8 @@ public class MessageViewController {
     @Autowired
     public MessageViewController(
             MessageService messageService,
-            ChatRepository chatRepository
+            ChatRepository chatRepository,
+            FileEntityService fileEntityService
     ) {
         this.messageService = messageService;
         this.chatRepository = chatRepository;
@@ -69,7 +67,7 @@ public class MessageViewController {
     @SendTo("/topic/chat/{id}/typing")
     public ChatTyping typingUser(
             @Payload ChatTyping chatTyping
-            ) throws IOException {
+    ) throws IOException {
         String g = "";
 
         return chatTyping;
@@ -121,9 +119,8 @@ public class MessageViewController {
         return message;
     }
 
-    private CustomUserDetails getCustomUserDetails(Principal principal)
-    {
+    private CustomUserDetails getCustomUserDetails(Principal principal) {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
-        return  (CustomUserDetails) token.getPrincipal();
+        return (CustomUserDetails) token.getPrincipal();
     }
 }
