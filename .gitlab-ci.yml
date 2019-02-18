@@ -28,6 +28,6 @@ deploy dev:
   dependencies:
     - build
   script:
-    - mv ./spd_talks.jar
+    - mv ./build/libs/spd_talks.jar
     - cd /opt/app
     - sudo ./dev_restart.sh &
