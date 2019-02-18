@@ -29,5 +29,5 @@ deploy dev:
     - build
   script:
     - mv ./build/libs/spd_talks.jar
-    - cd /opt/app
+    - cd ./opt/app
     - sudo ./dev_restart.sh &
