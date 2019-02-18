@@ -54,8 +54,7 @@ public class UserController {
         Set<String> props = new HashSet<>();
 
         props.add("id");
-        props.add("firstName");
-        props.add("lastName");
+        props.add("fullName");
 
         SimpleFilterProvider filterProvider = new SimpleFilterProvider();
         filterProvider.addFilter("listUserSideBarFilter",

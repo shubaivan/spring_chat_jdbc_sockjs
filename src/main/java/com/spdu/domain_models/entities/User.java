@@ -12,13 +12,8 @@ import java.util.Objects;
 public class User {
     @JsonProperty("id")
     private long id;
-
-    @JsonProperty("firstName")
     private String firstName;
-
-    @JsonProperty("lastName")
     private String lastName;
-
     private String email;
     private String userName;
     private String password;
@@ -29,6 +24,9 @@ public class User {
     private String urlGit;
     private LocalDate dateOfBirth;
     private boolean isEnabled;
+
+    @JsonProperty("fullName")
+    private String fullName;
 
     public User() {
     }
@@ -178,5 +176,11 @@ public class User {
 
     public void setEnabled(boolean enabled) {
         isEnabled = enabled;
+    }
+
+    public String getFullName() {
+        fullName = this.getFirstName() + " " + this.getLastName();
+
+        return fullName.equals("null null") ? userName: fullName ;
     }
 }
