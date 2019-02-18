@@ -28,8 +28,8 @@ $(document).ready(function () {
             error: function (result) {
                 console.log(result)
             },
-            complete:function(jqXHR, textStatus ){
-                $("a[data-el-id="+chatId+"]").parent(".parentDivChat").remove();
+            complete: function (jqXHR, textStatus) {
+                $("a[data-el-id=" + chatId + "]").parent(".parentDivChat").remove();
                 createAllChatEl(chatId, chatName);
             }
         });
@@ -46,7 +46,7 @@ $(document).ready(function () {
             {},
             JSON.stringify({userId: userId, sender: username, type: 'LEAVE', chatId: chatId})
         );
-        $("#allChats").find("[data-el-id="+chatId+"]").closest('div').remove();
+        $("#allChats").find("[data-el-id=" + chatId + "]").closest('div').remove();
 
         createAllPublicChatEl(chatId, chatName);
 
@@ -57,9 +57,9 @@ $(document).ready(function () {
 
 function createAllPublicChatEl(chatId, chatName) {
     $("#publicChats").append('<div class="parentDivChat">\n' +
-        '<a href="#" data-el-id="'+ chatId +'">\n' +
-        ' <h>'+chatName+'</h>\n' +
-        '<span class="rightBottom" data-el-id="'+chatId+'" data-el-name="'+chatName+'">Join Chat</span>\n' +
+        '<a href="#" data-el-id="' + chatId + '">\n' +
+        ' <h>' + chatName + '</h>\n' +
+        '<span class="rightBottom" data-el-id="' + chatId + '" data-el-name="' + chatName + '">Join Chat</span>\n' +
         '</a>\n' +
         '</div>');
 }
@@ -185,20 +185,20 @@ function stomp() {
     function onConnected() {
         var propertyNamesTopicPublic = Object.keys(stompClient.subscriptions)
             .filter(function (propertyName) {
-                return propertyName.indexOf("chatId"+chatId) === 0;
+                return propertyName.indexOf("chatId" + chatId) === 0;
             });
         if (!propertyNamesTopicPublic.length) {
             // Subscribe to the Public Topic
-            stompClient.subscribe('/topic/public/' + chatId, onMessageReceived, { id: "chatId"+chatId });
+            stompClient.subscribe('/topic/public/' + chatId, onMessageReceived, {id: "chatId" + chatId});
         }
 
         var propertyNamesChatTyping = Object.keys(stompClient.subscriptions)
             .filter(function (propertyName) {
-                return propertyName.indexOf("typing"+chatId) === 0;
+                return propertyName.indexOf("typing" + chatId) === 0;
             });
 
         if (!propertyNamesChatTyping.length) {
-            stompClient.subscribe('/topic/chat/' + chatId + '/typing', onTypingReceived, { id: "typing"+chatId });
+            stompClient.subscribe('/topic/chat/' + chatId + '/typing', onTypingReceived, {id: "typing" + chatId});
         }
 
         // Tell your username to the server
@@ -239,8 +239,8 @@ function stomp() {
     }
 
     messageForm.addEventListener('submit', sendMessage, true);
-    
-    $(messageInput).on('keyup', function(eventObject) {
+
+    $(messageInput).on('keyup', function (eventObject) {
         stompClient.send("/app/chat/" + chatId + "/typing",
             {},
             JSON.stringify({userId: userId, chatId: chatId})
@@ -250,10 +250,10 @@ function stomp() {
 
 function onTypingReceived(payload) {
     var chatTyping = JSON.parse(payload.body);
-    var userTyping = $("#userArea").find("[data-user-id="+chatTyping.userId+"]");
-    userTyping.append('<span id="typing'+chatTyping.userId+'" style="color: red">typing...</span>');
+    var userTyping = $("#userArea").find("[data-user-id=" + chatTyping.userId + "]");
+    userTyping.append('<span id="typing' + chatTyping.userId + '" style="color: red">typing...</span>');
     setTimeout(function () {
-        $("#typing"+chatTyping.userId).remove();
+        $("#typing" + chatTyping.userId).remove();
     }, 2000);
 }
 
@@ -274,13 +274,13 @@ function parseUser(user) {
 function parseMessage(message, socket) {
     var messageElement = document.createElement('li');
     var dateTime = message.createdDate + ' ' + message.createdTime;
-    var checkExistUsername = $("#userArea").find("[data-user-id="+message.userId+"]");
-    if(message.type === 'JOIN') {
+    var checkExistUsername = $("#userArea").find("[data-user-id=" + message.userId + "]");
+    if (message.type === 'JOIN') {
         messageElement.classList.add('event-message');
         message.content = message.sender + ' joined! at ' + dateTime;
         if (socket) {
             if (!checkExistUsername.length) {
-                $("#userArea").append('<p data-user-id="'+message.userId+'">'+message.sender+'</p>');
+                $("#userArea").append('<p data-user-id="' + message.userId + '">' + message.sender + '</p>');
             }
         }
     } else if (message.type === 'LEAVE') {
@@ -297,7 +297,8 @@ function parseMessage(message, socket) {
         var avatarElement = document.createElement('i');
 
         if (message.avatarId) {
-            avatarElement.style.backgroundImage = "url('http://localhost:8080/api/file_entities/" + message.avatarId + "')";
+            var full = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
+            avatarElement.style.backgroundImage = image.style.backgroundImage = "url('" + full + '/api/file_entities/' + avatarId + "')";
         } else {
             var avatarText = document.createTextNode(message.sender);
             avatarElement.appendChild(avatarText);
