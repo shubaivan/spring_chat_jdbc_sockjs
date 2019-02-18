@@ -39,6 +39,7 @@ public class ChatViewController {
 
         modelMap.addAttribute("chat", chat);
         modelMap.addAttribute("fullName", fullName);
+        modelMap.addAttribute("auth", cud.getUser());
 
         return "chat";
     }
@@ -57,13 +58,8 @@ public class ChatViewController {
         modelMap.addAttribute("allChats", allChats);
         modelMap.addAttribute("allPublic", allPublic);
 
-        return "mainform";
-    }
-
-    @GetMapping("/new")
-    public String createForm(ModelMap modelMap) {
         modelMap.addAttribute("chatDto", new ChatDto());
-        return "/createchat";
+        return "mainform";
     }
 
     @PostMapping("/createchat")
@@ -73,7 +69,7 @@ public class ChatViewController {
         CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
         chatDto.setOwnerId(cud.getId());
         chatServiceImp.create(chatDto);
-        return "redirect:/mainform";
+        return "redirect:/chats";
     }
 
     @PutMapping("/chat/update")

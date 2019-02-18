@@ -9,6 +9,9 @@ public class ChatMessage {
     private String content;
     private String sender;
     private Integer chatId;
+    private Integer userId;
+
+    private long avatarId;
 
     private Date createdDate;
     private Time createdTime;
@@ -45,6 +48,14 @@ public class ChatMessage {
         this.chatId = chatId;
     }
 
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
     public Date getCreatedDate() {
         return createdDate;
     }
@@ -59,6 +70,14 @@ public class ChatMessage {
 
     public void setCreatedTime(Time createdTime) {
         this.createdTime = createdTime;
+    }
+
+    public long getAvatarId() {
+        return avatarId;
+    }
+
+    public void setAvatarId(long avatarId) {
+        this.avatarId = avatarId;
     }
 }
 

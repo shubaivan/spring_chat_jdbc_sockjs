@@ -10,14 +10,16 @@ buildscript {
     }
 }
 
+
+
 plugins {
     id "org.flywaydb.flyway" version "5.2.4"
 }
 
 flyway {
-    url = 'jdbc:postgresql://localhost:5432/spd_talks'
+    url = 'jdbc:postgresql://spd-talks.c55nl4eb84c1.eu-west-1.rds.amazonaws.com:5432/spd_talks'
     user = 'postgres'
-    password = '12345'
+    password = 'Admin2019'
 }
 
 apply plugin: 'java'
@@ -36,6 +38,10 @@ configurations.all {
     exclude group: "commons-logging", module: "commons-logging"
 }
 
+bootJar{
+    archiveName = "spd_talks.jar"
+}
+
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
@@ -43,6 +49,7 @@ dependencies {
     compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
 
     compile group: 'org.flywaydb', name: 'flyway-core', version: '3.0'
+    testCompile group: 'com.h2database', name: 'h2', version: '1.4.197'
     testCompile group: 'org.flywaydb.flyway-test-extensions', name: 'flyway-spring-test', version: '5.2.1'
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.1.2.RELEASE'
     testCompile group: 'org.mockito', name: 'mockito-core', version: '2.24.0'
@@ -66,7 +73,6 @@ dependencies {
     compile "org.flywaydb:flyway-core:5.2.4"
 
     compile group: 'org.springframework', name: 'spring-context', version: '5.1.4.RELEASE'
-    compile group: 'org.springframework', name: 'spring-context-support', version: '5.1.5.RELEASE'
 
     compile group: 'com.zaxxer', name: 'HikariCP', version: '3.3.0'
 

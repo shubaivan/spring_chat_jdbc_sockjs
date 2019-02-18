@@ -11,4 +11,6 @@ public interface FileEntityRepository {
     long create(FileEntity fileEntity) throws SQLException;
 
     Optional<FileEntity> getById(long id) throws EmptyResultDataAccessException;
+
+    FileEntity getByUserId(long id) throws EmptyResultDataAccessException;
 }

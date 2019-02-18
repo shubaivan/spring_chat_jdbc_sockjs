@@ -2,7 +2,7 @@ body {
     font-family: "Arial", Serif;
     background-color: #f4f4f4;
     margin: 0;
-    overflow: hidden;
+    overflow: auto;
 }
 
 .navbar {
@@ -35,7 +35,7 @@ body {
     padding: 0;
     margin-top: 8px;
     list-style: none;
-    overflow: auto;
+    overflow: hidden;
 }
 
 .navbar a:hover {
@@ -57,7 +57,7 @@ body {
 }
 
 .main-container {
-    overflow: auto;
+    overflow: hidden;
 }
 
 .side-nav a {
@@ -113,4 +113,25 @@ body {
     .navbar ul li {
         display: none;
     }
+}
+
+.leftBottom {
+    color: red;
+    background: yellow;
+    border: 1px solid black;
+    width: 60px;
+    border-radius: 50px 50px 0 50px;
+    cursor:pointer;
+}
+
+.rightBottom {
+    padding: inherit;
+    color: red;
+    background: green;
+    border: 1px solid black;
+    width: 60px;
+    border-radius: 50px 0px 50px 50px;
+    cursor: pointer;
+    padding-left: initial;
+    margin-left: 20px;
 }

@@ -11,4 +11,5 @@ function uploadFile(input) {
 
 var image = document.getElementById("avatar");
 var avatarId = image.getAttribute("field");
-image.style.backgroundImage = "url('http://localhost:8080/api/file_entities/" + avatarId + "')";
+var full = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
+image.style.backgroundImage = "url('" + full + '/api/file_entities/' + avatarId + "')";

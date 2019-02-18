@@ -4,9 +4,9 @@
     box-sizing: border-box;
 }
 
-html,body {
+html, body {
     height: 800px;
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 
 body {
@@ -15,21 +15,21 @@ body {
     font-weight: 400;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 1rem;
-    line-height: 1.58;
+    /*line-height: 1.58;*/
     color: #333;
     background-color: #f4f4f4;
     height: 1000px;
 }
 
 /*body:before {*/
-    /*height: 50%;*/
-    /*width: 1000px;*/
-    /*position: absolute;*/
-    /*top: 0;*/
-    /*left: 0;*/
-    /*background: #128ff2;*/
-    /*content: "";*/
-    /*z-index: 0;*/
+/*height: 50%;*/
+/*width: 1000px;*/
+/*position: absolute;*/
+/*top: 0;*/
+/*left: 0;*/
+/*background: #128ff2;*/
+/*content: "";*/
+/*z-index: 0;*/
 /*}*/
 
 .clearfix:after {
@@ -132,7 +132,6 @@ button.accent {
     margin-top: 10px;
 }
 
-
 #chat-page {
     position: relative;
     height: 1000px;
@@ -207,6 +206,7 @@ button.accent {
     border-radius: 50%;
     font-style: normal;
     text-transform: uppercase;
+    background-size: 100% 100%;
 }
 
 #chat-page .chat-message span {
@@ -249,7 +249,6 @@ button.accent {
     top: 65px;
     width: 100%;
 }
-
 
 @media screen and (max-width: 730px) {
 
