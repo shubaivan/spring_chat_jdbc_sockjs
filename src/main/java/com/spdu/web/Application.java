@@ -13,6 +13,5 @@ public class Application extends SpringBootServletInitializer {
         SpringApplication springApplication = new SpringApplication(Application.class);
         springApplication.addListeners(new ApplicationPidFileWriter("spd_talks.pid"));
         springApplication.run(args);
-
     }
 }
