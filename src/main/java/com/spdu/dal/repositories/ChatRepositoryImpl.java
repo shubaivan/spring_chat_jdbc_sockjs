@@ -1,7 +1,8 @@
 package com.spdu.dal.repositories;
 
-import com.spdu.dal.mappers.ChatMapper;
+import com.spdu.bll.custom_exceptions.ChatException;
 import com.spdu.bll.models.constants.ChatType;
+import com.spdu.dal.mappers.ChatMapper;
 import com.spdu.domain_models.entities.Chat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -33,6 +34,18 @@ public class ChatRepositoryImpl implements ChatRepository {
                 new Object[]{id},
                 new ChatMapper());
         return Optional.of(chat);
+    }
+
+    @Override
+    public Chat update(long id, Chat chat) throws SQLException, ChatException {
+        String query = "UPDATE chats SET name = ?, tags = ?, description = ? WHERE id = ?";
+        jdbcTemplate.update(query, chat.getName(), chat.getTags(), chat.getDescription(), id);
+        Optional<Chat> modifiedChat = getById(id);
+        if (modifiedChat.isPresent()) {
+            return modifiedChat.get();
+        } else {
+            throw new ChatException("Can't update chat " + chat.getName());
+        }
     }
 
     @Override

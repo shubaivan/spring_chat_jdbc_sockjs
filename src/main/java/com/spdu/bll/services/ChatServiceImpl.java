@@ -1,16 +1,14 @@
 package com.spdu.bll.services;
 
+import com.spdu.bll.custom_exceptions.ChatException;
 import com.spdu.bll.interfaces.ChatService;
 import com.spdu.bll.models.ChatDto;
-import com.spdu.bll.models.CustomUserDetails;
 import com.spdu.dal.repositories.ChatRepository;
 import com.spdu.domain_models.entities.Chat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +16,22 @@ import java.util.Optional;
 
 @Service
 public class ChatServiceImpl implements ChatService {
+
+    @Override
+    public ChatDto update(long id, ChatDto chatDto) throws SQLException, ChatException {
+        Optional<Chat> optionalChat = getById(id);
+        if (optionalChat.isPresent()) {
+            Chat oldChat = optionalChat.get();
+            oldChat.setName(chatDto.getName());
+            oldChat.setDescription(chatDto.getDescription());
+            oldChat.setTags(chatDto.getTags());
+            Chat modifiedChat = chatRepository.update(id, oldChat);
+            return new ChatDto(modifiedChat);
+        } else {
+            throw new ChatException("Chat not found");
+        }
+    }
+
     private final ChatRepository chatRepository;
 
     @Autowired
