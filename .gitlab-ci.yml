@@ -19,7 +19,7 @@ build:
     - ls -l
   artifacts:
     paths:
-      - ./src/spd_talks.jar
+      - ./spd_talks.jar
 
 deploy develop:
   stage: deploy
@@ -28,6 +28,6 @@ deploy develop:
   dependencies:
     - build
   script:
-    - mv ./src/spd_talks.jar /opt/app/
+    - mv ./spd_talks.jar
     - cd /opt/app
     - sudo ./restart.sh &
