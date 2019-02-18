@@ -37,6 +37,9 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<Message> getByChatId(long id) throws EmptyResultDataAccessException {
         List<Message> messages = messageRepository.getByChatId(id);
+
+
+
         return messages;
     }
 
