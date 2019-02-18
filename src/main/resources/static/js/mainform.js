@@ -298,7 +298,7 @@ function parseMessage(message, socket) {
 
         if (message.avatarId) {
             var full = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
-            avatarElement.style.backgroundImage = image.style.backgroundImage = "url('" + full + '/api/file_entities/' + avatarId + "')";
+            avatarElement.style.backgroundImage = "url('" + full + '/api/file_entities/' + avatarId + "')";
         } else {
             var avatarText = document.createTextNode(message.sender);
             avatarElement.appendChild(avatarText);
