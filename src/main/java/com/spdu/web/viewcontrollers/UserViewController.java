@@ -60,7 +60,6 @@ public class UserViewController {
 
         User result = userService.update(userId, userDTO);
 
-        //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         List<GrantedAuthority> updatedAuthorities = new ArrayList<>(token.getAuthorities());
         Authentication newAuth = new UsernamePasswordAuthenticationToken(
                 new CustomUserDetails(result, userService.getUserRole(result.getId())),
@@ -75,15 +74,17 @@ public class UserViewController {
     @PutMapping("/profile/avatar")
     public ModelAndView updateUsersAvatar(MultipartFile multipartFile, ModelMap modelMap, Principal principal) {
         try {
-            UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
-            CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
-            long userId = cud.getId();
-            String path = "/avatar/" + principal.getName() + "/";
+            if (!multipartFile.isEmpty()) {
+                UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+                CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
+                long userId = cud.getId();
+                String path = "/avatar/" + principal.getName() + "/";
 
-            FileEntityDto newFile = fileUploader.uploadFile(multipartFile, path, userId);
-            UserDto updatedUser = userService.updateAvatar(userId, newFile.getId());
+                FileEntityDto newFile = fileUploader.uploadFile(multipartFile, path, userId);
+                UserDto updatedUser = userService.updateAvatar(userId, newFile.getId());
 
-            modelMap.addAttribute("userDTO", updatedUser);
+                modelMap.addAttribute("userDTO", updatedUser);
+            }
         } catch (IOException | SQLException | UserException | CustomFileException e) {
             throw new RuntimeException(e);
         }
@@ -105,5 +106,4 @@ public class UserViewController {
         modelMap.addAttribute("user", user);
         return "userinfo";
     }
-
 }
