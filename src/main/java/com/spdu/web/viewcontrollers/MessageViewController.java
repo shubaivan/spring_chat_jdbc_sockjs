@@ -1,11 +1,13 @@
 package com.spdu.web.viewcontrollers;
 
+import com.spdu.bll.custom_exceptions.CustomFileException;
+import com.spdu.bll.interfaces.FileEntityService;
 import com.spdu.bll.interfaces.MessageService;
 import com.spdu.bll.models.ChatMessage;
 import com.spdu.bll.models.ChatTyping;
 import com.spdu.bll.models.CustomUserDetails;
-import com.spdu.dal.repositories.ChatRepositoryImpl;
-import com.spdu.dal.repositories.FileEntityRepository;
+import com.spdu.bll.models.FileEntityDto;
+import com.spdu.dal.repositories.ChatRepository;
 import com.spdu.domain_models.entities.FileEntity;
 import com.spdu.domain_models.entities.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.Optional;
 
 @Controller
 public class MessageViewController {
@@ -30,7 +33,8 @@ public class MessageViewController {
     @Autowired
     public MessageViewController(
             MessageService messageService,
-            ChatRepository chatRepository
+            ChatRepository chatRepository,
+            FileEntityService fileEntityService
     ) {
         this.messageService = messageService;
         this.chatRepository = chatRepository;
