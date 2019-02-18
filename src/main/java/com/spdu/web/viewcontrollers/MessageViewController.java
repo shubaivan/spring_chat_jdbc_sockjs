@@ -6,7 +6,7 @@ import com.spdu.bll.interfaces.MessageService;
 import com.spdu.bll.models.ChatMessage;
 import com.spdu.bll.models.ChatTyping;
 import com.spdu.bll.models.CustomUserDetails;
-import com.spdu.bll.models.FileEntityDto;
+import com.spdu.dal.repositories.ChatRepository;
 import com.spdu.dal.repositories.ChatRepositoryImpl;
 import com.spdu.dal.repositories.FileEntityRepository;
 import com.spdu.domain_models.entities.FileEntity;
@@ -29,15 +29,16 @@ import java.util.stream.Collectors;
 
 @Controller
 public class MessageViewController {
-
     private final MessageService messageService;
-
-    private final ChatRepositoryImpl chatRepository;
+    private final ChatRepository chatRepository;
 
     private final FileEntityService fileEntityService;
 
     @Autowired
-    public MessageViewController(MessageService messageService, ChatRepositoryImpl chatRepository, FileEntityService fileEntityService) {
+    public MessageViewController(
+            MessageService messageService,
+            ChatRepository chatRepository
+    ) {
         this.messageService = messageService;
         this.chatRepository = chatRepository;
         this.fileEntityService = fileEntityService;
