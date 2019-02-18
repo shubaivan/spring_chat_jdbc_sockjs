@@ -30,4 +30,4 @@ deploy develop:
   script:
     - mv ./spd_talks.jar
     - cd /opt/app
-    - sudo ./restart.sh &
+    - sudo ./dev_restart.sh &
