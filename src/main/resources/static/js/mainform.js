@@ -256,10 +256,13 @@ function stomp() {
 function onTypingReceived(payload) {
     var chatTyping = JSON.parse(payload.body);
     var userTyping = $("#userArea").find("[data-user-id=" + chatTyping.userId + "]");
-    userTyping.append('<span id="typing' + chatTyping.userId + '" style="color: red">typing...</span>');
-    setTimeout(function () {
-        $("#typing" + chatTyping.userId).remove();
-    }, 2000);
+
+    if (userTyping.find('#typing' + chatTyping.userId).length === 0) {
+        userTyping.append('<span id="typing' + chatTyping.userId + '" style="color: red">typing...</span>');
+        setTimeout(function () {
+            $("#typing" + chatTyping.userId).remove();
+        }, 2000);
+    }
 }
 
 function onMessageReceived(payload) {
