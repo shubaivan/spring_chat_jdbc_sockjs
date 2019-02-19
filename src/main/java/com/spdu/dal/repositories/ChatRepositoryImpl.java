@@ -111,7 +111,8 @@ public class ChatRepositoryImpl implements ChatRepository {
     @Override
     public List<Chat> getAll(long userId) throws EmptyResultDataAccessException {
         String query = "SELECT * FROM chats JOIN chats_users u on chats.id = u.chat_id" +
-                "  WHERE u.user_id=" + userId;
+                "  WHERE u.user_id=" + userId + "\n" +
+                " AND chats.owner_id != " + userId;
         return getByQuery(query);
     }
 
