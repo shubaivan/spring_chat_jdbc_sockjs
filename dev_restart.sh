@@ -1,23 +1,34 @@
-#!/usr/bin/env bash
-pidFile="/opt/app/spd_talks.pid"
-maxAttempts=6
+stages:
+  #  - test
+  - build
+  - deploy
 
-echo "Stop app"
-kill $(cat ${pidFile})
+#junit:
+#  stage: test
+#  script:
+#
+#    - ./gradlew test
 
-attempts=6
-while [[ -f ${pidFile} ]]
-do
-    echo "Wait for app stop"
+build:
+  stage: build
+  only:
+    - dev
+    - master
+  script:
+    - chmod +x gradlew
+    - ./gradlew bootJar
+    - ls -l
+  artifacts:
+    paths:
+      - ./build/libs/spd_talks.jar
 
-    sleep 10
-    ((attempts++))
-
-    if [[ ${attempts} -eq ${maxAttempts} ]]; then
-        echo "Kill app"
-        kill -9 $(cat ${pidFile})
-    fi
-done
-
-echo "Start app"
-nohup java -Ddb.host=spd-talks.c55nl4eb84c1.eu-west-1.rds.amazonaws.com  -Dspring.datasource.username=postgres -Dspring.datasource.password=Admin2019 -jar spd_talks.jar > /dev/null 2>&1 &
+deploy dev:
+  stage: deploy
+  only:
+    - dev
+  dependencies:
+    - build
+  script:
+    - mv ./build/libs/spd_talks.jar /opt/app
+    - cd /opt/app
+    - ./dev_restart.sh &
