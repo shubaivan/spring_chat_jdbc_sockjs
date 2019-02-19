@@ -60,7 +60,6 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.1.2.RELEASE'
 
     compile group: 'org.springframework', name: 'spring-orm', version: '5.1.2.RELEASE'
-
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.4'
     compile group: 'postgresql', name: 'postgresql', version: '9.1-901-1.jdbc4'
 
