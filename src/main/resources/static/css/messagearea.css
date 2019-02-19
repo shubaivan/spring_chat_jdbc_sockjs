@@ -1,7 +1,7 @@
 * {
-    -webkit-box-sizing: border-box;
+    /*-webkit-box-sizing: border-box;*/
     -moz-box-sizing: border-box;
-    box-sizing: border-box;
+    /*box-sizing: border-box;*/
 }
 
 html, body {
@@ -71,38 +71,38 @@ a {
     color: #128ff2;
 }
 
-button {
-    box-shadow: none;
-    border: 1px solid transparent;
-    font-size: 14px;
-    outline: none;
-    line-height: 50%;
-    white-space: nowrap;
-    vertical-align: middle;
-    padding: 0.6rem 1rem;
-    border-radius: 2px;
-    transition: all 0.2s ease-in-out;
-    cursor: pointer;
-    min-height: 38px;
-}
+/*button {*/
+    /*box-shadow: none;*/
+    /*border: 1px solid transparent;*/
+    /*font-size: 14px;*/
+    /*outline: none;*/
+    /*line-height: 50%;*/
+    /*white-space: nowrap;*/
+    /*vertical-align: middle;*/
+    /*padding: 0.6rem 1rem;*/
+    /*border-radius: 2px;*/
+    /*transition: all 0.2s ease-in-out;*/
+    /*cursor: pointer;*/
+    /*min-height: 38px;*/
+/*}*/
 
-button.default {
-    background-color: #e8e8e8;
-    color: #333;
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
-}
+/*button.default {*/
+    /*background-color: #e8e8e8;*/
+    /*color: #333;*/
+    /*box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);*/
+/*}*/
 
-button.primary {
-    background-color: #128ff2;
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
-    color: #fff;
-}
+/*button.primary {*/
+    /*background-color: #128ff2;*/
+    /*box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);*/
+    /*color: #fff;*/
+/*}*/
 
-button.accent {
-    background-color: #ff4743;
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
-    color: #fff;
-}
+/*button.accent {*/
+    /*background-color: #ff4743;*/
+    /*box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);*/
+    /*color: #fff;*/
+/*}*/
 
 #username-page {
     text-align: center;

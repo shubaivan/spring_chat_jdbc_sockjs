@@ -1,4 +1,8 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<link rel="stylesheet" th:href="@{/css/button.css}" href="../../css/button.css"/>
+<link rel="stylesheet" th:href="@{/css/search.css}" href="../../css/search.css"/>
+
 <span id="username" th:attr="data-el-id=${auth.getId()}" th:utext="${fullName}"></span>
 
 <p>chat name:
@@ -11,11 +15,22 @@
         <div class="leftBottom" th:attr="data-el-id=${chat.getId()}" th:attrappend="data-el-Name=${chat.getName()}">Left
             Chat
         </div>
+
+        <div class="wrap">
+            <div class="search" id="search-in-chat" th:field="${chat.getId()}">
+                <input id=keyword type="text" class="searchTerm" placeholder="What are you looking for?">
+                <button type="submit" class="searchButton" onclick="searchMessagesInChat()">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </div>
     </div>
     <div class="main-container" id="container">
 
         <ul id="messageArea" class="inner-container">
+            <div id="replace-messages">
 
+            </div>
         </ul>
         <div id="userArea" class="inner-container">
 
