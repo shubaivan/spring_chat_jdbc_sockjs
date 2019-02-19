@@ -1,5 +1,6 @@
 package com.spdu.dal.repositories;
 
+import com.spdu.bll.custom_exceptions.ChatException;
 import com.spdu.domain_models.entities.Chat;
 import org.springframework.dao.EmptyResultDataAccessException;
 
@@ -14,6 +15,8 @@ public interface ChatRepository {
     long create(Chat chat) throws SQLException;
 
     long joinToChat(long userId, long chatId);
+
+    Chat update(long id, Chat chat) throws SQLException, ChatException;
 
     List<Chat> getAll(long userId) throws EmptyResultDataAccessException;
 

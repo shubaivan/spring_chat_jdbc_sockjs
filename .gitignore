@@ -28,7 +28,6 @@ gradle-app.setting
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.nar
 *.ear
@@ -99,10 +98,6 @@ fabric.properties
 
 # Editor-based Rest Client
 .idea/httpRequests
-
-/gradle/
-/gradlew
-/gradlew.bat
 /talks-websocket.iml
 /.idea/
 /.gradle/

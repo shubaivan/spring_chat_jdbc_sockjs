@@ -1,5 +1,6 @@
 package com.spdu.web.viewcontrollers;
 
+import com.spdu.bll.custom_exceptions.ChatException;
 import com.spdu.bll.interfaces.ChatService;
 import com.spdu.bll.models.ChatDto;
 import com.spdu.bll.models.CustomUserDetails;
@@ -10,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
 import java.sql.SQLException;
@@ -69,5 +71,34 @@ public class ChatViewController {
         chatServiceImp.create(chatDto);
         return "redirect:/chats";
     }
+
+    @PutMapping("/chat/update")
+    public ModelAndView update(ChatDto chatDto, ModelMap modelMap, Principal principal) throws ChatException, SQLException {
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+        CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
+        long userId = cud.getId();
+
+        ChatDto result = chatServiceImp.update(1, chatDto);
+        modelMap.addAttribute("chatDto", result);
+
+        return new ModelAndView("redirect:/chats", modelMap);
+    }
+
+    @GetMapping("/chatprofile/{id}")
+    @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
+    public String profile(@PathVariable long id, ModelMap modelMap, Principal principal) throws ChatException {
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+        CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
+        if (cud.getId() == chatServiceImp.getById(id).get().getOwnerId()) {
+            Optional<Chat> optionalChat = chatServiceImp.getById(id);
+            if (optionalChat.isPresent()) {
+                modelMap.addAttribute("chatDto", new ChatDto(optionalChat.get()));
+            } else {
+                throw new ChatException("Chat not found!");
+            }
+            return "chatprofile";
+        } else throw new ChatException("You is not chat owner");
+    }
+
 }
 

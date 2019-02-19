@@ -1,6 +1,7 @@
 package com.spdu.bll.models;
 
 import com.spdu.bll.models.constants.ChatType;
+import com.spdu.domain_models.entities.Chat;
 
 public class ChatDto {
     private String name;
@@ -14,6 +15,14 @@ public class ChatDto {
 
     public void setOwnerId(long ownerId) {
         this.ownerId = ownerId;
+    }
+
+    public ChatDto(Chat chat) {
+        this.name = chat.getName();
+        this.chatType = chat.getChatType();
+        this.tags = chat.getTags();
+        this.description = chat.getDescription();
+        this.ownerId = chat.getOwnerId();
     }
 
     public long getOwnerId() {

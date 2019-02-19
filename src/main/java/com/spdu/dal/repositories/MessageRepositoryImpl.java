@@ -37,7 +37,13 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public List<Message> getByChatId(long id) throws EmptyResultDataAccessException {
-        String query = "SELECT *, concat(u.first_name, ' ', u.last_name) as fullname\n" +
+        String query = "SELECT *, \n" +
+                "  CASE\n" +
+                "    WHEN concat(u.first_name, ' ', u.last_name)=' ' THEN u.user_name\n" +
+                "    ELSE concat(u.first_name, ' ', u.last_name)\n" +
+                "  END \n" +
+                "  AS fullname\n" +
+                "\n" +
                 "FROM messages AS m \n" +
                 "LEFT JOIN db_users AS u ON u.id = m.author_id \n" +
                 "WHERE m.chat_id =?";
