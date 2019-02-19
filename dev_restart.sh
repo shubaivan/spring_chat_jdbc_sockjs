@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-pidFile="/opt/app/spd_talks.pid"
+pidFile="spd_talks.pid"
 maxAttempts=6
 
 echo "Stop app"
