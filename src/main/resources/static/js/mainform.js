@@ -147,7 +147,7 @@ function getChatMessages(currentChatId) {
 function searchMessagesInChat() {
     var currentChatId = document.getElementById("search-in-chat").getAttribute("field");
     var keyword = document.getElementById("keyword").value;
-    
+
         var myNode = document.getElementById("idMessage");
         while (myNode.firstChild) {
             myNode.removeChild(myNode.firstChild);
