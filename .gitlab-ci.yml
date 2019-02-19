@@ -6,7 +6,6 @@ stages:
 #junit:
 #  stage: test
 #  script:
-#
 #    - ./gradlew test
 
 build:
