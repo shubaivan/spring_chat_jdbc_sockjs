@@ -28,7 +28,6 @@ import java.util.Optional;
 public class MessageViewController {
     private final MessageService messageService;
     private final ChatRepository chatRepository;
-
     private final FileEntityService fileEntityService;
 
     @Autowired
@@ -69,7 +68,6 @@ public class MessageViewController {
             @Payload ChatTyping chatTyping
     ) throws IOException {
         String g = "";
-
         return chatTyping;
     }
 

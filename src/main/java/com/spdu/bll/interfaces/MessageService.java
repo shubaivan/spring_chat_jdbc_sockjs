@@ -15,4 +15,6 @@ public interface MessageService {
     Optional<Message> create(Message message);
 
     Optional<MessageReturnDto> send(String userEmail, Message message);
+
+    List<Message> searchMessage(long id, String keyword) throws EmptyResultDataAccessException;
 }
