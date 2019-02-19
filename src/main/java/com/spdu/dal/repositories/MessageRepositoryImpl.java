@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -62,7 +63,7 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     private List<Message> toMessagesList(ResultSet rs) throws SQLException {
-        List<Message> list = new LinkedList<>();
+        List<Message> list = new ArrayList<>();
         while (rs.next()) {
             list.add(new MessageMapper().mapRow(rs, rs.getRow()));
         }
