@@ -13,4 +13,6 @@ public interface MessageRepository {
     List<Message> getByChatId(long id) throws EmptyResultDataAccessException;
 
     long create(Message message) throws SQLException;
+
+    List<Message> searchMessages(long id, String keyword) throws EmptyResultDataAccessException;
 }
