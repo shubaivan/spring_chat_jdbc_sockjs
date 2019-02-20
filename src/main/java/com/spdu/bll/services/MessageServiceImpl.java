@@ -35,12 +35,6 @@ public class MessageServiceImpl implements MessageService {
         return messageRepository.getById(id);
     }
 
-//    @Override
-//    public List<Message> getByChatId(long id) throws EmptyResultDataAccessException {
-//        List<Message> messages = messageRepository.getByChatId(id);
-//        return messages;
-//    }
-
     @Override
     public List<Message> getMessages(MessagesRequestContentDto requestContentDTO) throws EmptyResultDataAccessException {
         List<Message> messages = messageRepository.getMessages(
@@ -48,12 +42,6 @@ public class MessageServiceImpl implements MessageService {
                 Optional.ofNullable(requestContentDTO.getKeyword()));
         return messages;
     }
-
-//    @Override
-//    public List<Message> searchMessage(long id, String keyword) throws EmptyResultDataAccessException {
-//        List<Message> messages = messageRepository.searchMessages(id, keyword);
-//        return messages;
-//    }
 
     @Override
     public Optional<Message> create(Message message) {

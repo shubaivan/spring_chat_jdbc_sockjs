@@ -60,9 +60,7 @@ public class MessageController {
             @RequestBody MessagesRequestContentDto requestContentDTO
     ) {
         List<Message> listMessages = messageService.getMessages(requestContentDTO);
-
         listMessages.forEach(this::accept);
-
         return new ResponseEntity(listMessages, HttpStatus.OK);
     }
 
