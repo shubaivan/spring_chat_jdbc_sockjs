@@ -35,10 +35,8 @@ public class ChatViewController {
 
         Optional<Chat> result = chatService.getById(id);
         Chat chat = result.get();
-        String fullName = cud.getUser().getFirstName() + ' ' + cud.getUser().getLastName();
 
         modelMap.addAttribute("chat", chat);
-        modelMap.addAttribute("fullName", fullName);
         modelMap.addAttribute("auth", cud.getUser());
 
         return "chat";

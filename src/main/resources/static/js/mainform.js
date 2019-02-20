@@ -21,10 +21,10 @@ $(document).ready(function () {
         $.ajax({
             type: "POST",
             url: '/api/users/chat',
-            contentType: "application/json",
             data: JSON.stringify({
                 chatId: chatId
             }),
+            contentType: "application/json",
             dataType: "json",
             success: function (data) {
                 console.log(data);
@@ -57,6 +57,12 @@ $(document).ready(function () {
 
         var replaceContainer = '<div id="main_container">SPD-Talks. Let\'s start conversation</div>';
         $('#main_container').replaceWith(replaceContainer);
+    });
+
+    $('body').on('click', '#clear', function () {
+        var el = $(this);
+        $('#messageArea').empty();
+        getChatMessages(el.data('elId'));
     })
 });
 
@@ -86,7 +92,7 @@ function extracted(currentChatId) {
             console.log(data);
             var replaceContainer = '<div id="main_container">' + data + '</div>';
             $('#main_container').replaceWith(replaceContainer);
-            getChatMessages(currentChatId);
+            getChatMessages(currentChatId, true);
             getUsersFromChat(currentChatId);
         },
         error: function (result) {
@@ -114,10 +120,15 @@ function getUsersFromChat(currentChatId) {
     })
 }
 
-function getChatMessages(currentChatId) {
+function getChatMessages(currentChatId, useStomp) {
     $.ajax({
-        type: "GET",
-        url: 'api/messages/chat/' + currentChatId,
+        type: "POST",
+        data: JSON.stringify({
+            chatId: currentChatId
+        }),
+        contentType: "application/json",
+        dataType: "json",
+        url: 'api/messages/chat',
         success: function (data) {
 
             $.each(data, function (key, val) {
@@ -136,7 +147,10 @@ function getChatMessages(currentChatId) {
 
                 parseMessage(payload);
             });
-            stomp()
+
+            if (useStomp !== 'undefined' && useStomp) {
+                stomp();
+            }
         },
         error: function (result) {
             console.log(result)
@@ -148,15 +162,17 @@ function searchMessagesInChat() {
     var currentChatId = document.getElementById("search-in-chat").getAttribute("field");
     var keyword = document.getElementById("keyword").value;
 
-    // var myNode = document.getElementById("idMessage");
-    // while (myNode.firstChild) {
-    //     myNode.removeChild(myNode.firstChild);
-    // }
     $('#messageArea').empty();
 
     $.ajax({
-        type: "GET",
-        url: 'api/messages/chat/' + currentChatId + '/' + keyword,
+        type: "POST",
+        data: JSON.stringify({
+            chatId: currentChatId,
+            keyword: keyword
+        }),
+        contentType: "application/json",
+        dataType: "json",
+        url: 'api/messages/chat/searching',
         success: function (data) {
 
             $.each(data, function (key, val) {
@@ -174,10 +190,7 @@ function searchMessagesInChat() {
                 }
 
                 parseMessage(payload);
-                // var replaceContainer = '<div id="replace-messages">' + parseMessage(payload) + '</div>';
-                // $('#replace-messages').replaceWith(replaceContainer);
             });
-            stomp()
         },
         error: function (result) {
             console.log(result)
