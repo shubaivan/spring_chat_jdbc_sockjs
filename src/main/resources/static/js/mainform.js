@@ -57,6 +57,12 @@ $(document).ready(function () {
 
         var replaceContainer = '<div id="main_container">SPD-Talks. Let\'s start conversation</div>';
         $('#main_container').replaceWith(replaceContainer);
+    });
+
+    $('body').on('click', '#clear', function () {
+        var el = $(this);
+        $('#messageArea').empty();
+        getChatMessages(el.data('elId'));
     })
 });
 
@@ -86,7 +92,7 @@ function extracted(currentChatId) {
             console.log(data);
             var replaceContainer = '<div id="main_container">' + data + '</div>';
             $('#main_container').replaceWith(replaceContainer);
-            getChatMessages(currentChatId);
+            getChatMessages(currentChatId, true);
             getUsersFromChat(currentChatId);
         },
         error: function (result) {
@@ -114,7 +120,7 @@ function getUsersFromChat(currentChatId) {
     })
 }
 
-function getChatMessages(currentChatId) {
+function getChatMessages(currentChatId, useStomp) {
     $.ajax({
         type: "POST",
         data: JSON.stringify({
@@ -141,7 +147,10 @@ function getChatMessages(currentChatId) {
 
                 parseMessage(payload);
             });
-            stomp()
+
+            if (useStomp !== 'undefined' && useStomp) {
+                stomp();
+            }
         },
         error: function (result) {
             console.log(result)
