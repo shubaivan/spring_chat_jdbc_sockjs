@@ -4,7 +4,7 @@
 <link rel="stylesheet" th:href="@{/css/search.css}" href="../../css/search.css"/>
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
       integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<span id="username" th:attr="data-el-id=${auth.getId()}" th:utext="${fullName}"></span>
+<span id="username" th:attr="data-el-id=${auth.getId()}" th:utext="${auth.fullName}"></span>
 
 <p>chat name:
     <span id="chatId" th:attr="data-el-id=${chat.getId()}" th:utext="${chat.getName()}">
@@ -22,6 +22,10 @@
                 <input id=keyword type="text" class="searchTerm" placeholder="What are you looking for?">
                 <button type="submit" class="searchButton" onclick="searchMessagesInChat()">
                     <i class="fa fa-search"></i>
+                </button>
+
+                <button type="submit">
+                    <i class="fa fa-window-close"></i>
                 </button>
             </div>
         </div>

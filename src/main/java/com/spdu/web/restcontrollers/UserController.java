@@ -11,7 +11,7 @@ import com.spdu.bll.interfaces.UserService;
 import com.spdu.bll.models.CustomUserDetails;
 import com.spdu.bll.models.UserDto;
 import com.spdu.bll.models.UserRegisterDto;
-import com.spdu.bll.models.joinChatRequestContentDTO;
+import com.spdu.bll.models.JoinChatRequestContentDTO;
 import com.spdu.bll.services.ChatServiceImpl;
 import com.spdu.bll.services.CustomUserDetailsService;
 import com.spdu.domain_models.entities.User;
@@ -118,7 +118,7 @@ public class UserController {
             HttpServletRequest request
     ) throws SQLException, IOException {
         String content = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        joinChatRequestContentDTO contentMap = this.deserializerToObj(content);
+        JoinChatRequestContentDTO contentMap = this.deserializerToObj(content);
 
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
         CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
@@ -158,9 +158,9 @@ public class UserController {
         return content;
     }
 
-    private joinChatRequestContentDTO deserializerToObj(String json) throws IOException {
+    private JoinChatRequestContentDTO deserializerToObj(String json) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
 
-        return mapper.readValue(json, joinChatRequestContentDTO.class);
+        return mapper.readValue(json, JoinChatRequestContentDTO.class);
     }
 }

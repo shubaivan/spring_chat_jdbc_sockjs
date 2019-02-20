@@ -21,10 +21,10 @@ $(document).ready(function () {
         $.ajax({
             type: "POST",
             url: '/api/users/chat',
-            contentType: "application/json",
             data: JSON.stringify({
                 chatId: chatId
             }),
+            contentType: "application/json",
             dataType: "json",
             success: function (data) {
                 console.log(data);
@@ -116,8 +116,13 @@ function getUsersFromChat(currentChatId) {
 
 function getChatMessages(currentChatId) {
     $.ajax({
-        type: "GET",
-        url: 'api/messages/chat/' + currentChatId,
+        type: "POST",
+        data: JSON.stringify({
+            chatId: currentChatId
+        }),
+        contentType: "application/json",
+        dataType: "json",
+        url: 'api/messages/chat',
         success: function (data) {
 
             $.each(data, function (key, val) {
@@ -148,15 +153,17 @@ function searchMessagesInChat() {
     var currentChatId = document.getElementById("search-in-chat").getAttribute("field");
     var keyword = document.getElementById("keyword").value;
 
-    // var myNode = document.getElementById("idMessage");
-    // while (myNode.firstChild) {
-    //     myNode.removeChild(myNode.firstChild);
-    // }
     $('#messageArea').empty();
 
     $.ajax({
-        type: "GET",
-        url: 'api/messages/chat/' + currentChatId + '/' + keyword,
+        type: "POST",
+        data: JSON.stringify({
+            chatId: currentChatId,
+            keyword: keyword
+        }),
+        contentType: "application/json",
+        dataType: "json",
+        url: 'api/messages/chat/searching',
         success: function (data) {
 
             $.each(data, function (key, val) {
@@ -174,10 +181,7 @@ function searchMessagesInChat() {
                 }
 
                 parseMessage(payload);
-                // var replaceContainer = '<div id="replace-messages">' + parseMessage(payload) + '</div>';
-                // $('#replace-messages').replaceWith(replaceContainer);
             });
-            stomp()
         },
         error: function (result) {
             console.log(result)
