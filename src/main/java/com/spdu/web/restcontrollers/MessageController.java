@@ -4,13 +4,12 @@ import com.spdu.bll.interfaces.FileEntityService;
 import com.spdu.bll.interfaces.MessageService;
 import com.spdu.bll.models.FileEntityDto;
 import com.spdu.bll.models.MessageReturnDto;
-import com.spdu.bll.models.MessagesRequestContentDTO;
+import com.spdu.bll.models.MessagesRequestContentDto;
 import com.spdu.domain_models.entities.FileEntity;
 import com.spdu.domain_models.entities.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,26 +56,10 @@ public class MessageController {
 
     @PostMapping("/chat")
     @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
-    public ResponseEntity getByChatId(
-            @RequestBody MessagesRequestContentDTO requestContentDTO
+    public ResponseEntity getByChat(
+            @RequestBody MessagesRequestContentDto requestContentDTO
     ) {
-        List<Message> listMessages = messageService.getByChatId(
-                requestContentDTO.getId()
-        );
-
-        listMessages.forEach(this::accept);
-
-        return new ResponseEntity(listMessages, HttpStatus.OK);
-    }
-
-    @PostMapping("/chat/searching")
-    @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
-    public ResponseEntity searchMessages(
-            @RequestBody MessagesRequestContentDTO requestContentDTO
-    ) {
-        List<Message> listMessages = messageService.searchMessage(
-                requestContentDTO.getId(), requestContentDTO.getKeyword()
-        );
+        List<Message> listMessages = messageService.getMessages(requestContentDTO);
 
         listMessages.forEach(this::accept);
 

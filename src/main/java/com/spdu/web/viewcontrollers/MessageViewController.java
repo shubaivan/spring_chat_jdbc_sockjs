@@ -66,8 +66,7 @@ public class MessageViewController {
     @SendTo("/topic/chat/{id}/typing")
     public ChatTyping typingUser(
             @Payload ChatTyping chatTyping
-    ) throws IOException {
-        String g = "";
+    ) {
         return chatTyping;
     }
 

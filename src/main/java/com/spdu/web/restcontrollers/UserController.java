@@ -7,12 +7,12 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.spdu.bll.custom_exceptions.PasswordException;
 import com.spdu.bll.custom_exceptions.UserException;
+import com.spdu.bll.interfaces.ChatService;
 import com.spdu.bll.interfaces.UserService;
 import com.spdu.bll.models.CustomUserDetails;
 import com.spdu.bll.models.UserDto;
 import com.spdu.bll.models.UserRegisterDto;
-import com.spdu.bll.models.JoinChatRequestContentDTO;
-import com.spdu.bll.services.ChatServiceImpl;
+import com.spdu.bll.models.JoinChatRequestContentDto;
 import com.spdu.bll.services.CustomUserDetailsService;
 import com.spdu.domain_models.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +34,13 @@ import java.util.stream.Collectors;
 public class UserController {
     private final UserService userService;
     private final CustomUserDetailsService userDetailsService;
-    private ChatServiceImpl chatService;
+    private ChatService chatService;
 
     @Autowired
     public UserController(
             UserService userService,
             CustomUserDetailsService userDetailsService,
-            ChatServiceImpl chatService
+            ChatService chatService
     ) {
         this.userService = userService;
         this.userDetailsService = userDetailsService;
@@ -118,12 +118,12 @@ public class UserController {
             HttpServletRequest request
     ) throws SQLException, IOException {
         String content = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        JoinChatRequestContentDTO contentMap = this.deserializerToObj(content);
+        JoinChatRequestContentDto contentMap = this.deserializerToObj(content);
 
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
         CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
 
-        boolean result = getChatService().joinToChat(cud.getUser().getId(), contentMap.getId());
+        boolean result = chatService.joinToChat(cud.getUser().getId(), contentMap.getId());
         Map<String, String> map = new HashMap<String, String>();
         if (!result) {
             map.put("status", "user exist in chat");
@@ -144,10 +144,6 @@ public class UserController {
         }
     }
 
-    private ChatServiceImpl getChatService() {
-        return chatService;
-    }
-
     private Map<String, Integer> deserializerToMap(String json) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -158,9 +154,9 @@ public class UserController {
         return content;
     }
 
-    private JoinChatRequestContentDTO deserializerToObj(String json) throws IOException {
+    private JoinChatRequestContentDto deserializerToObj(String json) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
 
-        return mapper.readValue(json, JoinChatRequestContentDTO.class);
+        return mapper.readValue(json, JoinChatRequestContentDto.class);
     }
 }
