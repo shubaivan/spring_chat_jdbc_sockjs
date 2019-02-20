@@ -21,11 +21,11 @@ import java.util.Optional;
 @Controller
 @RequestMapping("chats")
 public class ChatViewController {
-    private final ChatService chatServiceImp;
+    private final ChatService chatService;
 
     @Autowired
     public ChatViewController(ChatService chatService) {
-        this.chatServiceImp = chatService;
+        this.chatService = chatService;
     }
 
     @RequestMapping("/chat/{id}")
@@ -33,12 +33,13 @@ public class ChatViewController {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
         CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
 
-        Optional<Chat> result = chatServiceImp.getById(id);
+        Optional<Chat> result = chatService.getById(id);
         Chat chat = result.get();
         String fullName = cud.getUser().getFirstName() + ' ' + cud.getUser().getLastName();
 
         modelMap.addAttribute("chat", chat);
         modelMap.addAttribute("fullName", fullName);
+        modelMap.addAttribute("auth", cud.getUser());
 
         return "chat";
     }
@@ -49,21 +50,16 @@ public class ChatViewController {
         CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
         long userId = cud.getId();
 
-        List<Chat> ownChats = chatServiceImp.getAllOwn(userId);
-        List<Chat> allChats = chatServiceImp.getAll(userId);
-        List<Chat> allPublic = chatServiceImp.getPublic(userId);
+        List<Chat> ownChats = chatService.getAllOwn(userId);
+        List<Chat> allChats = chatService.getAll(userId);
+        List<Chat> allPublic = chatService.getPublic(userId);
 
         modelMap.addAttribute("ownChats", ownChats);
         modelMap.addAttribute("allChats", allChats);
         modelMap.addAttribute("allPublic", allPublic);
+        modelMap.addAttribute("chatDto", new ChatDto());
 
         return "mainform";
-    }
-
-    @GetMapping("/new")
-    public String createForm(ModelMap modelMap) {
-        modelMap.addAttribute("chatDto", new ChatDto());
-        return "/createchat";
     }
 
     @PostMapping("/createchat")
@@ -72,8 +68,8 @@ public class ChatViewController {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
         CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
         chatDto.setOwnerId(cud.getId());
-        chatServiceImp.create(chatDto);
-        return "redirect:/mainform";
+        chatService.create(chatDto);
+        return "redirect:/chats";
     }
 
     @PutMapping("/chat/update")
@@ -82,7 +78,7 @@ public class ChatViewController {
         CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
         long userId = cud.getId();
 
-        ChatDto result = chatServiceImp.update(1, chatDto);
+        ChatDto result = chatService.update(1, chatDto);
         modelMap.addAttribute("chatDto", result);
 
         return new ModelAndView("redirect:/chats", modelMap);
@@ -93,8 +89,8 @@ public class ChatViewController {
     public String profile(@PathVariable long id, ModelMap modelMap, Principal principal) throws ChatException {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
         CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
-        if (cud.getId() == chatServiceImp.getById(id).get().getOwnerId()) {
-            Optional<Chat> optionalChat = chatServiceImp.getById(id);
+        if (cud.getId() == chatService.getById(id).get().getOwnerId()) {
+            Optional<Chat> optionalChat = chatService.getById(id);
             if (optionalChat.isPresent()) {
                 modelMap.addAttribute("chatDto", new ChatDto(optionalChat.get()));
             } else {
@@ -103,6 +99,5 @@ public class ChatViewController {
             return "chatprofile";
         } else throw new ChatException("You is not chat owner");
     }
-
 }
 
