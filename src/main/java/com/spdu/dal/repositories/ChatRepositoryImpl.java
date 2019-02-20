@@ -107,7 +107,7 @@ public class ChatRepositoryImpl implements ChatRepository {
                 "AND user_id = ?\n";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        int t = jdbcTemplate.update(connection -> {
+        int count = jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection
                     .prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             ps.setLong(1, chatId);
@@ -116,15 +116,14 @@ public class ChatRepositoryImpl implements ChatRepository {
             return ps;
         }, keyHolder);
 
-        Long y = Long.valueOf(keyHolder.getKeys().get("id").toString());
-
-        return t;
+        return count;
     }
 
     @Override
     public List<Chat> getAll(long userId) throws EmptyResultDataAccessException {
         String query = "SELECT * FROM chats JOIN chats_users u on chats.id = u.chat_id" +
-                "  WHERE u.user_id=" + userId;
+                "  WHERE u.user_id=" + userId + "\n" +
+                " AND chats.owner_id != " + userId;
         return getByQuery(query);
     }
 

@@ -36,7 +36,7 @@ public class UserRepositoryImpl implements UserRepository {
                 "date_of_birth, date_of_registration," +
                 "first_name, last_name," +
                 "user_name, password," +
-                "email) VALUES (?,?,?,?,?,?,?)";
+                "email, is_enabled) VALUES (?,?,?,?,?,?,?,?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -50,6 +50,7 @@ public class UserRepositoryImpl implements UserRepository {
             ps.setString(5, user.getUserName());
             ps.setString(6, user.getPassword());
             ps.setString(7, user.getEmail());
+            ps.setBoolean(8, false);
             return ps;
         }, keyHolder);
         return Long.valueOf(keyHolder.getKeys().get("id").toString());

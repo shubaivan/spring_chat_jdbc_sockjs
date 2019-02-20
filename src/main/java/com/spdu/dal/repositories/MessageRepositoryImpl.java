@@ -5,14 +5,12 @@ import com.spdu.domain_models.entities.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -39,20 +37,43 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public List<Message> getByChatId(long id) throws EmptyResultDataAccessException {
-        String query = "SELECT *, concat(u.first_name, ' ', u.last_name) as fullname\n" +
+        String query = "SELECT *, \n" +
+                "  CASE\n" +
+                "    WHEN concat(u.first_name, ' ', u.last_name)=' ' THEN u.user_name\n" +
+                "    ELSE concat(u.first_name, ' ', u.last_name)\n" +
+                "  END \n" +
+                "  AS fullname\n" +
+                "\n" +
                 "FROM messages AS m \n" +
                 "LEFT JOIN db_users AS u ON u.id = m.author_id \n" +
                 "WHERE m.chat_id =?";
+
         List<Message> messages = jdbcTemplate.query(query,
                 new Object[]{id},
-                rs -> {
-                    List<Message> list = new ArrayList<>();
-                    while (rs.next()) {
-                        list.add(new MessageMapper().mapRow(rs, rs.getRow()));
-                    }
-                    return list;
-                });
+                (ResultSetExtractor<List<Message>>) rs -> toMessagesList(rs));
         return messages;
+    }
+
+    @Override
+    public List<Message> searchMessages(long id, String keyword) throws EmptyResultDataAccessException {
+        String query = "SELECT *, concat(u.first_name, ' ', u.last_name) as fullname " +
+                "FROM messages AS m " +
+                "LEFT JOIN db_users AS u ON u.id = m.author_id " +
+                "WHERE m.chat_id =? AND m.text ILIKE ?";
+
+        List<Message> messages = jdbcTemplate.query(query,
+                new Object[]{id, "%" + keyword + "%"},
+                (ResultSetExtractor<List<Message>>) rs -> toMessagesList(rs)
+        );
+        return messages;
+    }
+
+    private List<Message> toMessagesList(ResultSet rs) throws SQLException {
+        List<Message> list = new ArrayList<>();
+        while (rs.next()) {
+            list.add(new MessageMapper().mapRow(rs, rs.getRow()));
+        }
+        return list;
     }
 
     @Override

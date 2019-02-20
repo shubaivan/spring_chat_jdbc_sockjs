@@ -2,7 +2,7 @@ body {
     font-family: "Arial", Serif;
     background-color: #f4f4f4;
     margin: 0;
-    overflow: hidden;
+    overflow: auto;
 }
 
 .navbar {
@@ -57,7 +57,7 @@ body {
 }
 
 .main-container {
-    overflow: hidden;
+    overflow: auto;
 }
 
 .side-nav a {
@@ -82,7 +82,7 @@ body {
 #main {
     transition: 0.35s;
     padding: 20px;
-    overflow: hidden;
+    overflow: auto;
     width: 1000px;
 }
 
@@ -121,7 +121,7 @@ body {
     border: 1px solid black;
     width: 60px;
     border-radius: 50px 50px 0 50px;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .rightBottom {
@@ -134,4 +134,15 @@ body {
     cursor: pointer;
     padding-left: initial;
     margin-left: 20px;
+}
+
+
+.splash{
+    background-color: #9f191f;
+    animation: splash 1s linear both;
+}
+
+@keyframes splash{
+    0%{ background-color: #00a157;  }
+    100%{ background-color: #ffffff;  }
 }
