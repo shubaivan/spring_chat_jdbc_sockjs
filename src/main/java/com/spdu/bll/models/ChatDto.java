@@ -5,6 +5,7 @@ import com.spdu.domain_models.entities.Chat;
 
 public class ChatDto {
     private String name;
+    private long id;
     private ChatType chatType;
     private String tags;
     private String description;
@@ -23,6 +24,14 @@ public class ChatDto {
         this.tags = chat.getTags();
         this.description = chat.getDescription();
         this.ownerId = chat.getOwnerId();
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public long getOwnerId() {
