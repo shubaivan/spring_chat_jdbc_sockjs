@@ -69,7 +69,8 @@
         <div th:each="chat: ${allPublic}" class="parentDivChat">
             <a href="#" th:attr="data-el-id=${chat.getId()}">
                 <h th:text="${chat.name}">Name</h>
-                <span class="rightBottom" th:attr="data-el-id=${chat.getId()}" th:attrappend="data-el-Name=${chat.getName()}">Join Chat</span>
+                <span class="rightBottom" th:attr="data-el-id=${chat.getId()}"
+                      th:attrappend="data-el-Name=${chat.getName()}">Join Chat</span>
             </a>
         </div>
     </div>
@@ -83,9 +84,10 @@
 
 <div class="b-popup" id=popup>
     <div class="b-popup-content">
-        <form action="#" th:action="@{/chats/createchat}" th:object="${chatDto}" method="POST">
-            <a href="#" onclick='hideElement("popup")' class='btn-close'>&times;</a>
-            <div>
+        <a href="#" onclick='hideElement("popup")' class='btn-close'>&times;</a>
+        <form action="#" th:action="@{/chats/createchat}" th:object="${chatDto}" method="POST"
+              style="display: flex; justify-content: center; flex: 1; ">
+            <div style="width: 90%; display: flex; flex-direction: column;">
                 <span><h3>Chat name</h3></span>
                 <input type="text" class="text" th:field="*{name}">
                 <span><h3>Chat type</h3></span>

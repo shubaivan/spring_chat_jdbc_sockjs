@@ -144,6 +144,48 @@ function getChatMessages(currentChatId) {
     })
 }
 
+function searchMessagesInChat() {
+    var currentChatId = document.getElementById("search-in-chat").getAttribute("field");
+    var keyword = document.getElementById("keyword").value;
+
+    // var myNode = document.getElementById("idMessage");
+    // while (myNode.firstChild) {
+    //     myNode.removeChild(myNode.firstChild);
+    // }
+    $('#messageArea').empty();
+
+    $.ajax({
+        type: "GET",
+        url: 'api/messages/chat/' + currentChatId + '/' + keyword,
+        success: function (data) {
+
+            $.each(data, function (key, val) {
+                console.log(val);
+                var payload = {
+                    type: val.messageType,
+                    content: val.text,
+                    sender: val.fullName,
+                    createdDate: val.createdDate,
+                    createdTime: val.createdTime
+                };
+
+                if (val.avatarId) {
+                    payload.avatarId = val.avatarId;
+                }
+
+                parseMessage(payload);
+                // var replaceContainer = '<div id="replace-messages">' + parseMessage(payload) + '</div>';
+                // $('#replace-messages').replaceWith(replaceContainer);
+            });
+            stomp()
+        },
+        error: function (result) {
+            console.log(result)
+        }
+    })
+}
+
+
 var colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
     '#ffc107', '#ff85af', '#FF9800', '#39bbb0'
@@ -156,6 +198,7 @@ function stomp() {
     var messageForm = document.querySelector('#messageForm');
     var messageInput = document.querySelector('#message');
     var messageArea = document.querySelector('#messageArea');
+    var replaceMessages = document.querySelector('#replace-messages');
     var userArea = document.querySelector('#userArea');
     var connectingElement = document.querySelector('#connecting');
     chatId = $('#chatId').data('elId');
@@ -281,6 +324,9 @@ function parseUser(user) {
 
 function parseMessage(message, socket) {
     var messageElement = document.createElement('li');
+
+    messageElement.setAttribute('id', 'idMessage');
+
     var dateTime = message.createdDate + ' ' + message.createdTime;
     var checkExistUsername = $("#userArea").find("[data-user-id=" + message.userId + "]");
     if (message.type === 'JOIN') {
