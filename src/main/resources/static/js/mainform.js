@@ -148,10 +148,11 @@ function searchMessagesInChat() {
     var currentChatId = document.getElementById("search-in-chat").getAttribute("field");
     var keyword = document.getElementById("keyword").value;
 
-        var myNode = document.getElementById("idMessage");
-        while (myNode.firstChild) {
-            myNode.removeChild(myNode.firstChild);
-        }
+    // var myNode = document.getElementById("idMessage");
+    // while (myNode.firstChild) {
+    //     myNode.removeChild(myNode.firstChild);
+    // }
+    $('#messageArea').empty();
 
     $.ajax({
         type: "GET",

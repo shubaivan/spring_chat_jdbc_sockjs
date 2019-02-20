@@ -137,12 +137,16 @@ body {
 }
 
 
-.splash{
+.splash {
     background-color: #9f191f;
     animation: splash 1s linear both;
 }
 
-@keyframes splash{
-    0%{ background-color: #00a157;  }
-    100%{ background-color: #ffffff;  }
+@keyframes splash {
+    0% {
+        background-color: #00a157;
+    }
+    100% {
+        background-color: #ffffff;
+    }
 }
