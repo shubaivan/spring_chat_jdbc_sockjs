@@ -127,13 +127,7 @@ body {
 .rightBottom {
     padding: inherit;
     color: red;
-    background: green;
-    border: 1px solid black;
-    width: 60px;
-    border-radius: 50px 0px 50px 50px;
     cursor: pointer;
-    padding-left: initial;
-    margin-left: 20px;
 }
 
 
@@ -150,3 +144,8 @@ body {
         background-color: #ffffff;
     }
 }
+
+.user_in_chat{
+    cursor: pointer;
+}
+

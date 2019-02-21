@@ -88,7 +88,9 @@ public class ChatRepositoryImpl implements ChatRepository {
 
     @Override
     public List<Chat> getAllOwn(long userId) throws EmptyResultDataAccessException {
-        String query = "SELECT * FROM chats WHERE chats.owner_id=" + userId;
+        String query = "SELECT * FROM chats " +
+                "WHERE chats.owner_id=" + userId +
+                " AND chats.chat_type != " + ChatType.PRIVATE.ordinal();
         return getByQuery(query);
     }
 
@@ -98,6 +100,23 @@ public class ChatRepositoryImpl implements ChatRepository {
                 "WHERE chats_users.user_id=" + userId
                 + "AND chats_users.chat_id=" + chatId;
         return jdbcTemplate.queryForRowSet(query).next();
+    }
+
+    @Override
+    public List<Chat> userIsPresentInOwnerPrivateChat(long ownerId, long appendUserId) throws EmptyResultDataAccessException {
+        String query = "SELECT * \n" +
+                "FROM chats as c\n" +
+                "WHERE c.chat_type = 0\n" +
+                "AND c.owner_id = "+ownerId+"\n" +
+                "AND c.id IN (SELECT cu.chat_id FROM db_users as u\n" +
+                "                INNER JOIN chats_users AS cu ON cu.user_id = u.id\n" +
+                "                LEFT JOIN chats AS ch ON ch.id = cu.chat_id\n" +
+                "                WHERE cu.user_id ="+appendUserId+"\n" +
+                "\t\t\t\t\t\t\t\tAND ch.chat_type = 0\n" +
+                "                GROUP BY cu.chat_id\n" +
+                ")\n" +
+                "LIMIT 1";
+        return getByQuery(query);
     }
 
     public int removeChatUser(long userId, long chatId)
@@ -123,7 +142,18 @@ public class ChatRepositoryImpl implements ChatRepository {
     public List<Chat> getAll(long userId) throws EmptyResultDataAccessException {
         String query = "SELECT * FROM chats JOIN chats_users u on chats.id = u.chat_id" +
                 "  WHERE u.user_id=" + userId + "\n" +
-                " AND chats.owner_id != " + userId;
+                " AND chats.owner_id != " + userId +
+                " AND chats.chat_type != " + ChatType.PRIVATE.ordinal();
+
+        return getByQuery(query);
+    }
+
+    @Override
+    public List<Chat> getAllPrivate(long userId) throws EmptyResultDataAccessException {
+        String query = "SELECT * FROM chats JOIN chats_users u on chats.id = u.chat_id" +
+                "  WHERE u.user_id=" + userId + "\n" +
+                " AND chats.chat_type = " + ChatType.PRIVATE.ordinal();
+
         return getByQuery(query);
     }
 
@@ -141,8 +171,7 @@ public class ChatRepositoryImpl implements ChatRepository {
     @Override
     public List<Chat> getPublic(long userId) throws EmptyResultDataAccessException {
         String query = "SELECT * FROM chats AS rc\n" +
-                "WHERE rc.chat_type="+ChatType.PUBLIC.ordinal()+"\n" +
-                "AND rc.id NOT IN (SELECT cu.chat_id FROM db_users as u\n" +
+                "WHERE rc.id NOT IN (SELECT cu.chat_id FROM db_users as u\n" +
                 "INNER JOIN chats_users AS cu ON cu.user_id = u.id\n" +
                 "LEFT JOIN chats AS ch ON ch.id = cu.chat_id\n" +
                 "WHERE cu.user_id ="+userId+"\n" +

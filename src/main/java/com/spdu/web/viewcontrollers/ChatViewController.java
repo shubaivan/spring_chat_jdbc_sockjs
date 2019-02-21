@@ -51,10 +51,13 @@ public class ChatViewController {
         List<Chat> ownChats = chatService.getAllOwn(userId);
         List<Chat> allChats = chatService.getAll(userId);
         List<Chat> allPublic = chatService.getPublic(userId);
+        List<Chat> allPrivate = chatService.getPrivate(userId);
 
         modelMap.addAttribute("ownChats", ownChats);
         modelMap.addAttribute("allChats", allChats);
         modelMap.addAttribute("allPublic", allPublic);
+        modelMap.addAttribute("allPrivate", allPrivate);
+
         modelMap.addAttribute("chatDto", new ChatDto());
 
         return "mainform";

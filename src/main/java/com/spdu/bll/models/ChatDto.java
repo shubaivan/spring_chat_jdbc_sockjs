@@ -9,6 +9,7 @@ public class ChatDto {
     private String tags;
     private String description;
     private long ownerId;
+    private long appendUserId;
 
     public ChatDto() {
     }
@@ -59,5 +60,13 @@ public class ChatDto {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public long getAppendUserId() {
+        return appendUserId;
+    }
+
+    public void setAppendUserId(long appendUserId) {
+        this.appendUserId = appendUserId;
     }
 }
