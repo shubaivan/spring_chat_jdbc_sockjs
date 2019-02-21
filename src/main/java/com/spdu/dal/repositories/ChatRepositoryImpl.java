@@ -177,7 +177,7 @@ public class ChatRepositoryImpl implements ChatRepository {
                 "LEFT JOIN chats AS ch ON ch.id = cu.chat_id\n" +
                 "WHERE cu.user_id ="+userId+"\n" +
                 "GROUP BY cu.chat_id)" + "\n" +
-                "AND chats.chat_type != " + ChatType.PRIVATE.ordinal();
+                "AND rc.chat_type != " + ChatType.PRIVATE.ordinal();
 
         return getByQuery(query);
     }
