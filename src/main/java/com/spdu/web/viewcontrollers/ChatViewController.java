@@ -57,7 +57,6 @@ public class ChatViewController {
         modelMap.addAttribute("allChats", allChats);
         modelMap.addAttribute("allPublic", allPublic);
         modelMap.addAttribute("allPrivate", allPrivate);
-
         modelMap.addAttribute("chatDto", new ChatDto());
 
         return "mainform";
