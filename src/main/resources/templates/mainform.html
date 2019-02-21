@@ -13,6 +13,8 @@
 <link rel="stylesheet" th:href="@{/css/button.css}" href="../../css/button.css"/>
 <link rel="stylesheet" th:href="@{/css/chatsInfoFlex.css}" href="../../css/chatsInfoFlex.css"/>
 <link rel="stylesheet" href="/css/messagearea.css"/>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+      integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
@@ -73,13 +75,22 @@
         </div>
     </div>
 
+    <h2 class="text"> All private chats</h2>
+    <div id="privateChats" layout:fragment="content">
+        <div th:each="chat: ${allPrivate}" class="parentDivChat">
+            <a href="#" class="chats_info_private" th:attr="data-el-id=${chat.getId()}">
+                <h th:text="${chat.name}">Name</h>
+            </a>
+        </div>
+    </div>
+
     <h2 class="text"> All public chats</h2>
     <div id="publicChats" layout:fragment="content">
         <div th:each="chat: ${allPublic}" class="parentDivChat">
             <a href="#" th:attr="data-el-id=${chat.getId()}">
                 <h th:text="${chat.name}">Name</h>
-                <span class="rightBottom" th:attr="data-el-id=${chat.getId()}"
-                      th:attrappend="data-el-Name=${chat.getName()}">Join Chat</span>
+                <i class="fas fa-plus rightBottom" th:attr="data-el-id=${chat.getId()}"
+                   th:attrappend="data-el-Name=${chat.getName()}"></i>
             </a>
         </div>
     </div>

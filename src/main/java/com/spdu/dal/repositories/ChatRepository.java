@@ -20,11 +20,17 @@ public interface ChatRepository {
 
     List<Chat> getAll(long userId) throws EmptyResultDataAccessException;
 
+    List<Chat> getAllPrivate(long userId) throws EmptyResultDataAccessException;
+
     List<Chat> getPublic(long userId) throws EmptyResultDataAccessException;
 
     List<Chat> getAllOwn(long userId) throws EmptyResultDataAccessException;
 
     boolean userIsPresentInChat(long userId, long chatId) throws EmptyResultDataAccessException;
+
+    List<Chat> userIsPresentInOwnerPrivateChat(
+            long ownerId,
+            long appendUserId) throws EmptyResultDataAccessException;
 
     int removeChatUser(long userId, long chatId);
 }

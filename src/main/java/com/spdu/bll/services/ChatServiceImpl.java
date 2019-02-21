@@ -49,15 +49,41 @@ public class ChatServiceImpl implements ChatService {
         if (chatDto == null) {
             throw new RuntimeException("Chat is empty!");
         }
-        Chat chat = new Chat();
-        chat.setTags(chatDto.getTags());
-        chat.setOwnerId(chatDto.getOwnerId());
-        chat.setDescription(chatDto.getDescription());
-        chat.setName(chatDto.getName());
-        chat.setCreatedAt(LocalDateTime.now());
-        chat.setChatType(chatDto.getChatType());
-        long chatId = chatRepository.create(chat);
-        joinToChat(chat.getOwnerId(), chatId);
+        Chat existChat = null;
+        Chat chat = null;
+        if (chatDto.getAppendUserId() != 0) {
+            Chat checkChat = this.userIsPresentInOwnerPrivateChat(
+                    chatDto.getOwnerId(),
+                    chatDto.getAppendUserId()
+            );
+
+            if (checkChat != null) {
+                existChat = checkChat;
+            }
+        }
+        long chatId;
+        if (existChat == null) {
+            chat = new Chat();
+
+            chat.setTags(chatDto.getTags());
+            chat.setOwnerId(chatDto.getOwnerId());
+            chat.setDescription(chatDto.getDescription());
+            chat.setName(chatDto.getName());
+            chat.setCreatedAt(LocalDateTime.now());
+            chat.setChatType(chatDto.getChatType());
+
+            chatId = chatRepository.create(chat);
+
+            joinToChat(chat.getOwnerId(), chatId);
+        } else {
+            chat = existChat;
+            chatId = chat.getId();
+        }
+
+        if (chatDto.getAppendUserId() != 0) {
+            joinToChat(chatDto.getAppendUserId(), chatId);
+        }
+
         return getById(chatId);
     }
 
@@ -80,6 +106,18 @@ public class ChatServiceImpl implements ChatService {
         return chatRepository.userIsPresentInChat(userId, chatId);
     }
 
+    private Chat userIsPresentInOwnerPrivateChat(
+            long userId, long chatId
+    ) throws EmptyResultDataAccessException {
+        List<Chat> result = this.getChatRepository()
+                .userIsPresentInOwnerPrivateChat(userId, chatId);
+        if (result.size() > 0) {
+            return result.get(0);
+        }
+
+        return null;
+    }
+
     @Override
     public List<Chat> getAll(long userId) throws EmptyResultDataAccessException {
         return chatRepository.getAll(userId);
@@ -93,5 +131,14 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public List<Chat> getPublic(long userId) throws EmptyResultDataAccessException {
         return chatRepository.getPublic(userId);
+    }
+
+    @Override
+    public List<Chat> getPrivate(long userId) throws EmptyResultDataAccessException {
+        return chatRepository.getAllPrivate(userId);
+    }
+
+    private ChatRepository getChatRepository() {
+        return chatRepository;
     }
 }
