@@ -57,7 +57,6 @@ public class UserViewController {
         } else {
             throw new UsernameNotFoundException(principal.getName() + " - user not found!");
         }
-
         return "profile";
     }
 

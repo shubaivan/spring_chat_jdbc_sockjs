@@ -26,16 +26,19 @@ import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
     private final ChatRepository chatRepository;
     private final ConfirmationTokenRepository confirmationTokenRepository;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, ChatRepository chatRepository,
-                           ConfirmationTokenRepository confirmationTokenRepository) {
+                           ConfirmationTokenRepository confirmationTokenRepository,
+                           BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.chatRepository = chatRepository;
         this.confirmationTokenRepository = confirmationTokenRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -96,7 +99,7 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = new User();
-        String encoded = new BCryptPasswordEncoder().
+        String encoded = bCryptPasswordEncoder.
                 encode(userRegisterDto.getPassword());
         user.setPassword(encoded);
         user.setEmail(userRegisterDto.getEmail());
@@ -181,7 +184,7 @@ public class UserServiceImpl implements UserService {
             if (!resetPasswordDto.getPassword().equals(resetPasswordDto.getMatchingPassword())) {
                 throw new PasswordException("Password doesn't match!");
             }
-            String encoded = new BCryptPasswordEncoder().
+            String encoded = bCryptPasswordEncoder.
                     encode(resetPasswordDto.getPassword());
 
             userRepository.changePassword(userOptional.get().getId(), encoded);
