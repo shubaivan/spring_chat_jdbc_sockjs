@@ -5,14 +5,17 @@ import com.spdu.bll.custom_exceptions.UserException;
 import com.spdu.bll.interfaces.UserService;
 import com.spdu.bll.models.ResetPasswordDto;
 import com.spdu.bll.models.UserRegisterDto;
+import com.spdu.bll.models.validator.DtoValidator;
 import com.spdu.domain_models.entities.User;
 import com.spdu.web.helpers.EmailSender;
 import com.spdu.web.helpers.URLHelper;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,12 +25,14 @@ import java.util.Optional;
 
 @Controller
 public class AuthenticationController {
+    private final DtoValidator dtoValidator;
     private final UserService userService;
     private final EmailSender emailSender;
     private final URLHelper urlHelper;
 
-    public AuthenticationController(UserService userService, EmailSender emailSender,
-                                    URLHelper urlHelper) {
+    public AuthenticationController(DtoValidator dtoValidator, UserService userService,
+                                    EmailSender emailSender, URLHelper urlHelper) {
+        this.dtoValidator = dtoValidator;
         this.userService = userService;
         this.emailSender = emailSender;
         this.urlHelper = urlHelper;
@@ -50,21 +55,26 @@ public class AuthenticationController {
     }
 
     @GetMapping("/register")
-    public String registerForm(ModelMap modelMap) {
+    public String registerForm(ModelMap modelMap) throws IllegalArgumentException {
         modelMap.addAttribute("userRegisterDTO", new UserRegisterDto());
         return "register";
     }
 
     @PostMapping("/register")
     public ModelAndView registerSubmit(HttpServletRequest request, ModelMap modelMap,
-                                       UserRegisterDto userRegisterDTO) throws UserException, SQLException, PasswordException {
-        Optional<User> newUser = userService.register(userRegisterDTO);
-
-        if (newUser.isPresent()) {
-            sendToken(urlHelper.getUrl(request), newUser.get());
+                                       UserRegisterDto userRegisterDTO) throws UserException, SQLException,
+            PasswordException, IllegalArgumentException {
+        try {
+            dtoValidator.validateUserRegisterDto(userRegisterDTO);
+            Optional<User> newUser = userService.register(userRegisterDTO);
+            if (newUser.isPresent()) {
+                sendToken(urlHelper.getUrl(request), newUser.get());
+            }
+            modelMap.put("email", userRegisterDTO.getEmail());
+            return new ModelAndView("registerSuccess", modelMap);
+        } catch (IllegalArgumentException e) {
+            return new ModelAndView("registerrules");
         }
-        modelMap.put("email", userRegisterDTO.getEmail());
-        return new ModelAndView("registerSuccess", modelMap);
     }
 
     @GetMapping("/confirm-account")
@@ -134,13 +144,17 @@ public class AuthenticationController {
     }
 
     @PutMapping("/new-password")
-    public ModelAndView newPassword(ResetPasswordDto passwordDTO) {
+    public ModelAndView newPassword(ResetPasswordDto passwordDto) {
         try {
-            userService.resetPassword(passwordDTO);
+            dtoValidator.validateResetPasswordDto(passwordDto);
+        } catch (IllegalArgumentException e) {
+            return new ModelAndView("newpasswordrules");
+        }
+        try {
+            userService.resetPassword(passwordDto);
         } catch (UserException | PasswordException e) {
             throw new RuntimeException(e);
         }
-
         return new ModelAndView("redirect:/login");
     }
 }
