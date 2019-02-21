@@ -11,15 +11,6 @@
     </span>
 </p>
 
-<script language="JavaScript">
-    function func() {
-        document.location.href = 'chats/chatprofile/' + chatId;
-    }
-</script>
-<p>
-    <a id="aaa" onclick="func();" href="#">Edit chat</a>
-</p>
-
 <div id="chat-page">
     <div class="chat-header">
         <div class="leftBottom" th:attr="data-el-id=${chat.getId()}" th:attrappend="data-el-Name=${chat.getName()}">Left

@@ -55,10 +55,10 @@
                 <a href="#" class="chats_info" th:attr="data-el-id=${chat.getId()}">
                     <h th:text="${chat.name}">Name</h>
                 </a>
-                <a href="#">
+                <a href="#" class="chats_edit" th:attr="data-el-id=${chat.getId()}">
                     <i class="far fa-edit"></i>
                 </a>
-                <a href="#">
+                <a href="#" class="chats_delete" th:attr="data-el-id=${chat.getId()}">
                     <i class="fas fa-trash"></i>
                 </a>
             </div>
@@ -122,10 +122,7 @@
                 <span><h3>Description</h3></span>
                 <input type="text" class="text" th:field="*{description}">
                 <br>
-                <!--<div class="flex-button">-->
                 <button class="action-button">Create</button>
-                <!--<button class="action-button" onclick="" >Cancel</button>-->
-                <!--</div>-->
             </div>
 
         </form>
