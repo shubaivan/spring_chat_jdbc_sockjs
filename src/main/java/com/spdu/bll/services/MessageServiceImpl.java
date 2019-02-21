@@ -4,6 +4,7 @@ import com.spdu.bll.interfaces.ChatService;
 import com.spdu.bll.interfaces.MessageService;
 import com.spdu.bll.interfaces.UserService;
 import com.spdu.bll.models.MessageReturnDto;
+import com.spdu.bll.models.MessagesRequestContentDto;
 import com.spdu.dal.repositories.MessageRepository;
 import com.spdu.domain_models.entities.Message;
 import com.spdu.domain_models.entities.User;
@@ -35,14 +36,10 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> getByChatId(long id) throws EmptyResultDataAccessException {
-        List<Message> messages = messageRepository.getByChatId(id);
-        return messages;
-    }
-
-    @Override
-    public List<Message> searchMessage(long id, String keyword) throws EmptyResultDataAccessException {
-        List<Message> messages = messageRepository.searchMessages(id, keyword);
+    public List<Message> getMessages(MessagesRequestContentDto requestContentDTO) throws EmptyResultDataAccessException {
+        List<Message> messages = messageRepository.getMessages(
+                requestContentDTO.getId(),
+                Optional.ofNullable(requestContentDTO.getKeyword()));
         return messages;
     }
 

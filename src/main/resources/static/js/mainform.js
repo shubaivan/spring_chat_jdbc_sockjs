@@ -62,6 +62,7 @@ $(document).ready(function () {
     $('body').on('click', '#clear', function () {
         var el = $(this);
         $('#messageArea').empty();
+        $('#keyword').val('');
         getChatMessages(el.data('elId'));
     })
 });
@@ -172,7 +173,7 @@ function searchMessagesInChat() {
         }),
         contentType: "application/json",
         dataType: "json",
-        url: 'api/messages/chat/searching',
+        url: 'api/messages/chat',
         success: function (data) {
 
             $.each(data, function (key, val) {

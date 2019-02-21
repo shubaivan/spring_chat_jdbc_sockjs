@@ -3,14 +3,14 @@ package com.spdu.bll.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class MessagesRequestContentDTO {
+public class MessagesRequestContentDto {
 
     private Integer chatId;
 
     private String keyword;
 
     @JsonCreator
-    public MessagesRequestContentDTO(
+    public MessagesRequestContentDto(
             @JsonProperty("chatId") Integer chatId,
             @JsonProperty("keyword") String keyword
     ) {
