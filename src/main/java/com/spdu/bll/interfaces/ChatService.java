@@ -27,4 +27,6 @@ public interface ChatService {
     List<Chat> getPrivate(long userId) throws EmptyResultDataAccessException;
 
     boolean userIsPresentInChat(long userId, long chatId);
+
+    boolean removeChat(long chatId, long ownerId) throws ChatException;
 }

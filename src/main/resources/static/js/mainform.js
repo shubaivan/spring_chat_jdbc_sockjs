@@ -23,7 +23,17 @@ $(document).ready(function () {
     $("#side-menu").on('click', '.chats_delete', function () {
         var current = $(this);
         var chatId = current.data('elId');
-        document.location.href = 'chats/chatprofile/' + chatId;
+
+        $.ajax({
+            type: "DELETE",
+            url: 'api/chats/' + chatId,
+            success: function (result) {
+                $("#side-menu").find("[data-el-id=" + chatId + "]").closest('div').remove();
+            },
+            error: function (result) {
+                console.log(result)
+            }
+        })
     });
 
     $("#side-menu").on('click', '.chats_info_private', function () {

@@ -16,6 +16,12 @@ import java.util.Optional;
 
 @Service
 public class ChatServiceImpl implements ChatService {
+    private final ChatRepository chatRepository;
+
+    @Autowired
+    public ChatServiceImpl(ChatRepository chatRepository) {
+        this.chatRepository = chatRepository;
+    }
 
     @Override
     public ChatDto update(long id, ChatDto chatDto) throws SQLException, ChatException {
@@ -30,13 +36,6 @@ public class ChatServiceImpl implements ChatService {
         } else {
             throw new ChatException("Chat not found");
         }
-    }
-
-    private final ChatRepository chatRepository;
-
-    @Autowired
-    public ChatServiceImpl(ChatRepository chatRepository) {
-        this.chatRepository = chatRepository;
     }
 
     @Override
@@ -106,15 +105,31 @@ public class ChatServiceImpl implements ChatService {
         return chatRepository.userIsPresentInChat(userId, chatId);
     }
 
+    @Override
+    public boolean removeChat(long chatId, long ownerId) throws ChatException {
+        boolean isOwnChat = chatRepository.isOwnChat(chatId, ownerId);
+        if (isOwnChat) {
+            int result = chatRepository.removeChat(chatId);
+
+            if (result > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            throw new ChatException("You can't remove not yours chat!");
+        }
+    }
+
     private Chat userIsPresentInOwnerPrivateChat(
             long userId, long chatId
     ) throws EmptyResultDataAccessException {
         List<Chat> result = this.getChatRepository()
                 .userIsPresentInOwnerPrivateChat(userId, chatId);
+
         if (result.size() > 0) {
             return result.get(0);
         }
-
         return null;
     }
 

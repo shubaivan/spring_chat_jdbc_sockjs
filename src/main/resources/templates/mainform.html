@@ -81,6 +81,12 @@
             <a href="#" class="chats_info_private" th:attr="data-el-id=${chat.getId()}">
                 <h th:text="${chat.name}">Name</h>
             </a>
+            <a href="#" class="chats_edit" th:attr="data-el-id=${chat.getId()}">
+                <i class="far fa-edit"></i>
+            </a>
+            <a href="#" class="chats_delete" th:attr="data-el-id=${chat.getId()}">
+                <i class="fas fa-trash"></i>
+            </a>
         </div>
     </div>
 

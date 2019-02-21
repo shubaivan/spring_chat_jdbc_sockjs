@@ -73,6 +73,7 @@ public class ChatViewController {
     }
 
     @PutMapping("/chat/update")
+    @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
     public ModelAndView update(ChatDto chatDto, ModelMap modelMap) throws ChatException, SQLException {
         ChatDto result = chatService.update(chatDto.getId(), chatDto);
         modelMap.addAttribute("chatDto", result);
