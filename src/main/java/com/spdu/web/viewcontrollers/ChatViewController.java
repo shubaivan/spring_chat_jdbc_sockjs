@@ -71,14 +71,9 @@ public class ChatViewController {
     }
 
     @PutMapping("/chat/update")
-    public ModelAndView update(ChatDto chatDto, ModelMap modelMap, Principal principal) throws ChatException, SQLException {
-        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
-        CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
-        long userId = cud.getId();
-
-        ChatDto result = chatService.update(1, chatDto);
+    public ModelAndView update(ChatDto chatDto, ModelMap modelMap) throws ChatException, SQLException {
+        ChatDto result = chatService.update(chatDto.getId(), chatDto);
         modelMap.addAttribute("chatDto", result);
-
         return new ModelAndView("redirect:/chats", modelMap);
     }
 
@@ -88,9 +83,11 @@ public class ChatViewController {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
         CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
         if (cud.getId() == chatService.getById(id).get().getOwnerId()) {
+            ChatDto chatDto = new ChatDto();
+            chatDto.setId(id);
             Optional<Chat> optionalChat = chatService.getById(id);
             if (optionalChat.isPresent()) {
-                modelMap.addAttribute("chatDto", new ChatDto(optionalChat.get()));
+                modelMap.addAttribute("chatDto", chatDto);
             } else {
                 throw new ChatException("Chat not found!");
             }
