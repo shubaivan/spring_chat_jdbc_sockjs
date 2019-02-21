@@ -4,6 +4,7 @@ import com.spdu.bll.custom_exceptions.ChatException;
 import com.spdu.bll.interfaces.ChatService;
 import com.spdu.bll.models.ChatDto;
 import com.spdu.bll.models.CustomUserDetails;
+import com.spdu.bll.models.UserDto;
 import com.spdu.domain_models.entities.Chat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -58,6 +59,7 @@ public class ChatViewController {
         modelMap.addAttribute("allPublic", allPublic);
         modelMap.addAttribute("allPrivate", allPrivate);
         modelMap.addAttribute("chatDto", new ChatDto());
+        modelMap.addAttribute("userDTO", new UserDto(cud.getUser()));
 
         return "mainform";
     }

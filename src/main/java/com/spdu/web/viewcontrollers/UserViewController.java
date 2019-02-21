@@ -77,7 +77,7 @@ public class UserViewController {
 
         modelMap.addAttribute("userDTO", new UserDto(result));
 
-        return new ModelAndView("redirect:/profile", modelMap);
+        return new ModelAndView("redirect:/chats");
     }
 
     @PutMapping("/profile/avatar")

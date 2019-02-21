@@ -8,13 +8,14 @@
 <body>
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
       integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
 <link rel='stylesheet' th:href="@{/css/mainform.css}" href="../../css/mainform.css"/>
 <link rel='stylesheet' th:href="@{/css/popup.css}" href="../../css/popup.css"/>
 <link rel="stylesheet" th:href="@{/css/button.css}" href="../../css/button.css"/>
 <link rel="stylesheet" th:href="@{/css/chatsInfoFlex.css}" href="../../css/chatsInfoFlex.css"/>
+<link rel="stylesheet" th:href="@{/css/avatar.css}" href="../../css/avatar.css"/>
+<link rel="stylesheet" th:href="@{/css/profileInfo.css}" href="../../css/profileInfo.css"/>
 <link rel="stylesheet" href="/css/messagearea.css"/>
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
-      integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
@@ -78,15 +79,17 @@
     <h2 class="text"> All private chats</h2>
     <div id="privateChats" layout:fragment="content">
         <div th:each="chat: ${allPrivate}" class="parentDivChat">
-            <a href="#" class="chats_info_private" th:attr="data-el-id=${chat.getId()}">
-                <h th:text="${chat.name}">Name</h>
-            </a>
-            <a href="#" class="chats_edit" th:attr="data-el-id=${chat.getId()}">
-                <i class="far fa-edit"></i>
-            </a>
-            <a href="#" class="chats_delete" th:attr="data-el-id=${chat.getId()}">
-                <i class="fas fa-trash"></i>
-            </a>
+            <div class="chats-info-flex">
+                <a href="#" class="chats_info_private" th:attr="data-el-id=${chat.getId()}">
+                    <h th:text="${chat.name}">Name</h>
+                </a>
+                <a href="#" class="chats_edit" th:attr="data-el-id=${chat.getId()}">
+                    <i class="far fa-edit"></i>
+                </a>
+                <a href="#" class="chats_delete" th:attr="data-el-id=${chat.getId()}">
+                    <i class="fas fa-trash"></i>
+                </a>
+            </div>
         </div>
     </div>
 
@@ -102,9 +105,36 @@
     </div>
 </div>
 
+
 <div id="main" class=>
     <div id="main_container">
-        <h1>SPD-Talks</h1>
+        <div id="profile_info">
+            <div class="update-form">
+                <form th:object="${userDTO}">
+                    <h3 th:text="*{firstName}"></h3>
+                    <h3 th:text="*{lastName}"></h3>
+                    <h3 th:text="*{userName}"></h3>
+                    <h3 th:text="*{urlLinkedin}"></h3>
+                    <h3 th:text="*{urlFacebook}"></h3>
+                    <h3 th:text="*{urlGit}"></h3>
+                    <h3 th:text="*{dateOfBirth}"></h3>
+                    <h3 th:text="*{email}"></h3>
+                </form>
+            </div>
+
+            <div class="update-form">
+                <form th:object="${userDTO}"
+                      class="avatar-show">
+                    <div class="avatar-preview container2">
+                        <div id="avatar" th:field="*{avatar}">
+                            <div id="imagePreview">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -143,7 +173,7 @@
 </script>
 
 <script src="/js/mainform.js"></script>
-
+<script src="/js/avatar.js"></script>
 <script src="/js/changeVisibility.js"></script>
 
 </body>

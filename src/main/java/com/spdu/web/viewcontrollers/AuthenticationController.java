@@ -8,7 +8,6 @@ import com.spdu.bll.models.UserRegisterDto;
 import com.spdu.domain_models.entities.User;
 import com.spdu.web.helpers.EmailSender;
 import com.spdu.web.helpers.URLHelper;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
