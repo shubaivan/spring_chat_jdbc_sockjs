@@ -97,8 +97,12 @@ public class ChatController {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
         CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
 
-        boolean result = chatService.joinToChat(cud.getId(), chatId);
+        boolean result = getChatService().joinToChat(cud.getId(), chatId);
         return new ResponseEntity(result, HttpStatus.OK);
+    }
+
+    private ChatService getChatService() {
+        return chatService;
     }
 
     @PutMapping
