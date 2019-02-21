@@ -84,8 +84,14 @@ public class ChatViewController {
     public String profile(@PathVariable long id, ModelMap modelMap, Principal principal) throws ChatException {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
         CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
-        if (cud.getId() == chatService.getById(id).get().getOwnerId()) {
+        Chat oldChat = chatService.getById(id).get();
+        if (cud.getId() == oldChat.getOwnerId()) {
             ChatDto chatDto = new ChatDto();
+            chatDto.setChatType(oldChat.getChatType());
+            chatDto.setId(oldChat.getId());
+            chatDto.setDescription(oldChat.getDescription());
+            chatDto.setName(oldChat.getName());
+            chatDto.setTags(oldChat.getTags());
             chatDto.setId(id);
             Optional<Chat> optionalChat = chatService.getById(id);
             if (optionalChat.isPresent()) {
