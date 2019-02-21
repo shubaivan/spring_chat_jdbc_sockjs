@@ -106,13 +106,13 @@ public class ChatRepositoryImpl implements ChatRepository {
     public List<Chat> userIsPresentInOwnerPrivateChat(long ownerId, long appendUserId) throws EmptyResultDataAccessException {
         String query = "SELECT * \n" +
                 "FROM chats as c\n" +
-                "WHERE c.chat_type = 0\n" +
+                "WHERE c.chat_type = "+ChatType.PRIVATE.ordinal()+"\n" +
                 "AND c.owner_id = "+ownerId+"\n" +
                 "AND c.id IN (SELECT cu.chat_id FROM db_users as u\n" +
                 "                INNER JOIN chats_users AS cu ON cu.user_id = u.id\n" +
                 "                LEFT JOIN chats AS ch ON ch.id = cu.chat_id\n" +
                 "                WHERE cu.user_id ="+appendUserId+"\n" +
-                "\t\t\t\t\t\t\t\tAND ch.chat_type = 0\n" +
+                "\t\t\t\t\t\t\t\tAND ch.chat_type = "+ChatType.PRIVATE.ordinal()+"\n" +
                 "                GROUP BY cu.chat_id\n" +
                 ")\n" +
                 "LIMIT 1";
