@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>SPD-Talks</title>
+</head>
+<body>
+<!--<script src="/js/avatar.js"></script>-->
+<link rel='stylesheet' th:href="@{/css/mainform.css}" href="../../css/mainform.css"/>
+<link rel='stylesheet' th:href="@{/css/profile.css}" href="../../css/profile.css"/>
+<p>
+<h1>Oops, something is wrong with the data entered.</h1><br>
+<p>
+<h3>Please, enter your valid email and date of birth</h3><br>
+<p>
+<h3>Also, the password must contain at least one digit in any position, at least one uppercase or lowercase letter
+    in any position, the password must consist of 4-10 characters</h3>
+<div class="update-form">
+    <form action="#" th:action="@{/register}" th:method="GET">
+        <button class="update">Try again</button>
+    </form>
+</div>
+</body>
+</html>
