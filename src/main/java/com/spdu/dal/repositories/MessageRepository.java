@@ -1,5 +1,6 @@
 package com.spdu.dal.repositories;
 
+import com.spdu.bll.custom_exceptions.MessageException;
 import com.spdu.domain_models.entities.Message;
 import org.springframework.dao.EmptyResultDataAccessException;
 
@@ -13,4 +14,6 @@ public interface MessageRepository {
     long create(Message message) throws SQLException;
 
     List<Message> getMessages(long id, Optional<String> keyword) throws EmptyResultDataAccessException;
+
+    Message update(long id, Message message) throws SQLException, MessageException;
 }

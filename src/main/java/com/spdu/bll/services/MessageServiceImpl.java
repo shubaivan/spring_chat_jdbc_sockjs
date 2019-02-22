@@ -1,8 +1,10 @@
 package com.spdu.bll.services;
 
+import com.spdu.bll.custom_exceptions.MessageException;
 import com.spdu.bll.interfaces.ChatService;
 import com.spdu.bll.interfaces.MessageService;
 import com.spdu.bll.interfaces.UserService;
+import com.spdu.bll.models.MessageDto;
 import com.spdu.bll.models.MessageReturnDto;
 import com.spdu.bll.models.MessagesRequestContentDto;
 import com.spdu.dal.repositories.MessageRepository;
@@ -28,6 +30,19 @@ public class MessageServiceImpl implements MessageService {
         this.messageRepository = messageRepository;
         this.userService = userService;
         this.chatService = chatService;
+    }
+
+    @Override
+    public MessageDto update(long id, MessageDto messageDto) throws SQLException, MessageException {
+        Optional<Message> messageOptional = getById(id);
+        if (messageOptional.isPresent()) {
+            Message oldMessage = messageOptional.get();
+            oldMessage.setText(messageDto.getContent());
+            Message modifiedMessage = messageRepository.update(id, oldMessage);
+            return new MessageDto(modifiedMessage);
+        } else {
+            throw new MessageException("Chat not found");
+        }
     }
 
     @Override
