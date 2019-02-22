@@ -79,7 +79,7 @@ public class ChatController {
         chatDto.setOwnerId(cud.getId());
         Optional<Chat> result;
         try {
-            result = chatService.create(chatDto);
+            result = Optional.ofNullable(chatService.create(chatDto));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

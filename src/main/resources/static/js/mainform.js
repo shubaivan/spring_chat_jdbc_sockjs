@@ -435,7 +435,17 @@ function createChatProcess(chatName, ownerId, appendUserId) {
         dataType: "json",
         success: function (data) {
             console.log(data);
-            handleChatProcess(data.id, getName(), false);
+
+            if (data.checkExist === 1) {
+                if (data.id === chatId) {
+                    splash({element: $('.chat-header'), addedClass: 'splash'});
+                } else {
+                    chatId = data.id;
+                    extracted(data.id);
+                }
+            } else {
+                handleChatProcess(data.id, getName(), false);
+            }
         },
         error: function (result) {
             console.log(result)

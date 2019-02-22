@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface ChatService {
     Optional<Chat> getById(long id) throws EmptyResultDataAccessException;
 
-    Optional<Chat> create(ChatDto chatDto) throws SQLException;
+    Chat create(ChatDto chatDto) throws SQLException;
 
     ChatDto update(long id, ChatDto chatDto) throws SQLException, ChatException;
 

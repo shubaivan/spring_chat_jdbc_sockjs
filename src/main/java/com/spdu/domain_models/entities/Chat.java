@@ -13,6 +13,8 @@ public class Chat {
     private String description;
     private long ownerId;
 
+    private long checkExist;
+
     public Chat() {
     }
 
@@ -70,5 +72,13 @@ public class Chat {
 
     public void setOwnerId(long ownerId) {
         this.ownerId = ownerId;
+    }
+
+    public long getCheckExist() {
+        return checkExist;
+    }
+
+    public void setCheckExist(long checkExist) {
+        this.checkExist = checkExist;
     }
 }
