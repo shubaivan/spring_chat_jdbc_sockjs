@@ -1,9 +1,12 @@
 package com.spdu.bll.services;
 
+import com.spdu.bll.custom_exceptions.MessageException;
 import com.spdu.bll.interfaces.ChatService;
 import com.spdu.bll.interfaces.MessageService;
 import com.spdu.bll.interfaces.UserService;
+import com.spdu.bll.models.MessageDto;
 import com.spdu.bll.models.MessageReturnDto;
+import com.spdu.bll.models.MessagesRequestContentDto;
 import com.spdu.dal.repositories.MessageRepository;
 import com.spdu.domain_models.entities.Message;
 import com.spdu.domain_models.entities.User;
@@ -30,19 +33,28 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    public MessageDto update(long id, MessageDto messageDto) throws SQLException, MessageException {
+        Optional<Message> messageOptional = getById(id);
+        if (messageOptional.isPresent()) {
+            Message oldMessage = messageOptional.get();
+            oldMessage.setText(messageDto.getContent());
+            Message modifiedMessage = messageRepository.update(id, oldMessage);
+            return new MessageDto(modifiedMessage);
+        } else {
+            throw new MessageException("Chat not found");
+        }
+    }
+
+    @Override
     public Optional<Message> getById(long id) throws EmptyResultDataAccessException {
         return messageRepository.getById(id);
     }
 
     @Override
-    public List<Message> getByChatId(long id) throws EmptyResultDataAccessException {
-        return messageRepository.getByChatId(id);
-    }
-
-    @Override
-    public List<Message> searchMessage(long id, String keyword) throws EmptyResultDataAccessException {
-        List<Message> messages = messageRepository.searchMessages(id, keyword);
-        return messages;
+    public List<Message> getMessages(MessagesRequestContentDto requestContentDTO) throws EmptyResultDataAccessException {
+        return messageRepository.getMessages(
+                requestContentDTO.getId(),
+                Optional.ofNullable(requestContentDTO.getKeyword()));
     }
 
     @Override

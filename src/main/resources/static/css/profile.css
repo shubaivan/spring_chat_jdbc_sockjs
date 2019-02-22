@@ -33,6 +33,15 @@ h2 {
     font-weight: 100;
 }
 
+h3 {
+    padding-left: 12px;
+    font-size: 12px;
+    text-transform: uppercase;
+    padding-bottom: 5px;
+    letter-spacing: 1px;
+    display: inline-block;
+    font-weight: 100;
+}
 h2:first-child {
     padding-left: 0px;
 }

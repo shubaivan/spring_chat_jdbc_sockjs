@@ -22,15 +22,11 @@
 
 <div id="main_container">
     <div class="update-form">
-        <form action="#" th:action="@{/chats/chat/update}" th:method="PUT" modelAttribute="chatDto"
-              th:object="${chatDto}">
-            <h3>Chat name</h3>
-            <input type="text" class="text" th:field="*{name}">
-            <h3>Chat tags</h3>
-            <input type="text" class="text" th:field="*{tags}">
-            <h3>Chat description</h3>
-            <input type="text" class="text" th:field="*{description}">
-            <input type="hidden" name="id" value="${chatDto.getId()}" th:value="${chatDto.id}"/>
+        <form action="#" th:action="@{/message/update}" th:method="PUT" modelAttribute="messageDto"
+              th:object="${messageDto}">
+            <h3>New text</h3>
+            <input type="text" class="text" th:field="*{content}">
+            <input type="hidden" name="id" value="${messageDto.getId()}" th:value="${messageDto.id}"/>
             <button class="update">Save changes</button>
         </form>
     </div>

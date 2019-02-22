@@ -4,6 +4,7 @@ import com.spdu.bll.custom_exceptions.ChatException;
 import com.spdu.bll.interfaces.ChatService;
 import com.spdu.bll.models.ChatDto;
 import com.spdu.bll.models.CustomUserDetails;
+import com.spdu.bll.models.UserDto;
 import com.spdu.domain_models.entities.Chat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -58,6 +59,7 @@ public class ChatViewController {
         modelMap.addAttribute("allPublic", allPublic);
         modelMap.addAttribute("allPrivate", allPrivate);
         modelMap.addAttribute("chatDto", new ChatDto());
+        modelMap.addAttribute("userDTO", new UserDto(cud.getUser()));
 
         return "mainform";
     }
@@ -73,14 +75,10 @@ public class ChatViewController {
     }
 
     @PutMapping("/chat/update")
-    public ModelAndView update(ChatDto chatDto, ModelMap modelMap, Principal principal) throws ChatException, SQLException {
-        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
-        CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
-        long userId = cud.getId();
-
-        ChatDto result = chatService.update(1, chatDto);
+    @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
+    public ModelAndView update(ChatDto chatDto, ModelMap modelMap) throws ChatException, SQLException {
+        ChatDto result = chatService.update(chatDto.getId(), chatDto);
         modelMap.addAttribute("chatDto", result);
-
         return new ModelAndView("redirect:/chats", modelMap);
     }
 
@@ -89,10 +87,18 @@ public class ChatViewController {
     public String profile(@PathVariable long id, ModelMap modelMap, Principal principal) throws ChatException {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
         CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
-        if (cud.getId() == chatService.getById(id).get().getOwnerId()) {
+        Chat oldChat = chatService.getById(id).get();
+        if (cud.getId() == oldChat.getOwnerId()) {
+            ChatDto chatDto = new ChatDto();
+            chatDto.setChatType(oldChat.getChatType());
+            chatDto.setId(oldChat.getId());
+            chatDto.setDescription(oldChat.getDescription());
+            chatDto.setName(oldChat.getName());
+            chatDto.setTags(oldChat.getTags());
+            chatDto.setId(id);
             Optional<Chat> optionalChat = chatService.getById(id);
             if (optionalChat.isPresent()) {
-                modelMap.addAttribute("chatDto", new ChatDto(optionalChat.get()));
+                modelMap.addAttribute("chatDto", chatDto);
             } else {
                 throw new ChatException("Chat not found!");
             }

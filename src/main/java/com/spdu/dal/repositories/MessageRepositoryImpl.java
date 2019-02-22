@@ -1,5 +1,6 @@
 package com.spdu.dal.repositories;
 
+import com.spdu.bll.custom_exceptions.MessageException;
 import com.spdu.dal.mappers.MessageMapper;
 import com.spdu.domain_models.entities.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,19 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public List<Message> getByChatId(long id) throws EmptyResultDataAccessException {
+    public Message update(long id, Message message) throws SQLException, MessageException {
+        String query = "UPDATE messages SET text = ? WHERE id = ?";
+        jdbcTemplate.update(query, message.getText(), id);
+        Optional<Message> modifiedMessage = getById(id);
+        if (modifiedMessage.isPresent()) {
+            return modifiedMessage.get();
+        } else {
+            throw new MessageException("Can't update message with id: " + message.getId());
+        }
+    }
+
+    @Override
+    public List<Message> getMessages(long id, Optional<String> keyword) throws EmptyResultDataAccessException {
         String query = "SELECT *, \n" +
                 "  CASE\n" +
                 "    WHEN concat(u.first_name, ' ', u.last_name)=' ' THEN u.user_name\n" +
@@ -49,23 +62,16 @@ public class MessageRepositoryImpl implements MessageRepository {
                 "WHERE m.chat_id =? \n" +
                 "ORDER BY m.id ASC";
 
+        Object[] parameters = new Object[]{id};
+
+        if (keyword.isPresent()) {
+            query += " AND m.text ILIKE ?";
+            parameters = new Object[]{id, "%" + keyword.get() + "%"};
+        }
+
         List<Message> messages = jdbcTemplate.query(query,
-                new Object[]{id},
+                parameters,
                 (ResultSetExtractor<List<Message>>) rs -> toMessagesList(rs));
-        return messages;
-    }
-
-    @Override
-    public List<Message> searchMessages(long id, String keyword) throws EmptyResultDataAccessException {
-        String query = "SELECT *, concat(u.first_name, ' ', u.last_name) as fullname " +
-                "FROM messages AS m " +
-                "LEFT JOIN db_users AS u ON u.id = m.author_id " +
-                "WHERE m.chat_id =? AND m.text ILIKE ?";
-
-        List<Message> messages = jdbcTemplate.query(query,
-                new Object[]{id, "%" + keyword + "%"},
-                (ResultSetExtractor<List<Message>>) rs -> toMessagesList(rs)
-        );
         return messages;
     }
 

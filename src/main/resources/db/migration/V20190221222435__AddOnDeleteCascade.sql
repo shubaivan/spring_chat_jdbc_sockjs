@@ -1,0 +1,13 @@
+ALTER TABLE chats_users
+DROP CONSTRAINT fk_chats,
+ADD CONSTRAINT fk_chats
+  FOREIGN KEY (chat_id)
+  REFERENCES chats(id)
+  ON DELETE CASCADE;
+
+ALTER TABLE messages
+DROP CONSTRAINT fk_chats,
+ADD CONSTRAINT fk_chats
+  FOREIGN KEY (chat_id)
+  REFERENCES chats(id)
+  ON DELETE CASCADE;

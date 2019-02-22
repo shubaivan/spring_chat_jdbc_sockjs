@@ -1,5 +1,6 @@
 package com.spdu.web.restcontrollers;
 
+import com.spdu.bll.custom_exceptions.ChatException;
 import com.spdu.bll.interfaces.ChatService;
 import com.spdu.bll.interfaces.UserService;
 import com.spdu.bll.models.ChatDto;
@@ -97,8 +98,12 @@ public class ChatController {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
         CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
 
-        boolean result = chatService.joinToChat(cud.getId(), chatId);
+        boolean result = getChatService().joinToChat(cud.getId(), chatId);
         return new ResponseEntity(result, HttpStatus.OK);
+    }
+
+    private ChatService getChatService() {
+        return chatService;
     }
 
     @PutMapping
@@ -108,6 +113,24 @@ public class ChatController {
             return new ResponseEntity(result, HttpStatus.OK);
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
+    public ResponseEntity delete(@PathVariable long id, Principal principal) {
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+        CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
+        try {
+            boolean result = chatService.removeChat(id, cud.getId());
+
+            if (result) {
+                return new ResponseEntity(HttpStatus.NO_CONTENT);
+            } else {
+                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            }
+        } catch (ChatException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }
