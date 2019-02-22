@@ -13,6 +13,29 @@ $(document).ready(function () {
             extracted(currentChatId);
         }
     });
+
+    $("#side-menu").on('click', '.chats_edit', function () {
+        var current = $(this);
+        var chatId = current.data('elId');
+        document.location.href = 'chats/chatprofile/' + chatId;
+    });
+
+    $("#side-menu").on('click', '.chats_delete', function () {
+        var current = $(this);
+        var chatId = current.data('elId');
+
+        $.ajax({
+            type: "DELETE",
+            url: 'api/chats/' + chatId,
+            success: function (result) {
+                $("#side-menu").find("[data-el-id=" + chatId + "]").closest('div').remove();
+            },
+            error: function (result) {
+                console.log(result)
+            }
+        })
+    });
+
     $("#side-menu").on('click', '.chats_info_private', function () {
         var current = $(this);
         var currentChatId = current.data('elId');
@@ -72,13 +95,13 @@ function createAllPublicChatEl(chatId, chatName) {
     $("#publicChats").append('<div class="parentDivChat">\n' +
         '<a href="#" data-el-id="' + chatId + '">\n' +
         ' <h>' + chatName + '</h>\n' +
-        '<i class="fas fa-plus rightBottom" data-el-id="' + chatId + '" data-el-name="'+chatName+'"></i>\n' +
+        '<i class="fas fa-plus rightBottom" data-el-id="' + chatId + '" data-el-name="' + chatName + '"></i>\n' +
         '</a>\n' +
         '</div>');
 }
 
 function createChatEl(chatId, chatName, identity) {
-    $("#"+identity).append('<div>\n' +
+    $("#" + identity).append('<div>\n' +
         '<a href="#" class="chats_info" data-el-id="' + chatId + '">\n' +
         '<h>' + chatName + '</h>\n' +
         '</a>\n' +

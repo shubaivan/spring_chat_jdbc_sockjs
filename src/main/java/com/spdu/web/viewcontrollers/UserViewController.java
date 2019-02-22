@@ -57,7 +57,6 @@ public class UserViewController {
         } else {
             throw new UsernameNotFoundException(principal.getName() + " - user not found!");
         }
-
         return "profile";
     }
 
@@ -77,7 +76,7 @@ public class UserViewController {
 
         modelMap.addAttribute("userDTO", new UserDto(result));
 
-        return new ModelAndView("redirect:/profile", modelMap);
+        return new ModelAndView("redirect:/chats");
     }
 
     @PutMapping("/profile/avatar")

@@ -12,25 +12,29 @@ public interface ChatRepository {
 
     Optional<Chat> getById(long id) throws EmptyResultDataAccessException;
 
-    long create(Chat chat) throws SQLException;
+    long create(Chat chat);
 
     long joinToChat(long userId, long chatId);
 
-    Chat update(long id, Chat chat) throws SQLException, ChatException;
+    Chat update(long id, Chat chat) throws ChatException;
 
-    List<Chat> getAll(long userId) throws EmptyResultDataAccessException;
+    List<Chat> getAll(long userId);
 
-    List<Chat> getAllPrivate(long userId) throws EmptyResultDataAccessException;
+    List<Chat> getAllPrivate(long userId);
 
-    List<Chat> getPublic(long userId) throws EmptyResultDataAccessException;
+    List<Chat> getPublic(long userId);
 
-    List<Chat> getAllOwn(long userId) throws EmptyResultDataAccessException;
+    List<Chat> getAllOwn(long userId);
 
     boolean userIsPresentInChat(long userId, long chatId) throws EmptyResultDataAccessException;
 
     List<Chat> userIsPresentInOwnerPrivateChat(
             long ownerId,
-            long appendUserId) throws EmptyResultDataAccessException;
+            long appendUserId);
 
     int removeChatUser(long userId, long chatId);
+
+    int removeChat(long chatId);
+
+    boolean isOwnChat(long chatId, long userId);
 }
