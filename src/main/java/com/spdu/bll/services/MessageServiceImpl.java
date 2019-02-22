@@ -52,10 +52,9 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<Message> getMessages(MessagesRequestContentDto requestContentDTO) throws EmptyResultDataAccessException {
-        List<Message> messages = messageRepository.getMessages(
+        return messageRepository.getMessages(
                 requestContentDTO.getId(),
                 Optional.ofNullable(requestContentDTO.getKeyword()));
-        return messages;
     }
 
     @Override

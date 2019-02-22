@@ -59,7 +59,8 @@ public class MessageRepositoryImpl implements MessageRepository {
                 "\n" +
                 "FROM messages AS m \n" +
                 "LEFT JOIN db_users AS u ON u.id = m.author_id \n" +
-                "WHERE m.chat_id =?";
+                "WHERE m.chat_id =? \n" +
+                "ORDER BY m.id ASC";
 
         Object[] parameters = new Object[]{id};
 

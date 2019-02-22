@@ -44,7 +44,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public Optional<Chat> create(ChatDto chatDto) throws SQLException {
+    public Chat create(ChatDto chatDto) throws SQLException {
         if (chatDto == null) {
             throw new RuntimeException("Chat is empty!");
         }
@@ -77,13 +77,14 @@ public class ChatServiceImpl implements ChatService {
         } else {
             chat = existChat;
             chatId = chat.getId();
+            chat.setCheckExist(1);
         }
 
         if (chatDto.getAppendUserId() != 0) {
             joinToChat(chatDto.getAppendUserId(), chatId);
         }
 
-        return getById(chatId);
+        return chat;
     }
 
     @Override
