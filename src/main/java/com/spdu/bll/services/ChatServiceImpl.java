@@ -117,7 +117,7 @@ public class ChatServiceImpl implements ChatService {
                 return false;
             }
         } else {
-            throw new ChatException("You can't remove not yours chat!");
+            throw new ChatException("You can remove only your own chat!");
         }
     }
 
