@@ -1,5 +1,6 @@
 package com.spdu.dal.repositories;
 
+import com.spdu.bll.custom_exceptions.MessageException;
 import com.spdu.dal.mappers.MessageMapper;
 import com.spdu.domain_models.entities.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,18 @@ public class MessageRepositoryImpl implements MessageRepository {
                 new Object[]{id},
                 new MessageMapper());
         return Optional.of(message);
+    }
+
+    @Override
+    public Message update(long id, Message message) throws SQLException, MessageException {
+        String query = "UPDATE messages SET text = ? WHERE id = ?";
+        jdbcTemplate.update(query, message.getText(), id);
+        Optional<Message> modifiedMessage = getById(id);
+        if (modifiedMessage.isPresent()) {
+            return modifiedMessage.get();
+        } else {
+            throw new MessageException("Can't update message with id: " + message.getId());
+        }
     }
 
     @Override

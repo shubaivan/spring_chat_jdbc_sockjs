@@ -3,6 +3,7 @@ package com.spdu.web.restcontrollers;
 import com.spdu.bll.interfaces.FileEntityService;
 import com.spdu.bll.interfaces.MessageService;
 import com.spdu.bll.models.FileEntityDto;
+import com.spdu.bll.models.MessageDto;
 import com.spdu.bll.models.MessageReturnDto;
 import com.spdu.bll.models.MessagesRequestContentDto;
 import com.spdu.domain_models.entities.FileEntity;
@@ -81,6 +82,16 @@ public class MessageController {
             return new ResponseEntity(newMessage.get(), HttpStatus.CREATED);
         } else {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping
+    public ResponseEntity update(@RequestBody MessageDto messageDto, long messageId) {
+        try {
+            MessageDto result = messageService.update(messageId, messageDto);
+            return new ResponseEntity(result, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -1,12 +1,10 @@
 package com.spdu.web.viewcontrollers;
 
 import com.spdu.bll.custom_exceptions.CustomFileException;
+import com.spdu.bll.custom_exceptions.MessageException;
 import com.spdu.bll.interfaces.FileEntityService;
 import com.spdu.bll.interfaces.MessageService;
-import com.spdu.bll.models.ChatMessage;
-import com.spdu.bll.models.ChatTyping;
-import com.spdu.bll.models.CustomUserDetails;
-import com.spdu.bll.models.FileEntityDto;
+import com.spdu.bll.models.*;
 import com.spdu.dal.repositories.ChatRepository;
 import com.spdu.domain_models.entities.FileEntity;
 import com.spdu.domain_models.entities.Message;
@@ -15,12 +13,18 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.servlet.ModelAndView;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.sql.Time;
 import java.util.Optional;
 
@@ -119,5 +123,41 @@ public class MessageViewController {
     private CustomUserDetails getCustomUserDetails(Principal principal) {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
         return (CustomUserDetails) token.getPrincipal();
+    }
+
+    @PutMapping("/message/update")
+    public ModelAndView update(MessageDto messageDto, ModelMap modelMap) throws MessageException, SQLException {
+        MessageDto result = messageService.update(messageDto.getId(), messageDto);
+        modelMap.addAttribute("messageDto", result);
+        return new ModelAndView("redirect:/chats", modelMap);
+    }
+
+    @GetMapping("/messageprofile/{id}")
+    @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
+    public String profile(@PathVariable long id, ModelMap modelMap, Principal principal) throws MessageException {
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+        CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
+        if (messageService.getById(id).isPresent()) {
+            Message oldMessage = messageService.getById(id).get();
+            if (oldMessage.getMessageType().equals(MessageType.CHAT)) {
+                if (cud.getId() == oldMessage.getAuthorID()) {
+                    MessageDto messageDto = new MessageDto();
+                    messageDto.setId(oldMessage.getId());
+                    messageDto.setContent(oldMessage.getText());
+                    messageDto.setDate(oldMessage.getCreatedAt());
+                    messageDto.setUserName(oldMessage.getFullName());
+                    messageDto.setAuthorId(oldMessage.getAuthorID());
+                    modelMap.addAttribute("messageDto", messageDto);
+                    return "messageprofile";
+                } else {
+                    throw new
+                            MessageException("You is not message owner");
+                }
+            } else {
+                throw new MessageException("Message is not from chat!");
+            }
+        } else {
+            throw new MessageException("Message not found!");
+        }
     }
 }
