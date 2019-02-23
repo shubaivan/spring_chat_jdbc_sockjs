@@ -163,7 +163,8 @@ function getChatMessages(currentChatId, useStomp) {
                     content: val.text,
                     sender: val.fullName,
                     createdDate: val.createdDate,
-                    createdTime: val.createdTime
+                    createdTime: val.createdTime,
+                    authorId: val.authorID
                 };
 
                 if (val.avatarId) {
@@ -368,6 +369,9 @@ function parseMessage(message, socket) {
     var messageElement = document.createElement('li');
     var currentUserId = $('#username').data('elId');
 
+    var fromMessageCurrentUser = message.authorId;
+    console.log('From message current user' + fromMessageCurrentUser);
+
     messageElement.setAttribute('id', 'idMessage');
 
     var dateTime = message.createdDate + ' ' + message.createdTime;
@@ -421,7 +425,7 @@ function parseMessage(message, socket) {
 
         console.log("UserId = " + currentUserId);
 
-        if (message.userId === currentUserId) {
+        if (currentUserId === fromMessageCurrentUser || currentUserId === message.userId) {
             var editMessageElement = document.createElement('a');
             editMessageElement.setAttribute('href', "#");
             editMessageElement.innerHTML =
