@@ -366,6 +366,7 @@ function parseUser(user) {
 
 function parseMessage(message, socket) {
     var messageElement = document.createElement('li');
+    var currentUserId = $('#username').data('elId');
 
     messageElement.setAttribute('id', 'idMessage');
 
@@ -417,6 +418,29 @@ function parseMessage(message, socket) {
         usernameElement.appendChild(dateTimeText);
 
         messageElement.appendChild(usernameElement);
+
+        console.log("UserId = " + currentUserId);
+
+        if (message.userId === currentUserId) {
+            var editMessageElement = document.createElement('a');
+            editMessageElement.setAttribute('href', "#");
+            editMessageElement.innerHTML =
+                '<i class="far fa-edit" ' +
+                'style="position: initial; ' +
+                'color: #43464b">' +
+                '</i>';
+
+            var deleteMessageElement = document.createElement('a');
+            deleteMessageElement.setAttribute('href', "#");
+            deleteMessageElement.innerHTML =
+                '<i class="fas fa-trash" ' +
+                'style="position: initial; ' +
+                'color: #43464b">' +
+                '</i>';
+
+            messageElement.appendChild(editMessageElement);
+            messageElement.appendChild(deleteMessageElement);
+        }
     }
 
     var textElement = document.createElement('p');
