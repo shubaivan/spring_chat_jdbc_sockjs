@@ -291,6 +291,27 @@ function stomp() {
             stompClient.subscribe('/topic/chat/' + chatId + '/typing', onTypingReceived, {id: "typing" + chatId});
         }
 
+        //edit message
+        var propertyNamesChatEditMessage = Object.keys(stompClient.subscriptions)
+            .filter(function (propertyName) {
+                return propertyName.indexOf("edit-message" + chatId) === 0;
+            });
+
+        if (!propertyNamesChatEditMessage.length) {
+            stompClient.subscribe('/topic/chat/' + chatId + '/edit-message', reloadMessageContent, {id: "edit-message" + chatId});
+        }
+
+        //delete message
+        var propertyNamesChatEditMessage = Object.keys(stompClient.subscriptions)
+            .filter(function (propertyName) {
+                return propertyName.indexOf("delete-message" + chatId) === 0;
+            });
+
+        if (!propertyNamesChatEditMessage.length) {
+            stompClient.subscribe('/topic/chat/' + chatId + '/delete-message', deleteMessageContent,
+                {id: "delete-message" + chatId});
+        }
+
         // Tell your username to the server
         stompClient.send("/app/chat/" + chatId + "/addUser",
             {},
@@ -336,6 +357,17 @@ function stomp() {
             JSON.stringify({userId: userId, chatId: chatId})
         )
     })
+
+    function sendEditedMessage(messageId, newContent) {
+        stompClient.send("/app/chat/" + chatId + "/edit-message",
+            {},
+            JSON.stringify({
+                chatId: chatId,
+                messageId: messageId,
+                newContent: newContent
+            })
+        )
+    }
 }
 
 function onTypingReceived(payload) {
@@ -348,6 +380,17 @@ function onTypingReceived(payload) {
             $("#typing" + chatTyping.userId).remove();
         }, 2000);
     }
+}
+
+function reloadMessageContent(payload) {
+    var editedMessage = JSON.parse(payload.body);
+    $("#messageArea").find("[data-el-id=" + editedMessage.messageId + "]")
+        .children('p').text(editedMessage.newContent);
+}
+
+function deleteMessageContent(payload) {
+    var deletedMessage = JSON.parse(payload.body);
+    $("#messageArea").find("[data-el-id=" + deletedMessage.messageId + "]").remove();
 }
 
 function onMessageReceived(payload) {
@@ -378,6 +421,13 @@ function deleteMessage(messageId) {
         url: 'api/messages/' + messageId,
         success: function (result) {
             $("#messageArea").find("[data-el-id=" + messageId + "]").remove();
+            stompClient.send("/app/chat/" + chatId + "/delete-message",
+                {},
+                JSON.stringify({
+                    chatId: chatId,
+                    messageId: messageId
+                })
+            )
         },
         error: function (result) {
             console.log(result)

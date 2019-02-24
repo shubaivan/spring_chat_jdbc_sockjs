@@ -5,6 +5,8 @@ import com.spdu.bll.custom_exceptions.MessageException;
 import com.spdu.bll.interfaces.FileEntityService;
 import com.spdu.bll.interfaces.MessageService;
 import com.spdu.bll.models.*;
+import com.spdu.bll.models.sockets.ChatTyping;
+import com.spdu.bll.models.sockets.MessageEdit;
 import com.spdu.dal.repositories.ChatRepository;
 import com.spdu.domain_models.entities.FileEntity;
 import com.spdu.domain_models.entities.Message;
@@ -72,6 +74,18 @@ public class MessageViewController {
             @Payload ChatTyping chatTyping
     ) {
         return chatTyping;
+    }
+
+    @MessageMapping("/chat/{id}/edit-message")
+    @SendTo("/topic/chat/{id}/edit-message")
+    public MessageEdit editMessage(@Payload MessageEdit message) {
+        return message;
+    }
+
+    @MessageMapping("/chat/{id}/delete-message")
+    @SendTo("/topic/chat/{id}/delete-message")
+    public MessageEdit deleteMessage(@Payload MessageEdit message) {
+        return message;
     }
 
     @MessageMapping("/chat/{id}/leftUser")

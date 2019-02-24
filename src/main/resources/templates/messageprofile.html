@@ -27,9 +27,10 @@
             <h3>New text</h3>
             <input type="text" class="text" th:field="*{content}">
             <input type="hidden" name="id" value="${messageDto.getId()}" th:value="${messageDto.id}"/>
-            <button class="update">Save changes</button>
+            <button class="update" onclick="clickTest()">Save changes</button>
         </form>
     </div>
 </div>
+<script src="/js/editeMessage.js"></script>
 </body>
 </html>
