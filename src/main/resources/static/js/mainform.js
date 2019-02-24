@@ -377,7 +377,7 @@ function deleteMessage(messageId) {
         type: "DELETE",
         url: 'api/messages/' + messageId,
         success: function (result) {
-            $("#messageArea").find("[data-el-id=" + messageId + "]").closest('li').remove();
+            $("#messageArea").find("[data-el-id=" + messageId + "]").remove();
         },
         error: function (result) {
             console.log(result)
@@ -393,6 +393,8 @@ function parseMessage(message, socket) {
     console.log('From message current user' + fromMessageCurrentUser);
 
     messageElement.setAttribute('id', 'idMessage');
+
+    messageElement.setAttribute('data-el-id', message.id);
 
     var dateTime = message.createdDate + ' ' + message.createdTime;
     var checkExistUsername = $("#userArea").find("[data-user-id=" + message.userId + "]");
@@ -459,8 +461,7 @@ function parseMessage(message, socket) {
 
             var deleteMessageElement = document.createElement('a');
             deleteMessageElement.setAttribute('href', "#");
-            deleteMessageElement.setAttribute('data-el-id', message.id);
-            deleteMessageElement.classList.add('message_edit');
+            deleteMessageElement.classList.add('message_delete');
             deleteMessageElement.setAttribute('onclick', 'javascript:deleteMessage(' + message.id + ')');
 
             deleteMessageElement.innerHTML =
