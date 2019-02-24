@@ -19,13 +19,6 @@ $(document).ready(function () {
         var chatId = current.data('elId');
         document.location.href = 'chats/chatprofile/' + chatId;
     });
-    //$("#userArea").find("[data-user-id=" + chatTyping.userId + "]")
-
-    // $("#idMessage.chat-message").on('click', '.message_edit', function () {
-    //     var current = $(this);
-    //     var messageId = current.data('elId');
-    //     document.location.href = 'messageprofile/' + messageId;
-    // });
 
     $("#side-menu").on('click', '.chats_delete', function () {
         var current = $(this);
@@ -379,6 +372,19 @@ function editMessage(messageId) {
     document.location.href = 'messageprofile/' + messageId;
 }
 
+function deleteMessage(messageId) {
+    $.ajax({
+        type: "DELETE",
+        url: 'api/messages/' + messageId,
+        success: function (result) {
+            $("#messageArea").find("[data-el-id=" + messageId + "]").closest('li').remove();
+        },
+        error: function (result) {
+            console.log(result)
+        }
+    })
+}
+
 function parseMessage(message, socket) {
     var messageElement = document.createElement('li');
     var currentUserId = $('#username').data('elId');
@@ -443,9 +449,8 @@ function parseMessage(message, socket) {
             var editMessageElement = document.createElement('a');
             editMessageElement.setAttribute('href', "#");
             editMessageElement.classList.add('message_edit');
-            // editMessageElement.setAttribute('data-el-id', message.id);
             editMessageElement.setAttribute('onclick', 'javascript:editMessage(' + message.id + ')');
-            //class="chats_edit" th:attr="data-el-id=${chat.getId()}"
+
             editMessageElement.innerHTML =
                 '<i class="far fa-edit" ' +
                 'style="position: initial; ' +
@@ -454,6 +459,10 @@ function parseMessage(message, socket) {
 
             var deleteMessageElement = document.createElement('a');
             deleteMessageElement.setAttribute('href', "#");
+            deleteMessageElement.setAttribute('data-el-id', message.id);
+            deleteMessageElement.classList.add('message_edit');
+            deleteMessageElement.setAttribute('onclick', 'javascript:deleteMessage(' + message.id + ')');
+
             deleteMessageElement.innerHTML =
                 '<i class="fas fa-trash" ' +
                 'style="position: initial; ' +

@@ -1,17 +1,16 @@
 package com.spdu.web.restcontrollers;
 
+import com.spdu.bll.custom_exceptions.MessageException;
 import com.spdu.bll.interfaces.FileEntityService;
 import com.spdu.bll.interfaces.MessageService;
-import com.spdu.bll.models.FileEntityDto;
-import com.spdu.bll.models.MessageDto;
-import com.spdu.bll.models.MessageReturnDto;
-import com.spdu.bll.models.MessagesRequestContentDto;
+import com.spdu.bll.models.*;
 import com.spdu.domain_models.entities.FileEntity;
 import com.spdu.domain_models.entities.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -92,6 +91,24 @@ public class MessageController {
             return new ResponseEntity(result, HttpStatus.OK);
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
+    public ResponseEntity delete(@PathVariable long id, Principal principal) {
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+        CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
+        try {
+            boolean result = messageService.removeMessage(id, cud.getId());
+
+            if (result) {
+                return new ResponseEntity(HttpStatus.NO_CONTENT);
+            } else {
+                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            }
+        } catch (MessageException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

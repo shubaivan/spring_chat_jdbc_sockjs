@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +32,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public MessageDto update(long id, MessageDto messageDto) throws SQLException, MessageException {
+    public MessageDto update(long id, MessageDto messageDto) throws MessageException {
         Optional<Message> messageOptional = getById(id);
         if (messageOptional.isPresent()) {
             Message oldMessage = messageOptional.get();
@@ -42,6 +41,22 @@ public class MessageServiceImpl implements MessageService {
             return new MessageDto(modifiedMessage);
         } else {
             throw new MessageException("Chat not found");
+        }
+    }
+
+    @Override
+    public boolean removeMessage(long id, long userId) throws MessageException {
+        boolean isOwnMessage = messageRepository.isOwnMessage(id, userId);
+        if (isOwnMessage) {
+            int result = messageRepository.removeMessage(id);
+
+            if (result > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            throw new MessageException("You can remove only your own message!");
         }
     }
 
@@ -59,12 +74,8 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Optional<Message> create(Message message) {
-        try {
-            long messageId = messageRepository.create(message);
-            return getById(messageId);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        long messageId = messageRepository.create(message);
+        return getById(messageId);
     }
 
     public Optional<MessageReturnDto> send(String userEmail, Message message) {
@@ -76,12 +87,8 @@ public class MessageServiceImpl implements MessageService {
                 message.setAuthorID(user.getId());
 
                 Optional<Message> optionalMessage;
-                try {
-                    long messageId = messageRepository.create(message);
-                    optionalMessage = getById(messageId);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                long messageId = messageRepository.create(message);
+                optionalMessage = getById(messageId);
 
                 if (optionalMessage.isPresent()) {
                     Message createdMessage = optionalMessage.get();
