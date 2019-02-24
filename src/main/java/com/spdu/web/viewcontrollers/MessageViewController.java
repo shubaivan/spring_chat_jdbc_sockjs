@@ -109,8 +109,13 @@ public class MessageViewController {
                 .setCreatedTime(message.getCreatedTime())
                 .setCreatedDate(message.getCreatedDate());
 
-        messageService.send(cud.getUser().getEmail(), messageModel);
+        Optional<MessageReturnDto> optionalMessage = messageService.send(cud.getUser().getEmail(), messageModel);
         Optional<FileEntity> fileOptional = Optional.ofNullable(fileEntityService.getFileEntity(cud.getUser().getId()));
+
+        if (optionalMessage.isPresent()) {
+            MessageReturnDto messageReturnDto = optionalMessage.get();
+            message.setId(messageReturnDto.getId());
+        }
 
         if (fileOptional.isPresent()) {
             FileEntityDto fileEntityDto = new FileEntityDto(fileOptional.get());

@@ -10,6 +10,7 @@ public class ChatMessage {
     private String sender;
     private Integer chatId;
     private Integer userId;
+    private long id;
 
     private long avatarId;
 
@@ -78,6 +79,14 @@ public class ChatMessage {
 
     public void setAvatarId(long avatarId) {
         this.avatarId = avatarId;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }
 

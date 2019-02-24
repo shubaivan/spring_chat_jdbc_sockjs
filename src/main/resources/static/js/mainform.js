@@ -19,6 +19,13 @@ $(document).ready(function () {
         var chatId = current.data('elId');
         document.location.href = 'chats/chatprofile/' + chatId;
     });
+    //$("#userArea").find("[data-user-id=" + chatTyping.userId + "]")
+
+    // $("#idMessage.chat-message").on('click', '.message_edit', function () {
+    //     var current = $(this);
+    //     var messageId = current.data('elId');
+    //     document.location.href = 'messageprofile/' + messageId;
+    // });
 
     $("#side-menu").on('click', '.chats_delete', function () {
         var current = $(this);
@@ -164,7 +171,8 @@ function getChatMessages(currentChatId, useStomp) {
                     sender: val.fullName,
                     createdDate: val.createdDate,
                     createdTime: val.createdTime,
-                    authorId: val.authorID
+                    authorId: val.authorID,
+                    id: val.id
                 };
 
                 if (val.avatarId) {
@@ -208,7 +216,9 @@ function searchMessagesInChat() {
                     content: val.text,
                     sender: val.fullName,
                     createdDate: val.createdDate,
-                    createdTime: val.createdTime
+                    createdTime: val.createdTime,
+                    authorId: val.authorID,
+                    id: val.id
                 };
 
                 if (val.avatarId) {
@@ -365,6 +375,10 @@ function parseUser(user) {
     userArea.appendChild(para);
 }
 
+function editMessage(messageId) {
+    document.location.href = 'messageprofile/' + messageId;
+}
+
 function parseMessage(message, socket) {
     var messageElement = document.createElement('li');
     var currentUserId = $('#username').data('elId');
@@ -428,6 +442,10 @@ function parseMessage(message, socket) {
         if (currentUserId === fromMessageCurrentUser || currentUserId === message.userId) {
             var editMessageElement = document.createElement('a');
             editMessageElement.setAttribute('href', "#");
+            editMessageElement.classList.add('message_edit');
+            // editMessageElement.setAttribute('data-el-id', message.id);
+            editMessageElement.setAttribute('onclick', 'javascript:editMessage(' + message.id + ')');
+            //class="chats_edit" th:attr="data-el-id=${chat.getId()}"
             editMessageElement.innerHTML =
                 '<i class="far fa-edit" ' +
                 'style="position: initial; ' +

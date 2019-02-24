@@ -87,7 +87,7 @@ public class MessageServiceImpl implements MessageService {
                     Message createdMessage = optionalMessage.get();
                     MessageReturnDto messageReturnDTO = new MessageReturnDto(
                             userEmail, createdMessage.getText(),
-                            createdMessage.getCreatedAt());
+                            createdMessage.getCreatedAt(), createdMessage.getId());
                     return Optional.of(messageReturnDTO);
                 }
             }
