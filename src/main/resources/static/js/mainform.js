@@ -1,5 +1,6 @@
 var stompClient = null;
 var chatId = null;
+var userId = null;
 
 $(document).ready(function () {
 
@@ -244,7 +245,7 @@ function stomp() {
     var userArea = document.querySelector('#userArea');
     var connectingElement = document.querySelector('#connecting');
     chatId = $('#chatId').data('elId');
-    var userId = $('#username').data('elId');
+    userId = $('#username').data('elId');
 
     // var stompClient = null;
     // var username = null;
@@ -411,8 +412,39 @@ function parseUser(user) {
     userArea.appendChild(para);
 }
 
-function editMessage(messageId) {
-    document.location.href = 'messageprofile/' + messageId;
+function editMessage(messageId, oldContent) {
+    $("#new-message-content").val(oldContent);
+    $("#id-message").val(messageId);
+    showElement("popupMessage");
+}
+
+function sendRequestEdit() {
+    var newContent = $("#new-message-content").val();
+    var messageId = $("#id-message").val();
+    $.ajax({
+        type: "PUT",
+        data: JSON.stringify({
+            content: newContent,
+            authorId: userId
+        }),
+        contentType: "application/json",
+        dataType: "json",
+        url: 'api/messages/' + messageId,
+        success: function (result) {
+            stompClient.send("/app/chat/" + chatId + "/edit-message",
+                {},
+                JSON.stringify({
+                    chatId: chatId,
+                    messageId: messageId,
+                    newContent: newContent
+                })
+            ),
+                hideElement("popupMessage")
+        },
+        error: function (result) {
+            console.log(result)
+        }
+    })
 }
 
 function deleteMessage(messageId) {
@@ -501,7 +533,9 @@ function parseMessage(message, socket) {
             var editMessageElement = document.createElement('a');
             editMessageElement.setAttribute('href', "#");
             editMessageElement.classList.add('message_edit');
-            editMessageElement.setAttribute('onclick', 'javascript:editMessage(' + message.id + ')');
+            console.log(message.content);
+            editMessageElement.setAttribute('onclick',
+                "javascript:editMessage(" + message.id + ",'" + message.content + "')");
 
             editMessageElement.innerHTML =
                 '<i class="far fa-edit" ' +

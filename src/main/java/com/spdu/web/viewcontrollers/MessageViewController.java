@@ -143,40 +143,4 @@ public class MessageViewController {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
         return (CustomUserDetails) token.getPrincipal();
     }
-
-    @PutMapping("/message/update")
-    public ModelAndView update(MessageDto messageDto, ModelMap modelMap) throws MessageException, SQLException {
-        MessageDto result = messageService.update(messageDto.getId(), messageDto);
-        modelMap.addAttribute("messageDto", result);
-        return new ModelAndView("redirect:/chats", modelMap);
-    }
-
-    @GetMapping("/messageprofile/{id}")
-    @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
-    public String profile(@PathVariable long id, ModelMap modelMap, Principal principal) throws MessageException {
-        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
-        CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
-        if (messageService.getById(id).isPresent()) {
-            Message oldMessage = messageService.getById(id).get();
-            if (oldMessage.getMessageType().equals(MessageType.CHAT)) {
-                if (cud.getId() == oldMessage.getAuthorID()) {
-                    MessageDto messageDto = new MessageDto();
-                    messageDto.setId(oldMessage.getId());
-                    messageDto.setContent(oldMessage.getText());
-                    messageDto.setDate(oldMessage.getCreatedAt());
-                    messageDto.setUserName(oldMessage.getFullName());
-                    messageDto.setAuthorId(oldMessage.getAuthorID());
-                    modelMap.addAttribute("messageDto", messageDto);
-                    return "messageprofile";
-                } else {
-                    throw new
-                            MessageException("You is not message owner");
-                }
-            } else {
-                throw new MessageException("Message is not from chat!");
-            }
-        } else {
-            throw new MessageException("Message not found!");
-        }
-    }
 }

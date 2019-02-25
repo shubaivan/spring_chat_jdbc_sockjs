@@ -84,13 +84,14 @@ public class MessageController {
         }
     }
 
-    @PutMapping
-    public ResponseEntity update(@RequestBody MessageDto messageDto, long messageId) {
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
+    public ResponseEntity update(@PathVariable long id, @RequestBody MessageDto messageDto) {
         try {
-            MessageDto result = messageService.update(messageId, messageDto);
+            MessageDto result = messageService.update(id, messageDto);
             return new ResponseEntity(result, HttpStatus.OK);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (MessageException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

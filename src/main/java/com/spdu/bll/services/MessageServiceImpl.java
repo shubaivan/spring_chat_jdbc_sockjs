@@ -33,14 +33,22 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public MessageDto update(long id, MessageDto messageDto) throws MessageException {
-        Optional<Message> messageOptional = getById(id);
-        if (messageOptional.isPresent()) {
-            Message oldMessage = messageOptional.get();
-            oldMessage.setText(messageDto.getContent());
-            Message modifiedMessage = messageRepository.update(id, oldMessage);
-            return new MessageDto(modifiedMessage);
-        } else {
-            throw new MessageException("Chat not found");
+        boolean isOwnMessage = messageRepository.isOwnMessage(id, messageDto.getAuthorId());
+
+        if (isOwnMessage) {
+            Optional<Message> messageOptional = getById(id);
+
+            if (messageOptional.isPresent()) {
+                Message oldMessage = messageOptional.get();
+                oldMessage.setText(messageDto.getContent());
+                Message modifiedMessage = messageRepository.update(id, oldMessage);
+                return new MessageDto(modifiedMessage);
+            } else {
+                throw new MessageException("Chat not found");
+            }
+
+        } else{
+            throw new MessageException("You can remove only your own message!");
         }
     }
 
