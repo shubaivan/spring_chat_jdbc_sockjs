@@ -116,7 +116,7 @@ public class UserController {
     public ResponseEntity postUserToChat(
             Principal principal,
             HttpServletRequest request
-    ) throws SQLException, IOException {
+    ) throws IOException {
         String content = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         JoinChatRequestContentDto contentMap = this.deserializerToObj(content);
 

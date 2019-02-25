@@ -11,11 +11,11 @@ import java.sql.SQLException;
 
 public interface FileEntityService {
 
-    FileEntityDto save(FileEntityDto fileEntityDto) throws SQLException, CustomFileException;
+    FileEntityDto save(FileEntityDto fileEntityDto) throws CustomFileException;
 
     File store(String fileName, String path) throws IOException;
 
-    FileEntityDto getById(long id) throws EmptyResultDataAccessException, CustomFileException;
+    FileEntityDto getById(long id) throws CustomFileException;
 
     FileEntity getFileEntity(long id);
 }

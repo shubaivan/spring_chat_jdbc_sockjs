@@ -47,7 +47,7 @@ public class MessageServiceImpl implements MessageService {
                 throw new MessageException("Chat not found");
             }
 
-        } else{
+        } else {
             throw new MessageException("You can remove only your own message!");
         }
     }
@@ -69,12 +69,12 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Optional<Message> getById(long id) throws EmptyResultDataAccessException {
+    public Optional<Message> getById(long id) {
         return messageRepository.getById(id);
     }
 
     @Override
-    public List<Message> getMessages(MessagesRequestContentDto requestContentDTO) throws EmptyResultDataAccessException {
+    public List<Message> getMessages(MessagesRequestContentDto requestContentDTO) {
         return messageRepository.getMessages(
                 requestContentDTO.getId(),
                 Optional.ofNullable(requestContentDTO.getKeyword()));

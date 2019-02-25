@@ -10,21 +10,21 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ChatService {
-    Optional<Chat> getById(long id) throws EmptyResultDataAccessException;
+    Optional<Chat> getById(long id);
 
-    Chat create(ChatDto chatDto) throws SQLException;
+    Chat create(ChatDto chatDto);
 
-    ChatDto update(long id, ChatDto chatDto) throws SQLException, ChatException;
+    ChatDto update(long id, ChatDto chatDto) throws ChatException;
 
     boolean joinToChat(long userId, long chatId);
 
-    List<Chat> getAll(long userId) throws EmptyResultDataAccessException;
+    List<Chat> getAll(long userId);
 
-    List<Chat> getAllOwn(long userId) throws EmptyResultDataAccessException;
+    List<Chat> getAllOwn(long userId);
 
-    List<Chat> getPublic(long userId) throws EmptyResultDataAccessException;
+    List<Chat> getPublic(long userId);
 
-    List<Chat> getPrivate(long userId) throws EmptyResultDataAccessException;
+    List<Chat> getPrivate(long userId);
 
     boolean userIsPresentInChat(long userId, long chatId);
 

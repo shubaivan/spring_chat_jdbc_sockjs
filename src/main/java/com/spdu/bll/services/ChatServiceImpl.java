@@ -6,10 +6,8 @@ import com.spdu.bll.models.ChatDto;
 import com.spdu.dal.repositories.ChatRepository;
 import com.spdu.domain_models.entities.Chat;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +22,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public ChatDto update(long id, ChatDto chatDto) throws SQLException, ChatException {
+    public ChatDto update(long id, ChatDto chatDto) throws ChatException {
         Optional<Chat> optionalChat = getById(id);
         if (optionalChat.isPresent()) {
             Chat oldChat = optionalChat.get();
@@ -39,12 +37,12 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public Optional<Chat> getById(long id) throws EmptyResultDataAccessException {
+    public Optional<Chat> getById(long id) {
         return chatRepository.getById(id);
     }
 
     @Override
-    public Chat create(ChatDto chatDto) throws SQLException {
+    public Chat create(ChatDto chatDto) {
         if (chatDto == null) {
             throw new RuntimeException("Chat is empty!");
         }
@@ -102,7 +100,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public boolean userIsPresentInChat(long userId, long chatId) throws EmptyResultDataAccessException {
+    public boolean userIsPresentInChat(long userId, long chatId) {
         return chatRepository.userIsPresentInChat(userId, chatId);
     }
 
@@ -122,9 +120,7 @@ public class ChatServiceImpl implements ChatService {
         }
     }
 
-    private Chat userIsPresentInOwnerPrivateChat(
-            long userId, long chatId
-    ) throws EmptyResultDataAccessException {
+    private Chat userIsPresentInOwnerPrivateChat(long userId, long chatId) {
         List<Chat> result = this.getChatRepository()
                 .userIsPresentInOwnerPrivateChat(userId, chatId);
 
@@ -135,22 +131,22 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public List<Chat> getAll(long userId) throws EmptyResultDataAccessException {
+    public List<Chat> getAll(long userId) {
         return chatRepository.getAll(userId);
     }
 
     @Override
-    public List<Chat> getAllOwn(long userId) throws EmptyResultDataAccessException {
+    public List<Chat> getAllOwn(long userId) {
         return chatRepository.getAllOwn(userId);
     }
 
     @Override
-    public List<Chat> getPublic(long userId) throws EmptyResultDataAccessException {
+    public List<Chat> getPublic(long userId) {
         return chatRepository.getPublic(userId);
     }
 
     @Override
-    public List<Chat> getPrivate(long userId) throws EmptyResultDataAccessException {
+    public List<Chat> getPrivate(long userId) {
         return chatRepository.getAllPrivate(userId);
     }
 

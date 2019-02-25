@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MessageService {
-    Optional<Message> getById(long id) throws EmptyResultDataAccessException;
+    Optional<Message> getById(long id);
 
     Optional<Message> create(Message message);
 

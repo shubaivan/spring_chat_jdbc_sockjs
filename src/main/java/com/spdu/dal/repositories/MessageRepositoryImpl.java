@@ -27,12 +27,16 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public Optional<Message> getById(long id) throws EmptyResultDataAccessException {
-        String query = "SELECT * FROM messages WHERE messages.id =?";
-        Message message = jdbcTemplate.queryForObject(query,
-                new Object[]{id},
-                new MessageMapper());
-        return Optional.of(message);
+    public Optional<Message> getById(long id) {
+        try {
+            String query = "SELECT * FROM messages WHERE messages.id =?";
+            Message message = jdbcTemplate.queryForObject(query,
+                    new Object[]{id},
+                    new MessageMapper());
+            return Optional.of(message);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

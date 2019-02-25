@@ -25,7 +25,7 @@ public class ConfirmationTokenRepositoryImpl implements ConfirmationTokenReposit
     }
 
     @Override
-    public String setConfirmationToken(ConfirmationToken confirmationToken) throws SQLException {
+    public String setConfirmationToken(ConfirmationToken confirmationToken) {
         String query = "INSERT INTO confirmation_token (" +
                 "confirmation_token, created_at," +
                 "user_id) VALUES (?,?,?)";

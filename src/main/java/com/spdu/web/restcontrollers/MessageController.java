@@ -86,7 +86,11 @@ public class MessageController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
-    public ResponseEntity update(@PathVariable long id, @RequestBody MessageDto messageDto) {
+    public ResponseEntity update(@PathVariable long id, @RequestBody MessageDto messageDto, Principal principal) {
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+        CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
+        messageDto.setAuthorId(cud.getId());
+
         try {
             MessageDto result = messageService.update(id, messageDto);
             return new ResponseEntity(result, HttpStatus.OK);

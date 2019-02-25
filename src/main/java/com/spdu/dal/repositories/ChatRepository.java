@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface ChatRepository {
 
-    Optional<Chat> getById(long id) throws EmptyResultDataAccessException;
+    Optional<Chat> getById(long id);
 
     long create(Chat chat);
 
@@ -26,7 +26,7 @@ public interface ChatRepository {
 
     List<Chat> getAllOwn(long userId);
 
-    boolean userIsPresentInChat(long userId, long chatId) throws EmptyResultDataAccessException;
+    boolean userIsPresentInChat(long userId, long chatId);
 
     List<Chat> userIsPresentInOwnerPrivateChat(
             long ownerId,
