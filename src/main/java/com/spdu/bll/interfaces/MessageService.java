@@ -5,7 +5,6 @@ import com.spdu.bll.models.MessageDto;
 import com.spdu.bll.models.MessageReturnDto;
 import com.spdu.bll.models.MessagesRequestContentDto;
 import com.spdu.domain_models.entities.Message;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.List;
 import java.util.Optional;

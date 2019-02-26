@@ -18,6 +18,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 
+import java.rmi.AccessException;
 import java.security.Principal;
 import java.sql.Date;
 import java.sql.Time;
@@ -77,14 +78,19 @@ public class MessageViewController {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
         CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
 
-        if (cud.getId() != messageDto.getAuthorId()) {
+        try {
+            if (cud.getId() != messageDto.getAuthorId()) {
+                throw new AccessException("dude, you not owner");
+            }
+            messageDto.setAuthorId(cud.getId());
+
+            return messageService.updateOptimization(messageDto);
+        } catch (Exception e) {
+            messageDto.setContent(e.getMessage());
             messageDto.setStatus(0);
+
             return messageDto;
         }
-
-        messageDto.setAuthorId(cud.getId());
-
-        return messageService.updateOptimization(messageDto);
     }
 
     @MessageMapping("/chat/{id}/delete-message")

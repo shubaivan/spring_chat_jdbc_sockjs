@@ -79,7 +79,9 @@ public class MessageDto {
         return status;
     }
 
-    public void setStatus(int status) {
+    public MessageDto setStatus(int status) {
         this.status = status;
+
+        return this;
     }
 }

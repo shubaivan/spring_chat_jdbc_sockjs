@@ -303,7 +303,7 @@ function stomp() {
             });
 
         if (!propertyNamesChatEditMessage.length) {
-            stompClient.subscribe('/topic/chat/' + chatId + '/edit-message', reloadMessageContent, {id: "edit-message" + chatId});
+            stompClient.subscribe('/topic/chat/' + chatId + '/edit-message', handleEditMessage, {id: "edit-message" + chatId});
         }
 
         //delete message
@@ -387,10 +387,33 @@ function onTypingReceived(payload) {
     }
 }
 
-function reloadMessageContent(payload) {
+function handleEditMessage(payload) {
     var editedMessage = JSON.parse(payload.body);
-    $("#messageArea").find("[data-el-id=" + editedMessage.messageId + "]")
-        .children('p').text(editedMessage.newContent);
+
+    var currentInput = $("#messageArea")
+        .find("input[data-el-id="+editedMessage.id+"]");
+    var currentLi = currentInput.closest('li');
+    currentLi.find('.keyup').remove();
+
+    if (editedMessage.status === 1) {
+        currentInput
+            .replaceWith('<p>'+editedMessage.content+'</p>');
+        var keyup_finished = '<div class="keyup_finished" data-el-id="'+
+            editedMessage.id + '">editing was finished</div>';
+        currentLi.append(keyup_finished);
+        splash({element: currentLi, addedClass: 'splash'});
+        setTimeout(function () {
+            currentLi.find('.keyup_finished').remove();
+        }, 2000);
+    } else {
+        var errorBlock = '<div class="keyup_error" data-el-id="'+
+            editedMessage.id + '">'+ editedMessage.content +'</div>';
+        currentLi.append(errorBlock);
+        splash({element: currentLi, addedClass: 'splash_error'});
+        setTimeout(function () {
+            currentLi.find('.keyup_error').remove();
+        }, 6000);
+    }
 }
 
 function deleteMessageContent(payload) {
@@ -416,9 +439,6 @@ function parseUser(user) {
     userArea.appendChild(para);
 }
 
-// function editMessage(messageId, oldContent) {
-
-
 function editMessage(el) {
     var actualTag = el.closest('li').find('p');
     var replaceInput = $('<input>').attr({
@@ -428,9 +448,6 @@ function editMessage(el) {
     actualTag.replaceWith(replaceInput);
 
     handleEditMessageProcess(replaceInput)
-    // $("#new-message-content").val(oldContent);
-    // $("#id-message").val(messageId);
-    // showElement("popupMessage");
 }
 
 function handleEditMessageProcess(handleEditMessage) {
@@ -457,8 +474,6 @@ function handleEditMessageProcess(handleEditMessage) {
 }
 
 function updateItem(currentInput) {
-    // alert('ffff');
-
     stompClient.send("/app/chat/" + chatId + "/edit-message",
         {},
         JSON.stringify({
@@ -468,35 +483,6 @@ function updateItem(currentInput) {
             id: currentInput.data('elId')
         })
     )
-}
-
-function sendRequestEdit() {
-    var newContent = $("#new-message-content").val();
-    var messageId = $("#id-message").val();
-    $.ajax({
-        type: "PUT",
-        data: JSON.stringify({
-            content: newContent,
-            authorId: userId
-        }),
-        contentType: "application/json",
-        dataType: "json",
-        url: 'api/messages/' + messageId,
-        success: function (result) {
-            stompClient.send("/app/chat/" + chatId + "/edit-message",
-                {},
-                JSON.stringify({
-                    chatId: chatId,
-                    messageId: messageId,
-                    newContent: newContent
-                })
-            ),
-                hideElement("popupMessage")
-        },
-        error: function (result) {
-            console.log(result)
-        }
-    })
 }
 
 function deleteMessage(messageId) {
@@ -583,13 +569,8 @@ function parseMessage(message, socket) {
 
         if (currentUserId === fromMessageCurrentUser || currentUserId === message.userId) {
             var editMessageElement = document.createElement('span');
-            // editMessageElement.setAttribute('href', "#");
             editMessageElement.classList.add('message_edit');
             editMessageElement.setAttribute('data-el-id', message.id);
-            console.log(message.content);
-            // editMessageElement.setAttribute('onclick',
-            //     "javascript:editMessage(" + message.id + ",'" + message.content + "')");
-
             editMessageElement.innerHTML =
                 '<i class="far fa-edit" ' +
                 'style="position: initial; ' +

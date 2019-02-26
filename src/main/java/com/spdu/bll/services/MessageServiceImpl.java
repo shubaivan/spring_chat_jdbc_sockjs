@@ -11,7 +11,6 @@ import com.spdu.dal.repositories.MessageRepository;
 import com.spdu.domain_models.entities.Message;
 import com.spdu.domain_models.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -56,7 +55,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public MessageDto updateOptimization(MessageDto messageDto) throws MessageException {
-        return null;
+        return (new MessageDto(getMessageRepository().updateOptimization(messageDto))).setStatus(1);
     }
 
     @Override
@@ -115,5 +114,9 @@ public class MessageServiceImpl implements MessageService {
             }
         }
         return Optional.empty();
+    }
+
+    public MessageRepository getMessageRepository() {
+        return messageRepository;
     }
 }

@@ -145,11 +145,29 @@ body {
     }
 }
 
+.splash_error{
+    background-color: #9f191f;
+    animation: splash_error 1s linear both;
+}
+
+@keyframes splash_error{
+    0%{ background-color: #9f191f;  }
+    100%{ background-color: #ffffff;  }
+}
+
 .user_in_chat{
     cursor: pointer;
 }
 
 .keyup{
     color: red;
+}
+
+.keyup_error {
+    color: red;
+}
+
+.keyup_finished {
+    color: green;
 }
 

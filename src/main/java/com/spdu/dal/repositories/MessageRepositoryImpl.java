@@ -1,6 +1,7 @@
 package com.spdu.dal.repositories;
 
 import com.spdu.bll.custom_exceptions.MessageException;
+import com.spdu.bll.models.MessageDto;
 import com.spdu.dal.mappers.MessageMapper;
 import com.spdu.domain_models.entities.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,33 @@ public class MessageRepositoryImpl implements MessageRepository {
         Optional<Message> modifiedMessage = getById(id);
         if (modifiedMessage.isPresent()) {
             return modifiedMessage.get();
+        } else {
+            throw new MessageException("Can't update message with id: " + message.getId());
+        }
+    }
+
+    @Override
+    public Message updateOptimization(MessageDto message) throws MessageException {
+        String query = "" +
+                "UPDATE messages \n" +
+                "SET text = ? \n" +
+                "WHERE id = ?\n" +
+                "AND author_id = ?\n" +
+                "AND chat_id = ?\n";
+
+        int result = jdbcTemplate.update(
+                query,
+                message.getContent(),
+                message.getId(),
+                message.getAuthorId(),
+                message.getChatId());
+        if (result > 0) {
+            Optional<Message> modifiedMessage = getById(message.getId());
+            if (modifiedMessage.isPresent()) {
+                return modifiedMessage.get();
+            } else {
+                throw new MessageException("Can't update message with id: " + message.getId());
+            }
         } else {
             throw new MessageException("Can't update message with id: " + message.getId());
         }
