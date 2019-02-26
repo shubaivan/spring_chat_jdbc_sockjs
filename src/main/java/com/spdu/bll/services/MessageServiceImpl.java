@@ -48,7 +48,7 @@ public class MessageServiceImpl implements MessageService {
             }
 
         } else {
-            throw new MessageException("You can remove only your own message!");
+            throw new MessageException("You can edit only your own message!");
         }
     }
 

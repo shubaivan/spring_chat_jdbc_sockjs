@@ -1,6 +1,6 @@
 var stompClient = null;
 var chatId = null;
-var userId = null;
+// var userId = null;
 
 $(document).ready(function () {
 
@@ -249,7 +249,7 @@ function stomp() {
 
     // var stompClient = null;
     // var username = null;
-    username = $('#username').text().trim();
+    var username = $('#username').text().trim();
     if (stompClient) {
         onConnected();
     } else {
