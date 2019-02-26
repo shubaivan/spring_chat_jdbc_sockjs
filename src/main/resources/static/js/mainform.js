@@ -507,11 +507,6 @@ function handleEditMessageProcess(handleEditMessage) {
         }
     });
 
-    handleEditMessage.bind("enterKey", function (e) {
-        var currentElement = $(this);
-        updateItem(currentElement);
-    });
-
     handleEditMessage.on('change', function () {
         var currentElement = $(this);
         updateItem(currentElement);
