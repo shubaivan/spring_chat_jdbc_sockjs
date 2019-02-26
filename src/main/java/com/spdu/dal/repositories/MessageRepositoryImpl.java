@@ -14,7 +14,6 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,16 +27,20 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public Optional<Message> getById(long id) throws EmptyResultDataAccessException {
-        String query = "SELECT * FROM messages WHERE messages.id =?";
-        Message message = jdbcTemplate.queryForObject(query,
-                new Object[]{id},
-                new MessageMapper());
-        return Optional.of(message);
+    public Optional<Message> getById(long id) {
+        try {
+            String query = "SELECT * FROM messages WHERE messages.id =?";
+            Message message = jdbcTemplate.queryForObject(query,
+                    new Object[]{id},
+                    new MessageMapper());
+            return Optional.of(message);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
-    public Message update(long id, Message message) throws SQLException, MessageException {
+    public Message update(long id, Message message) throws MessageException {
         String query = "UPDATE messages SET text = ? WHERE id = ?";
         jdbcTemplate.update(query, message.getText(), id);
         Optional<Message> modifiedMessage = getById(id);
@@ -49,7 +52,33 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public List<Message> getMessages(long id, Optional<String> keyword) throws EmptyResultDataAccessException {
+    public int removeMessage(long id) {
+        String query = "DELETE FROM messages " +
+                "WHERE id = ?";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        int count = jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection
+                    .prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setLong(1, id);
+            return ps;
+        }, keyHolder);
+
+        return count;
+    }
+
+    @Override
+    public boolean isOwnMessage(long id, long userId) {
+        String query = "SELECT * FROM messages " +
+                "WHERE id=?"
+                + " AND author_id=?";
+
+        return jdbcTemplate.queryForRowSet(query,
+                new Object[]{id, userId}).next();
+    }
+
+    @Override
+    public List<Message> getMessages(long id, Optional<String> keyword) {
         String query = "SELECT *, \n" +
                 "  CASE\n" +
                 "    WHEN concat(u.first_name, ' ', u.last_name)=' ' THEN u.user_name\n" +
@@ -59,8 +88,7 @@ public class MessageRepositoryImpl implements MessageRepository {
                 "\n" +
                 "FROM messages AS m \n" +
                 "LEFT JOIN db_users AS u ON u.id = m.author_id \n" +
-                "WHERE m.chat_id =? \n" +
-                "ORDER BY m.id ASC";
+                "WHERE m.chat_id =? \n";
 
         Object[] parameters = new Object[]{id};
 
@@ -68,6 +96,8 @@ public class MessageRepositoryImpl implements MessageRepository {
             query += " AND m.text ILIKE ?";
             parameters = new Object[]{id, "%" + keyword.get() + "%"};
         }
+
+        query += " ORDER BY m.id ASC";
 
         List<Message> messages = jdbcTemplate.query(query,
                 parameters,
@@ -84,7 +114,7 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public long create(Message message) throws SQLException {
+    public long create(Message message) {
         String query = "INSERT INTO messages (" +
                 "text, created_at," +
                 " author_id, relative_message_id," +

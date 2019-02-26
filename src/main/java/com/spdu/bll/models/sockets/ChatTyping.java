@@ -1,4 +1,4 @@
-package com.spdu.bll.models;
+package com.spdu.bll.models.sockets;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

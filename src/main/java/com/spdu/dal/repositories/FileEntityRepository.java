@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface FileEntityRepository {
 
-    long create(FileEntity fileEntity) throws SQLException;
+    long create(FileEntity fileEntity);
 
-    Optional<FileEntity> getById(long id) throws EmptyResultDataAccessException;
+    Optional<FileEntity> getById(long id);
 
-    FileEntity getByUserId(long id) throws EmptyResultDataAccessException;
+    FileEntity getByUserId(long id);
 }

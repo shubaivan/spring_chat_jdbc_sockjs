@@ -5,6 +5,8 @@ import com.spdu.bll.custom_exceptions.MessageException;
 import com.spdu.bll.interfaces.FileEntityService;
 import com.spdu.bll.interfaces.MessageService;
 import com.spdu.bll.models.*;
+import com.spdu.bll.models.sockets.ChatTyping;
+import com.spdu.bll.models.sockets.MessageEdit;
 import com.spdu.dal.repositories.ChatRepository;
 import com.spdu.domain_models.entities.FileEntity;
 import com.spdu.domain_models.entities.Message;
@@ -74,6 +76,18 @@ public class MessageViewController {
         return chatTyping;
     }
 
+    @MessageMapping("/chat/{id}/edit-message")
+    @SendTo("/topic/chat/{id}/edit-message")
+    public MessageEdit editMessage(@Payload MessageEdit message) {
+        return message;
+    }
+
+    @MessageMapping("/chat/{id}/delete-message")
+    @SendTo("/topic/chat/{id}/delete-message")
+    public MessageEdit deleteMessage(@Payload MessageEdit message) {
+        return message;
+    }
+
     @MessageMapping("/chat/{id}/leftUser")
     @SendTo("/topic/public/{id}")
     public ChatMessage leftUser(
@@ -109,8 +123,13 @@ public class MessageViewController {
                 .setCreatedTime(message.getCreatedTime())
                 .setCreatedDate(message.getCreatedDate());
 
-        messageService.send(cud.getUser().getEmail(), messageModel);
+        Optional<MessageReturnDto> optionalMessage = messageService.send(cud.getUser().getEmail(), messageModel);
         Optional<FileEntity> fileOptional = Optional.ofNullable(fileEntityService.getFileEntity(cud.getUser().getId()));
+
+        if (optionalMessage.isPresent()) {
+            MessageReturnDto messageReturnDto = optionalMessage.get();
+            message.setId(messageReturnDto.getId());
+        }
 
         if (fileOptional.isPresent()) {
             FileEntityDto fileEntityDto = new FileEntityDto(fileOptional.get());
@@ -123,41 +142,5 @@ public class MessageViewController {
     private CustomUserDetails getCustomUserDetails(Principal principal) {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
         return (CustomUserDetails) token.getPrincipal();
-    }
-
-    @PutMapping("/message/update")
-    public ModelAndView update(MessageDto messageDto, ModelMap modelMap) throws MessageException, SQLException {
-        MessageDto result = messageService.update(messageDto.getId(), messageDto);
-        modelMap.addAttribute("messageDto", result);
-        return new ModelAndView("redirect:/chats", modelMap);
-    }
-
-    @GetMapping("/messageprofile/{id}")
-    @PreAuthorize("hasAuthority(T(com.spdu.bll.models.constants.UserRole).ROLE_USER)")
-    public String profile(@PathVariable long id, ModelMap modelMap, Principal principal) throws MessageException {
-        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
-        CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
-        if (messageService.getById(id).isPresent()) {
-            Message oldMessage = messageService.getById(id).get();
-            if (oldMessage.getMessageType().equals(MessageType.CHAT)) {
-                if (cud.getId() == oldMessage.getAuthorID()) {
-                    MessageDto messageDto = new MessageDto();
-                    messageDto.setId(oldMessage.getId());
-                    messageDto.setContent(oldMessage.getText());
-                    messageDto.setDate(oldMessage.getCreatedAt());
-                    messageDto.setUserName(oldMessage.getFullName());
-                    messageDto.setAuthorId(oldMessage.getAuthorID());
-                    modelMap.addAttribute("messageDto", messageDto);
-                    return "messageprofile";
-                } else {
-                    throw new
-                            MessageException("You is not message owner");
-                }
-            } else {
-                throw new MessageException("Message is not from chat!");
-            }
-        } else {
-            throw new MessageException("Message not found!");
-        }
     }
 }

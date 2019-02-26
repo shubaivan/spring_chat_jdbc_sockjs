@@ -9,11 +9,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MessageRepository {
-    Optional<Message> getById(long id) throws EmptyResultDataAccessException;
+    Optional<Message> getById(long id);
 
-    long create(Message message) throws SQLException;
+    long create(Message message);
 
-    List<Message> getMessages(long id, Optional<String> keyword) throws EmptyResultDataAccessException;
+    List<Message> getMessages(long id, Optional<String> keyword);
 
-    Message update(long id, Message message) throws SQLException, MessageException;
+    Message update(long id, Message message) throws MessageException;
+
+    int removeMessage(long id);
+
+    boolean isOwnMessage(long id, long userId);
 }

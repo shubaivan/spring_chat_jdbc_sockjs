@@ -6,14 +6,16 @@ public class MessageReturnDto {
     private String userName;
     private String content;
     private LocalDateTime date;
+    private long id;
 
     public MessageReturnDto() {
     }
 
-    public MessageReturnDto(String userName, String content, LocalDateTime date) {
+    public MessageReturnDto(String userName, String content, LocalDateTime date, long id) {
         this.userName = userName;
         this.content = content;
         this.date = date;
+        this.id = id;
     }
 
     public String getContent() {
@@ -38,5 +40,13 @@ public class MessageReturnDto {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

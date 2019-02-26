@@ -165,6 +165,20 @@
     </div>
 </div>
 
+<div class="b-popup" id=popupMessage>
+    <div class="b-popup-content" style="height: 200px">
+        <a href="#" onclick='hideElement("popupMessage")' class='btn-close'>&times;</a>
+        <div style="display: flex; justify-content: center; flex: 1; ">
+            <div style="width: 90%; display: flex; flex-direction: column;">
+                <h3>New text</h3>
+                <input type="hidden" id=id-message>
+                <input type="text" class="text" id=new-message-content>
+                <button class="update" onclick="sendRequestEdit()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
     // <![CDATA[

@@ -27,13 +27,17 @@ public class ChatRepositoryImpl implements ChatRepository {
     }
 
     @Override
-    public Optional<Chat> getById(long id) throws EmptyResultDataAccessException {
-        String query = "SELECT * FROM chats WHERE chats.id =?";
+    public Optional<Chat> getById(long id) {
+        try {
+            String query = "SELECT * FROM chats WHERE chats.id =?";
 
-        Chat chat = jdbcTemplate.queryForObject(query,
-                new Object[]{id},
-                new ChatMapper());
-        return Optional.of(chat);
+            Chat chat = jdbcTemplate.queryForObject(query,
+                    new Object[]{id},
+                    new ChatMapper());
+            return Optional.of(chat);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -87,7 +91,7 @@ public class ChatRepositoryImpl implements ChatRepository {
     }
 
     @Override
-    public List<Chat> getAllOwn(long userId) throws EmptyResultDataAccessException {
+    public List<Chat> getAllOwn(long userId) {
         String query = "SELECT * FROM chats " +
                 "WHERE chats.owner_id=" + userId +
                 " AND chats.chat_type != " + ChatType.PRIVATE.ordinal();
@@ -95,7 +99,7 @@ public class ChatRepositoryImpl implements ChatRepository {
     }
 
     @Override
-    public boolean userIsPresentInChat(long userId, long chatId) throws EmptyResultDataAccessException {
+    public boolean userIsPresentInChat(long userId, long chatId) {
         String query = "SELECT * FROM chats_users " +
                 "WHERE chats_users.user_id=" + userId
                 + "AND chats_users.chat_id=" + chatId;
@@ -103,7 +107,7 @@ public class ChatRepositoryImpl implements ChatRepository {
     }
 
     @Override
-    public List<Chat> userIsPresentInOwnerPrivateChat(long ownerId, long appendUserId) throws EmptyResultDataAccessException {
+    public List<Chat> userIsPresentInOwnerPrivateChat(long ownerId, long appendUserId) {
         String query = "SELECT * \n" +
                 "FROM chats as c\n" +
                 "WHERE c.chat_type = " + ChatType.PRIVATE.ordinal() + "\n" +

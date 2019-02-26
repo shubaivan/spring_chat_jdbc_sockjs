@@ -28,7 +28,7 @@ public class FileEntityRepositoryImpl implements FileEntityRepository {
     }
 
     @Override
-    public long create(FileEntity fileEntity) throws SQLException {
+    public long create(FileEntity fileEntity) {
         String query = "INSERT INTO file_entities (" +
                 "name, path," +
                 " content_type, created_at," +
@@ -50,31 +50,35 @@ public class FileEntityRepositoryImpl implements FileEntityRepository {
     }
 
     @Override
-    public Optional<FileEntity> getById(long id) throws EmptyResultDataAccessException {
-        String query = "SELECT * FROM file_entities WHERE file_entities.id =?";
+    public Optional<FileEntity> getById(long id) {
+        try {
+            String query = "SELECT * FROM file_entities WHERE file_entities.id =?";
 
-        FileEntity fileEntity = jdbcTemplate.queryForObject(query,
-                new Object[]{id},
-                new FileEntityMapper());
-        return Optional.of(fileEntity);
+            FileEntity fileEntity = jdbcTemplate.queryForObject(query,
+                    new Object[]{id},
+                    new FileEntityMapper());
+            return Optional.of(fileEntity);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
     public FileEntity getByUserId(long id) throws EmptyResultDataAccessException {
         String query = "SELECT * FROM file_entities AS f\n" +
-                "WHERE f.owner_id ="+id+" \n" +
+                "WHERE f.owner_id =" + id + " \n" +
                 "ORDER BY f.id DESC \n" +
                 "LIMIT 1";
 
         List<FileEntity> result = getByQuery(query);
         if (result.size() > 0) {
-           return result.get(0);
+            return result.get(0);
         }
 
         return null;
     }
 
-    private List<FileEntity> getByQuery(String query) throws EmptyResultDataAccessException {
+    private List<FileEntity> getByQuery(String query) {
         return jdbcTemplate.query(query,
                 rs -> {
                     List<FileEntity> list = new LinkedList<>();

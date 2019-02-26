@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,25 +32,49 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public MessageDto update(long id, MessageDto messageDto) throws SQLException, MessageException {
-        Optional<Message> messageOptional = getById(id);
-        if (messageOptional.isPresent()) {
-            Message oldMessage = messageOptional.get();
-            oldMessage.setText(messageDto.getContent());
-            Message modifiedMessage = messageRepository.update(id, oldMessage);
-            return new MessageDto(modifiedMessage);
+    public MessageDto update(long id, MessageDto messageDto) throws MessageException {
+        boolean isOwnMessage = messageRepository.isOwnMessage(id, messageDto.getAuthorId());
+
+        if (isOwnMessage) {
+            Optional<Message> messageOptional = getById(id);
+
+            if (messageOptional.isPresent()) {
+                Message oldMessage = messageOptional.get();
+                oldMessage.setText(messageDto.getContent());
+                Message modifiedMessage = messageRepository.update(id, oldMessage);
+                return new MessageDto(modifiedMessage);
+            } else {
+                throw new MessageException("Chat not found");
+            }
+
         } else {
-            throw new MessageException("Chat not found");
+            throw new MessageException("You can edit only your own message!");
         }
     }
 
     @Override
-    public Optional<Message> getById(long id) throws EmptyResultDataAccessException {
+    public boolean removeMessage(long id, long userId) throws MessageException {
+        boolean isOwnMessage = messageRepository.isOwnMessage(id, userId);
+        if (isOwnMessage) {
+            int result = messageRepository.removeMessage(id);
+
+            if (result > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            throw new MessageException("You can remove only your own message!");
+        }
+    }
+
+    @Override
+    public Optional<Message> getById(long id) {
         return messageRepository.getById(id);
     }
 
     @Override
-    public List<Message> getMessages(MessagesRequestContentDto requestContentDTO) throws EmptyResultDataAccessException {
+    public List<Message> getMessages(MessagesRequestContentDto requestContentDTO) {
         return messageRepository.getMessages(
                 requestContentDTO.getId(),
                 Optional.ofNullable(requestContentDTO.getKeyword()));
@@ -59,12 +82,8 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Optional<Message> create(Message message) {
-        try {
-            long messageId = messageRepository.create(message);
-            return getById(messageId);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        long messageId = messageRepository.create(message);
+        return getById(messageId);
     }
 
     public Optional<MessageReturnDto> send(String userEmail, Message message) {
@@ -76,18 +95,14 @@ public class MessageServiceImpl implements MessageService {
                 message.setAuthorID(user.getId());
 
                 Optional<Message> optionalMessage;
-                try {
-                    long messageId = messageRepository.create(message);
-                    optionalMessage = getById(messageId);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                long messageId = messageRepository.create(message);
+                optionalMessage = getById(messageId);
 
                 if (optionalMessage.isPresent()) {
                     Message createdMessage = optionalMessage.get();
                     MessageReturnDto messageReturnDTO = new MessageReturnDto(
                             userEmail, createdMessage.getText(),
-                            createdMessage.getCreatedAt());
+                            createdMessage.getCreatedAt(), createdMessage.getId());
                     return Optional.of(messageReturnDTO);
                 }
             }

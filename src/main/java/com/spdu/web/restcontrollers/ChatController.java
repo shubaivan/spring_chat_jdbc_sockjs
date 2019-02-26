@@ -78,12 +78,9 @@ public class ChatController {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
         CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
         chatDto.setOwnerId(cud.getId());
+
         Optional<Chat> result;
-        try {
-            result = Optional.ofNullable(chatService.create(chatDto));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        result = Optional.ofNullable(chatService.create(chatDto));
 
         if (result.isPresent()) {
             return new ResponseEntity(result.get(), HttpStatus.CREATED);

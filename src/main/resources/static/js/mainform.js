@@ -1,5 +1,6 @@
 var stompClient = null;
 var chatId = null;
+// var userId = null;
 
 $(document).ready(function () {
 
@@ -163,7 +164,9 @@ function getChatMessages(currentChatId, useStomp) {
                     content: val.text,
                     sender: val.fullName,
                     createdDate: val.createdDate,
-                    createdTime: val.createdTime
+                    createdTime: val.createdTime,
+                    authorId: val.authorID,
+                    id: val.id
                 };
 
                 if (val.avatarId) {
@@ -207,7 +210,9 @@ function searchMessagesInChat() {
                     content: val.text,
                     sender: val.fullName,
                     createdDate: val.createdDate,
-                    createdTime: val.createdTime
+                    createdTime: val.createdTime,
+                    authorId: val.authorID,
+                    id: val.id
                 };
 
                 if (val.avatarId) {
@@ -240,11 +245,11 @@ function stomp() {
     var userArea = document.querySelector('#userArea');
     var connectingElement = document.querySelector('#connecting');
     chatId = $('#chatId').data('elId');
-    var userId = $('#username').data('elId');
+    userId = $('#username').data('elId');
 
     // var stompClient = null;
     // var username = null;
-    username = $('#username').text().trim();
+    var username = $('#username').text().trim();
     if (stompClient) {
         onConnected();
     } else {
@@ -285,6 +290,27 @@ function stomp() {
 
         if (!propertyNamesChatTyping.length) {
             stompClient.subscribe('/topic/chat/' + chatId + '/typing', onTypingReceived, {id: "typing" + chatId});
+        }
+
+        //edit message
+        var propertyNamesChatEditMessage = Object.keys(stompClient.subscriptions)
+            .filter(function (propertyName) {
+                return propertyName.indexOf("edit-message" + chatId) === 0;
+            });
+
+        if (!propertyNamesChatEditMessage.length) {
+            stompClient.subscribe('/topic/chat/' + chatId + '/edit-message', reloadMessageContent, {id: "edit-message" + chatId});
+        }
+
+        //delete message
+        var propertyNamesChatEditMessage = Object.keys(stompClient.subscriptions)
+            .filter(function (propertyName) {
+                return propertyName.indexOf("delete-message" + chatId) === 0;
+            });
+
+        if (!propertyNamesChatEditMessage.length) {
+            stompClient.subscribe('/topic/chat/' + chatId + '/delete-message', deleteMessageContent,
+                {id: "delete-message" + chatId});
         }
 
         // Tell your username to the server
@@ -332,6 +358,17 @@ function stomp() {
             JSON.stringify({userId: userId, chatId: chatId})
         )
     })
+
+    function sendEditedMessage(messageId, newContent) {
+        stompClient.send("/app/chat/" + chatId + "/edit-message",
+            {},
+            JSON.stringify({
+                chatId: chatId,
+                messageId: messageId,
+                newContent: newContent
+            })
+        )
+    }
 }
 
 function onTypingReceived(payload) {
@@ -344,6 +381,17 @@ function onTypingReceived(payload) {
             $("#typing" + chatTyping.userId).remove();
         }, 2000);
     }
+}
+
+function reloadMessageContent(payload) {
+    var editedMessage = JSON.parse(payload.body);
+    $("#messageArea").find("[data-el-id=" + editedMessage.messageId + "]")
+        .children('p').text(editedMessage.newContent);
+}
+
+function deleteMessageContent(payload) {
+    var deletedMessage = JSON.parse(payload.body);
+    $("#messageArea").find("[data-el-id=" + deletedMessage.messageId + "]").remove();
 }
 
 function onMessageReceived(payload) {
@@ -364,10 +412,71 @@ function parseUser(user) {
     userArea.appendChild(para);
 }
 
+function editMessage(messageId, oldContent) {
+    $("#new-message-content").val(oldContent);
+    $("#id-message").val(messageId);
+    showElement("popupMessage");
+}
+
+function sendRequestEdit() {
+    var newContent = $("#new-message-content").val();
+    var messageId = $("#id-message").val();
+    $.ajax({
+        type: "PUT",
+        data: JSON.stringify({
+            content: newContent,
+            authorId: userId
+        }),
+        contentType: "application/json",
+        dataType: "json",
+        url: 'api/messages/' + messageId,
+        success: function (result) {
+            stompClient.send("/app/chat/" + chatId + "/edit-message",
+                {},
+                JSON.stringify({
+                    chatId: chatId,
+                    messageId: messageId,
+                    newContent: newContent
+                })
+            ),
+                hideElement("popupMessage")
+        },
+        error: function (result) {
+            console.log(result)
+        }
+    })
+}
+
+function deleteMessage(messageId) {
+    $.ajax({
+        type: "DELETE",
+        url: 'api/messages/' + messageId,
+        success: function (result) {
+            $("#messageArea").find("[data-el-id=" + messageId + "]").remove();
+            stompClient.send("/app/chat/" + chatId + "/delete-message",
+                {},
+                JSON.stringify({
+                    chatId: chatId,
+                    messageId: messageId
+                })
+            )
+        },
+        error: function (result) {
+            console.log(result)
+        }
+    })
+}
+
 function parseMessage(message, socket) {
     var messageElement = document.createElement('li');
+    var currentUserId = $('#username').data('elId');
+
+    var fromMessageCurrentUser = message.authorId;
+    console.log('From message current user' + fromMessageCurrentUser);
 
     messageElement.setAttribute('id', 'idMessage');
+
+    messageElement.setAttribute('data-el-id', message.id);
 
     var dateTime = message.createdDate + ' ' + message.createdTime;
     var checkExistUsername = $("#userArea").find("[data-user-id=" + message.userId + "]");
@@ -417,6 +526,37 @@ function parseMessage(message, socket) {
         usernameElement.appendChild(dateTimeText);
 
         messageElement.appendChild(usernameElement);
+
+        console.log("UserId = " + currentUserId);
+
+        if (currentUserId === fromMessageCurrentUser || currentUserId === message.userId) {
+            var editMessageElement = document.createElement('a');
+            editMessageElement.setAttribute('href', "#");
+            editMessageElement.classList.add('message_edit');
+            console.log(message.content);
+            editMessageElement.setAttribute('onclick',
+                "javascript:editMessage(" + message.id + ",'" + message.content + "')");
+
+            editMessageElement.innerHTML =
+                '<i class="far fa-edit" ' +
+                'style="position: initial; ' +
+                'color: #43464b">' +
+                '</i>';
+
+            var deleteMessageElement = document.createElement('a');
+            deleteMessageElement.setAttribute('href', "#");
+            deleteMessageElement.classList.add('message_delete');
+            deleteMessageElement.setAttribute('onclick', 'javascript:deleteMessage(' + message.id + ')');
+
+            deleteMessageElement.innerHTML =
+                '<i class="fas fa-trash" ' +
+                'style="position: initial; ' +
+                'color: #43464b">' +
+                '</i>';
+
+            messageElement.appendChild(editMessageElement);
+            messageElement.appendChild(deleteMessageElement);
+        }
     }
 
     var textElement = document.createElement('p');

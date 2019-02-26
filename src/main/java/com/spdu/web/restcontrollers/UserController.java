@@ -12,7 +12,7 @@ import com.spdu.bll.interfaces.UserService;
 import com.spdu.bll.models.CustomUserDetails;
 import com.spdu.bll.models.UserDto;
 import com.spdu.bll.models.UserRegisterDto;
-import com.spdu.bll.models.JoinChatRequestContentDto;
+import com.spdu.bll.models.sockets.JoinChatRequestContentDto;
 import com.spdu.bll.services.CustomUserDetailsService;
 import com.spdu.domain_models.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,7 +116,7 @@ public class UserController {
     public ResponseEntity postUserToChat(
             Principal principal,
             HttpServletRequest request
-    ) throws SQLException, IOException {
+    ) throws IOException {
         String content = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         JoinChatRequestContentDto contentMap = this.deserializerToObj(content);
 
