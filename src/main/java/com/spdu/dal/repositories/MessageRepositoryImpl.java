@@ -53,7 +53,7 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public Message updateOptimization(MessageDto message) throws MessageException {
+    public boolean updateOptimization(MessageDto message) throws MessageException {
         String query = "" +
                 "UPDATE messages \n" +
                 "SET text = ? \n" +
@@ -68,12 +68,7 @@ public class MessageRepositoryImpl implements MessageRepository {
                 message.getAuthorId(),
                 message.getChatId());
         if (result > 0) {
-            Optional<Message> modifiedMessage = getById(message.getId());
-            if (modifiedMessage.isPresent()) {
-                return modifiedMessage.get();
-            } else {
-                throw new MessageException("Can't update message with id: " + message.getId());
-            }
+            return true;
         } else {
             throw new MessageException("Can't update message with id: " + message.getId());
         }

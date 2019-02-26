@@ -55,7 +55,9 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public MessageDto updateOptimization(MessageDto messageDto) throws MessageException {
-        return (new MessageDto(getMessageRepository().updateOptimization(messageDto))).setStatus(1);
+        getMessageRepository().updateOptimization(messageDto);
+
+        return messageDto.setStatus(1);
     }
 
     @Override
