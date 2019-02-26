@@ -67,7 +67,7 @@ public class MessageServiceImpl implements MessageService {
             if (result > 0) {
                 return true;
             } else {
-                return false;
+                throw new MessageException("message was not removed!");
             }
         } else {
             throw new MessageException("You can remove only your own message!");

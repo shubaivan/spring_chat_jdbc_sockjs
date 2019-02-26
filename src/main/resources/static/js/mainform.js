@@ -1,6 +1,6 @@
 var stompClient = null;
 var chatId = null;
-// var userId = null;
+var userId = null;
 
 $(document).ready(function () {
 
@@ -84,6 +84,13 @@ $(document).ready(function () {
 
     $('body').on('click', '.message_edit', function () {
         editMessage($(this));
+    });
+
+    $('body').on('click', '.message_delete', function () {
+        var confirmFromUser = confirm("Are you sure");
+        if (confirmFromUser == true) {
+            deleteMessage($(this));
+        }
     });
 
     $('body').on('click', '.user_in_chat', function () {
@@ -313,7 +320,7 @@ function stomp() {
             });
 
         if (!propertyNamesChatEditMessage.length) {
-            stompClient.subscribe('/topic/chat/' + chatId + '/delete-message', deleteMessageContent,
+            stompClient.subscribe('/topic/chat/' + chatId + '/delete-message', handleDeleteMessage,
                 {id: "delete-message" + chatId});
         }
 
@@ -389,7 +396,6 @@ function onTypingReceived(payload) {
 
 function handleEditMessage(payload) {
     var editedMessage = JSON.parse(payload.body);
-
     var currentInput = $("#messageArea")
         .find("input[data-el-id="+editedMessage.id+"]");
     var currentLi = currentInput.closest('li');
@@ -416,9 +422,28 @@ function handleEditMessage(payload) {
     }
 }
 
-function deleteMessageContent(payload) {
+function handleDeleteMessage(payload) {
     var deletedMessage = JSON.parse(payload.body);
-    $("#messageArea").find("[data-el-id=" + deletedMessage.messageId + "]").remove();
+    var currentLi = $("#messageArea")
+        .find("li[data-el-id="+deletedMessage.id+"]");
+
+    if (deletedMessage.status === 1) {
+        var keyup_finished = '<div class="keyup_finished" data-el-id="'+
+            deletedMessage.id + '">delete was finished</div>';
+        currentLi.append(keyup_finished);
+        setTimeout(function () {
+            currentLi.remove();
+        }, 2000);
+    } else {
+        var errorBlock = '<div class="keyup_error" data-el-id="'+
+            deletedMessage.id + '">'+ deletedMessage.content +'</div>';
+        currentLi.append(errorBlock);
+
+        splash({element: currentLi, addedClass: 'splash_error'});
+        setTimeout(function () {
+            currentLi.find('.keyup_error').remove();
+        }, 6000);
+    }
 }
 
 function onMessageReceived(payload) {
@@ -448,6 +473,18 @@ function editMessage(el) {
     actualTag.replaceWith(replaceInput);
 
     handleEditMessageProcess(replaceInput)
+}
+
+function deleteMessage(el) {
+    var currentChatId = $("#chatId").data('elId');
+    stompClient.send("/app/chat/" + currentChatId + "/delete-message",
+        {},
+        JSON.stringify({
+            authorId: userId,
+            chatId: currentChatId,
+            id: el.data('elId')
+        })
+    )
 }
 
 function handleEditMessageProcess(handleEditMessage) {
@@ -483,26 +520,6 @@ function updateItem(currentInput) {
             id: currentInput.data('elId')
         })
     )
-}
-
-function deleteMessage(messageId) {
-    $.ajax({
-        type: "DELETE",
-        url: 'api/messages/' + messageId,
-        success: function (result) {
-            $("#messageArea").find("[data-el-id=" + messageId + "]").remove();
-            stompClient.send("/app/chat/" + chatId + "/delete-message",
-                {},
-                JSON.stringify({
-                    chatId: chatId,
-                    messageId: messageId
-                })
-            )
-        },
-        error: function (result) {
-            console.log(result)
-        }
-    })
 }
 
 function parseMessage(message, socket) {
@@ -577,10 +594,9 @@ function parseMessage(message, socket) {
                 'color: #43464b">' +
                 '</i>';
 
-            var deleteMessageElement = document.createElement('a');
-            deleteMessageElement.setAttribute('href', "#");
+            var deleteMessageElement = document.createElement('span');
             deleteMessageElement.classList.add('message_delete');
-            deleteMessageElement.setAttribute('onclick', 'javascript:deleteMessage(' + message.id + ')');
+            deleteMessageElement.setAttribute('data-el-id', message.id);
 
             deleteMessageElement.innerHTML =
                 '<i class="fas fa-trash" ' +

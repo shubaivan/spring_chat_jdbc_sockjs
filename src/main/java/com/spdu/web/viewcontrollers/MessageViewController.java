@@ -6,7 +6,6 @@ import com.spdu.bll.interfaces.FileEntityService;
 import com.spdu.bll.interfaces.MessageService;
 import com.spdu.bll.models.*;
 import com.spdu.bll.models.sockets.ChatTyping;
-import com.spdu.bll.models.sockets.MessageEdit;
 import com.spdu.dal.repositories.ChatRepository;
 import com.spdu.domain_models.entities.FileEntity;
 import com.spdu.domain_models.entities.Message;
@@ -73,7 +72,8 @@ public class MessageViewController {
     @MessageMapping("/chat/{id}/edit-message")
     @SendTo("/topic/chat/{id}/edit-message")
     public MessageDto editMessage(
-            @Payload MessageDto messageDto, Principal principal
+            @Payload MessageDto messageDto,
+            Principal principal
     ) throws MessageException {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
         CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
@@ -95,8 +95,29 @@ public class MessageViewController {
 
     @MessageMapping("/chat/{id}/delete-message")
     @SendTo("/topic/chat/{id}/delete-message")
-    public MessageEdit deleteMessage(@Payload MessageEdit message) {
-        return message;
+    public MessageDto deleteMessage(
+            @Payload MessageDto messageDto,
+            Principal principal
+    ) {
+
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+        CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
+
+        try {
+            if (cud.getId() != messageDto.getAuthorId()) {
+                throw new AccessException("dude, you not owner");
+            }
+            messageDto.setAuthorId(cud.getId());
+            messageService.removeMessage(messageDto.getId(), messageDto.getAuthorId());
+            messageDto.setStatus(1);
+
+            return messageDto;
+        } catch (Exception e) {
+            messageDto.setContent(e.getMessage());
+            messageDto.setStatus(0);
+
+            return messageDto;
+        }
     }
 
     @MessageMapping("/chat/{id}/leftUser")
