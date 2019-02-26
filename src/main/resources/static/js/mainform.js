@@ -402,8 +402,16 @@ function handleEditMessage(payload) {
     currentLi.find('.keyup').remove();
 
     if (editedMessage.status === 1) {
-        currentInput
-            .replaceWith('<p>'+editedMessage.content+'</p>');
+        if (currentInput.length > 0) {
+            currentInput
+                .replaceWith('<p>'+editedMessage.content+'</p>');
+        } else {
+            currentLi = $("#messageArea")
+                .find("li[data-el-id="+editedMessage.id+"]");
+            currentLi.find('p')
+                .replaceWith('<p>'+editedMessage.content+'</p>');
+        }
+
         var keyup_finished = '<div class="keyup_finished" data-el-id="'+
             editedMessage.id + '">editing was finished</div>';
         currentLi.append(keyup_finished);
@@ -511,12 +519,13 @@ function handleEditMessageProcess(handleEditMessage) {
 }
 
 function updateItem(currentInput) {
-    stompClient.send("/app/chat/" + chatId + "/edit-message",
+    var currentChatId = $("#chatId").data('elId');
+    stompClient.send("/app/chat/" + currentChatId + "/edit-message",
         {},
         JSON.stringify({
             content: currentInput.val(),
             authorId: userId,
-            chatId: $("#chatId").data('elId'),
+            chatId: currentChatId,
             id: currentInput.data('elId')
         })
     )
