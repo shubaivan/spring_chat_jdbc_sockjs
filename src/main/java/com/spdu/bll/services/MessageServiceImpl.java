@@ -31,6 +31,8 @@ public class MessageServiceImpl implements MessageService {
         this.chatService = chatService;
     }
 
+
+
     @Override
     public MessageDto update(long id, MessageDto messageDto) throws MessageException {
         boolean isOwnMessage = messageRepository.isOwnMessage(id, messageDto.getAuthorId());
@@ -50,6 +52,11 @@ public class MessageServiceImpl implements MessageService {
         } else {
             throw new MessageException("You can edit only your own message!");
         }
+    }
+
+    @Override
+    public MessageDto updateOptimization(MessageDto messageDto) throws MessageException {
+        return null;
     }
 
     @Override

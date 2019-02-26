@@ -82,6 +82,10 @@ $(document).ready(function () {
         getChatMessages(el.data('elId'));
     });
 
+    $('body').on('click', '.message_edit', function () {
+        editMessage($(this));
+    });
+
     $('body').on('click', '.user_in_chat', function () {
         var el = $(this);
         createChatProcess(
@@ -412,10 +416,58 @@ function parseUser(user) {
     userArea.appendChild(para);
 }
 
-function editMessage(messageId, oldContent) {
-    $("#new-message-content").val(oldContent);
-    $("#id-message").val(messageId);
-    showElement("popupMessage");
+// function editMessage(messageId, oldContent) {
+
+
+function editMessage(el) {
+    var actualTag = el.closest('li').find('p');
+    var replaceInput = $('<input>').attr({
+        'data-el-id': el.data('elId'),
+        value: actualTag.text()
+    });
+    actualTag.replaceWith(replaceInput);
+
+    handleEditMessageProcess(replaceInput)
+    // $("#new-message-content").val(oldContent);
+    // $("#id-message").val(messageId);
+    // showElement("popupMessage");
+}
+
+function handleEditMessageProcess(handleEditMessage) {
+    handleEditMessage.keypress(function (event) {
+        var currentElement = $(this);
+        if(!currentElement.closest('li').find('.keyup').length) {
+            var keyup = '<div class="keyup" data-el-id="'+currentElement.data('elId')+'">editing</div>';
+            $(keyup).insertAfter(currentElement);
+        }
+        if (event.keyCode == 13) {
+            $(this).trigger("enterKey");
+        }
+    });
+
+    handleEditMessage.bind("enterKey", function (e) {
+        var currentElement = $(this);
+        updateItem(currentElement);
+    });
+
+    handleEditMessage.on('change', function () {
+        var currentElement = $(this);
+        updateItem(currentElement);
+    })
+}
+
+function updateItem(currentInput) {
+    // alert('ffff');
+
+    stompClient.send("/app/chat/" + chatId + "/edit-message",
+        {},
+        JSON.stringify({
+            content: currentInput.val(),
+            authorId: userId,
+            chatId: $("#chatId").data('elId'),
+            id: currentInput.data('elId')
+        })
+    )
 }
 
 function sendRequestEdit() {
@@ -530,12 +582,13 @@ function parseMessage(message, socket) {
         console.log("UserId = " + currentUserId);
 
         if (currentUserId === fromMessageCurrentUser || currentUserId === message.userId) {
-            var editMessageElement = document.createElement('a');
-            editMessageElement.setAttribute('href', "#");
+            var editMessageElement = document.createElement('span');
+            // editMessageElement.setAttribute('href', "#");
             editMessageElement.classList.add('message_edit');
+            editMessageElement.setAttribute('data-el-id', message.id);
             console.log(message.content);
-            editMessageElement.setAttribute('onclick',
-                "javascript:editMessage(" + message.id + ",'" + message.content + "')");
+            // editMessageElement.setAttribute('onclick',
+            //     "javascript:editMessage(" + message.id + ",'" + message.content + "')");
 
             editMessageElement.innerHTML =
                 '<i class="far fa-edit" ' +

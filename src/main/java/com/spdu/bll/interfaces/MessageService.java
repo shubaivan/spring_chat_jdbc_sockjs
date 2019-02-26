@@ -21,5 +21,7 @@ public interface MessageService {
 
     MessageDto update(long id, MessageDto messageDto) throws MessageException;
 
+    MessageDto updateOptimization(MessageDto messageDto) throws MessageException;
+
     boolean removeMessage(long chatId, long ownerId) throws MessageException;
 }

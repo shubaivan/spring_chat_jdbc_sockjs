@@ -15,18 +15,11 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
 import java.sql.Date;
-import java.sql.SQLException;
 import java.sql.Time;
 import java.util.Optional;
 
@@ -78,8 +71,20 @@ public class MessageViewController {
 
     @MessageMapping("/chat/{id}/edit-message")
     @SendTo("/topic/chat/{id}/edit-message")
-    public MessageEdit editMessage(@Payload MessageEdit message) {
-        return message;
+    public MessageDto editMessage(
+            @Payload MessageDto messageDto, Principal principal
+    ) throws MessageException {
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+        CustomUserDetails cud = (CustomUserDetails) token.getPrincipal();
+
+        if (cud.getId() != messageDto.getAuthorId()) {
+            messageDto.setStatus(0);
+            return messageDto;
+        }
+
+        messageDto.setAuthorId(cud.getId());
+
+        return messageService.updateOptimization(messageDto);
     }
 
     @MessageMapping("/chat/{id}/delete-message")

@@ -10,6 +10,9 @@ public class MessageDto {
     private LocalDateTime date;
     private long id;
     private long authorId;
+    private long chatId;
+
+    private int status;
 
     public MessageDto() {
     }
@@ -20,6 +23,8 @@ public class MessageDto {
         this.userName = message.getFullName();
         this.content = message.getText();
         this.date = message.getCreatedAt();
+        this.chatId = message.getChatId();
+        this.status = 1;
     }
 
     public long getAuthorId() {
@@ -60,5 +65,21 @@ public class MessageDto {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+
+    public long getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(long chatId) {
+        this.chatId = chatId;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }
