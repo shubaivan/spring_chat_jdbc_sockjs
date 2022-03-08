@@ -74,18 +74,16 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/register*").anonymous()
-                .antMatchers("/confirm-account*").anonymous()
-                .antMatchers("/reset-password*").anonymous()
-                .antMatchers("/newPassword").anonymous()
-                .antMatchers("/check-token").anonymous()
-                .antMatchers("/new-password").anonymous()
+                    .antMatchers("/login**").permitAll()
+                    .antMatchers("/register*").anonymous()
+                    .antMatchers("/confirm-account*").anonymous()
+                    .antMatchers("/reset-password*").anonymous()
+                    .antMatchers("/newPassword").anonymous()
+                    .antMatchers("/check-token").anonymous()
+                    .antMatchers("/new-password").anonymous()
 
+                    .antMatchers("/chats").access("hasRole('USER')")
                 .anyRequest().hasAnyRole("ADMIN", "USER")
-                .antMatchers("/chats").access("hasRole('USER')")
-
-                .and()
-                .authorizeRequests().antMatchers("/login**").permitAll()
 
                 .and()
                 .formLogin().loginPage("/login").loginProcessingUrl("/loginAction").permitAll()

@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.1.1.RELEASE'
+        springBootVersion = '2.2.2.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -12,13 +12,13 @@ buildscript {
 
 
 plugins {
-    id "org.flywaydb.flyway" version "5.2.4"
+    id "org.flywaydb.flyway" version "6.5.7"
 }
 
 flyway {
-    url = 'jdbc:postgresql://spd-talks.c55nl4eb84c1.eu-west-1.rds.amazonaws.com:5432/spd_talks'
-    user = 'postgres'
-    password = 'Admin2019'
+    url = 'jdbc:postgresql://127.0.0.1:5434/spd_talks'
+    user = 'admin'
+    password = '111'
 }
 
 apply plugin: 'java'
@@ -49,19 +49,19 @@ dependencies {
 
     compile group: 'commons-validator', name: 'commons-validator', version: '1.4.0'
     
-    compile group: 'org.flywaydb', name: 'flyway-core', version: '3.0'
+    compile group: 'org.flywaydb', name: 'flyway-core', version: '6.5.7'
     testCompile group: 'com.h2database', name: 'h2', version: '1.4.197'
-    testCompile group: 'org.flywaydb.flyway-test-extensions', name: 'flyway-spring-test', version: '5.2.1'
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.1.2.RELEASE'
+    testCompile group: 'org.flywaydb.flyway-test-extensions', name: 'flyway-spring-test', version: '6.4.0'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.2.2.RELEASE'
     testCompile group: 'org.mockito', name: 'mockito-core', version: '2.24.0'
 
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-websocket', version: '2.1.1.RELEASE'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '2.1.2.RELEASE'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.1.RELEASE'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.1.2.RELEASE'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.1.2.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-websocket', version: '2.2.2.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '2.2.2.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.2.2.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.2.2.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.2.2.RELEASE'
 
-    compile group: 'org.springframework', name: 'spring-orm', version: '5.1.2.RELEASE'
+    compile group: 'org.springframework', name: 'spring-orm', version: '5.2.19.RELEASE'
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.4'
     compile group: 'postgresql', name: 'postgresql', version: '9.1-901-1.jdbc4'
     compile group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.25'
@@ -69,9 +69,9 @@ dependencies {
 
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 
-    compile "org.flywaydb:flyway-core:5.2.4"
+    compile "org.flywaydb:flyway-core:6.5.7"
 
-    compile group: 'org.springframework', name: 'spring-context', version: '5.1.4.RELEASE'
+    compile group: 'org.springframework', name: 'spring-context', version: '5.2.19.RELEASE'
 
     compile group: 'com.zaxxer', name: 'HikariCP', version: '3.3.0'
 
