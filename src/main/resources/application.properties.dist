@@ -1,0 +1,39 @@
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.url=jdbc:postgresql://127.0.0.1:5434/spd_talks
+spring.datasource.username=admin
+spring.datasource.password=111
+spring.flyway.check-location=false
+spring.flyway.locations=classpath:db/migration
+#file-storage
+server.upload.docs.path=/spd-talks/uploads
+spring.servlet.multipart.max-file-size=10MB
+spring.servlet.multipart.max-request-size=10MB
+
+
+#Use these properties:
+
+#mail.host=smtp.gmail.com
+#mail.port=587
+#mail.username=<gmail-username@gmail.com>
+#mail.password=<gmail-password>
+#mail.transport.protocol=smtp
+#mail.smtp.auth=true
+#mail.smtp.starttls.enable=true
+#mail.from.email=<gmail-username@gmail.com>
+#By default, gmail does not allow less secure apps to get authenticated. You need to turn on the option in you gmail account to allow less secure apps to get authenticated.
+
+#Follow these steps:
+
+#1.Login to Gmail.
+#2.Access the URL as https://www.google.com/settings/security/lesssecureapps
+#3.Select "Turn on"
+#Try running your code again, it should work.
+
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.protocol=smtp
+spring.mail.username=spdtalks2019@gmail.com
+spring.mail.password=Admin2019
+spring.mail.properties.mail.smtp.starttls.enable=true
+spring.mail.default-encoding=UTF-8
+logging.file=./logs/spd_talks.log
