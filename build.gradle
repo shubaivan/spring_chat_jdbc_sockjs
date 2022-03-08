@@ -16,9 +16,9 @@ plugins {
 }
 
 flyway {
-    url = 'jdbc:postgresql://spd-talks.c55nl4eb84c1.eu-west-1.rds.amazonaws.com:5432/spd_talks'
-    user = 'postgres'
-    password = 'Admin2019'
+    url = 'jdbc:postgresql://127.0.0.1:5434/spd_talks'
+    user = 'admin'
+    password = '111'
 }
 
 apply plugin: 'java'

@@ -11,5 +11,7 @@ function uploadFile(input) {
 
 var image = document.getElementById("avatar");
 var avatarId = image.getAttribute("field");
-var full = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
-image.style.backgroundImage = "url('" + full + '/api/file_entities/' + avatarId + "')";
+if (avatarId > 0) {
+    var full = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
+    image.style.backgroundImage = "url('" + full + '/api/file_entities/' + avatarId + "')";
+}

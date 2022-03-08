@@ -62,12 +62,12 @@ public class MessageRepositoryImplTest {
     @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
     public void testGetByChatId() throws SQLException {
         createMessages();
-        Message testMessage = messageRepository.getByChatId(1).stream().filter(x -> 1 == x.getId()).findFirst().get();
+        Message testMessage = messageRepository.getMessages(1, null).stream().filter(x -> 1 == x.getId()).findFirst().get();
         assertEquals(1, testMessage.getId());
         assertEquals(1, testMessage.getAuthorID());
         assertEquals(1, testMessage.getChatId());
         assertEquals("Text from message", testMessage.getText());
-        assertEquals(2, messageRepository.getByChatId(1).size());
+        assertEquals(2, messageRepository.getMessages(1, null).size());
     }
 
     private void createMessages() throws SQLException {
